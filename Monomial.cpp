@@ -6,7 +6,7 @@
 /*                <vmkuznetsov@edu.hse.ru>            #:#+#:#+#:#    +#:#+#:#      #+#:#+#        */
 /*                                                   +#+     +#+           +#+    +#+             */
 /*   Created: 2019/07/07 15:33:22 by cdraugr-       #+#     #+#   +#       #+#   #+#              */
-/*   Updated: 2019/07/07 19:52:47 by cdraugr-      ###     ###     #########    #########.ru      */
+/*   Updated: 2019/07/07 22:47:29 by cdraugr-      ###     ###     #########    #########.ru      */
 /*                                                                                                */
 /* ********************************************************************************************** */
 
@@ -60,7 +60,7 @@ public:
     }
 
     friend Monomial operator*(const Monomial& left, const Monomial& right) {
-        if (left.data() == container() || right.data() == container()) {
+        if (left.data().empty() || right.data().empty()) {
             return {};
         }
 
@@ -87,7 +87,7 @@ public:
     }
 
     friend Monomial operator,(const Monomial& left, const Monomial& right) {  // gcd
-        if (left.data() == container() || right.data() == container()) {
+        if (left.data().empty() || right.data().empty()) {
             return {};
         }
 
@@ -104,8 +104,8 @@ public:
         return result;
     }
 
-    Monomial lcm(const Monomial& other) {
-        if (data() == container() || other.data() == container()) {
+    Monomial lcm(const Monomial& other) const {
+        if (data().empty() || other.data().empty()) {
             return {};
         }
 
@@ -119,7 +119,7 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& out, const Monomial& monom) {
-        if (monom.data() == container()) {
+        if (monom.data().empty()) {
             return out << 0;
         }
 
