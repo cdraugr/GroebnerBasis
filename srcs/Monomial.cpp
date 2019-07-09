@@ -1,66 +1,57 @@
-/* ********************************************************************************************** */
-/*                                                                                                */
-/*   Monomial.cpp                                        :::     :::    :::::::::     :::::::::   */
-/*                                                      :+:     :+:   :+:       +:   :+:          */
-/*   By: cdraugr- <kvm2014@bk.ru>                      +:+     +:+   +:+            +:+           */
-/*                <vmkuznetsov@edu.hse.ru>            #:#+#:#+#:#    +#:#+#:#      #+#:#+#        */
-/*                                                   +#+     +#+           +#+    +#+             */
-/*   Created: 2019/07/07 15:33:22 by cdraugr-       #+#     #+#   +#       #+#   #+#              */
-/*   Updated: 2019/07/08 08:56:54 by cdraugr-      ###     ###     #########    #########.ru      */
-/*                                                                                                */
-/* ********************************************************************************************** */
-
+#include <algorithm>
+#include <numeric>
 #include "../includes/Monomial.h"
 
 Monomial::Monomial() = default;
 
-Monomial::Monomial(i32 value) {
-    if (value) {
-        data_[0] = value;
-    }
-}
+Monomial::Monomial(double value)
+    : count_{value} {}
 
-Monomial::Monomial(const std::vector<i32>& arguments) {
-    if (arguments.size() && arguments[0]) {
+Monomial::Monomial(const std::vector<i32>& arguments, const double value) {
+    count_ = value;
+    if (count() != 0 && !arguments.empty()) {
         for (size_t i = 0; i != arguments.size(); ++i) {
-            if (arguments[i]) {
+            if (arguments[i] != 0) {
                 data_[static_cast<i32>(i)] = arguments[i];
             }
         }
     }
 }
 
-Monomial::Monomial(const container& arguments) {
-    if (arguments.find(0) != arguments.end() && (data_[0] = arguments.at(0))) {
+Monomial::Monomial(const container& arguments, const double value) {
+    count_ = value;
+    if (count() != 0) {
         for (const auto& [num, degree] : arguments) {
-            if (num > 0 && degree > 0) {
+            if (num >= 0 && degree > 0) {
                 data_[num] = degree;
             }
         }
     }
 }
 
-Monomial& Monomial::operator*=(const Monomial& other) noexcept {
-    if (data().empty() || other.data().empty()) {
-        return *this = {};
-    }
+double Monomial::count() const noexcept {
+    return count_;
+}
 
-    data_[0] *= other.data().at(0);
-    for (const auto& [num, degree] : other.data()) {
-        if (num) {
-            data_[num] += degree;
-        }
+const Monomial::container& Monomial::degrees() const noexcept {
+    return data_;
+}
+
+Monomial& Monomial::operator*=(const Monomial& other) noexcept {
+    count_ *= other.count();
+    for (const auto& [num, degree] : other.degrees()) {
+        data_[num] += degree;
     }
     return *this;
 }
 
-Monomial operator*(const Monomial& left, const Monomial& right) noexcept {
-    Monomial composition = left;
-    return composition *= right;
+Monomial operator*(Monomial left, const Monomial& right) noexcept {
+    left *= right;
+    return left;
 }
 
 bool operator==(const Monomial& left, const Monomial& right) noexcept {
-    return left.data() == right.data();
+    return left.count() == right.count() && left.degrees() == right.degrees();
 }
 
 bool operator!=(const Monomial& left, const Monomial& right) noexcept {
@@ -68,62 +59,61 @@ bool operator!=(const Monomial& left, const Monomial& right) noexcept {
 }
 
 Monomial operator,(const Monomial& left, const Monomial& right) noexcept {  // gcd
-    if (left.data().empty() || right.data().empty()) {
-        return {};
-    }
-
-    Monomial result(std::gcd(left.data().at(0), right.data().at(0)));
-    for (const auto& [num, degree] : left.data()) {
-        if (num) {
-            if (right.data().find(num) != right.data().end()) {
-                result.data_[num] = std::min(degree, right.data().at(num));
-            } else {
-                result.data_.erase(num);
-            }
+    Monomial result(
+        std::gcd(
+            static_cast<i32>(left.count()),
+            static_cast<i32>(right.count())
+        )
+    );
+    for (const auto& [num, degree] : left.degrees()) {
+        if (right.degrees().find(num) != right.degrees().end()) {
+            result.data_[num] = std::min(degree, right.degrees().at(num));
+        } else {
+            result.data_.erase(num);
         }
     }
     return result;
 }
 
 Monomial lcm(const Monomial& left, const Monomial& right) noexcept {
-    if (left.data().empty() || right.data().empty()) {
-        return {};
-    }
-
     Monomial result = left;
-    for (const auto& [num, degree] : right.data()) {
-        result.data_[num] = num ?
-            std::max(result.data_[num], degree) :
-            std::lcm(result.data().at(0), right.data().at(0));
+    result.count_ = std::lcm(
+            static_cast<i32>(left.count()),
+            static_cast<i32>(right.count())
+        );
+    for (const auto& [num, degree] : right.degrees()) {
+        result.data_[num] = std::max(result.data_[num], degree);
     }
     return result;
 }
 
+i32 deg(const Monomial& monom) noexcept {
+    i32 sum = 0;
+    for (const auto& [num, degree] : monom.degrees()) {
+        sum += degree;
+    }
+    return sum;
+}
+
 std::ostream& operator<<(std::ostream& out, const Monomial& monom) noexcept {
-    if (monom.data().empty()) {
-        return out << 0;
+    if (monom.degrees().empty()) {
+        return out << monom.count();
     }
 
-    for (const auto& [num, degree] : monom.data()) {
-        if (num > 0) {
-            out << "x_(" << num << ')';
-            if (degree > 1) {
-                out << "^(" << degree << ')';
-            }
-            if (num < (*monom.data().crbegin()).first) {
-                out << '*';
-            }
-        } else {
-            if (degree == -1) {
-                out << '-';
-            } else if (degree != 1) {
-                out << degree << '*';
-            }
+    if (monom.count() == -1) {
+        out << '-';
+    } else if (monom.count() != 1) {
+        out << monom.count() << '*';
+    }
+
+    for (const auto& [num, degree] : monom.degrees()) {
+        out << "x_(" << num + 1 << ')';
+        if (degree > 1) {
+            out << "^(" << degree << ')';
+        }
+        if (num < (*monom.degrees().crbegin()).first) {
+            out << '*';
         }
     }
     return out;
-}
-
-const Monomial::container& Monomial::data() const noexcept {  // private
-    return data_;
 }
