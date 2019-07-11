@@ -19,16 +19,8 @@ bool LexComp::operator()(const Monomial& left, const Monomial& right) const noex
         (*right.degrees().crbegin()).first
     );
     for (i32 i = 0; i <= maximum; ++i) {
-        if (left.degrees().find(i) != left.degrees().end()) {
-            if (right.degrees().find(i) != right.degrees().end()) {
-                if (left.degrees().at(i) != right.degrees().at(i)) {
-                    return left.degrees().at(i) < right.degrees().at(i);
-                }
-            } else {
-                return false;
-            }
-        } else if (right.degrees().find(i) != right.degrees().end()) {
-            return true;
+        if (left.GetDegree(i) != right.GetDegree(i)) {
+            return left.GetDegree(i) < right.GetDegree(i);
         }
     }
     return false;

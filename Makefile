@@ -6,7 +6,7 @@
 #                 <vmkuznetsov@edu.hse.ru>            #:#+#:#+#:#    +#:#+#:#      #+#:#+#         #
 #                                                    +#+     +#+           +#+    +#+              #
 #    Created: 2019/07/08 07:33:53 by cdraugr-       #+#     #+#   +#       #+#   #+#               #
-#    Updated: 2019/07/09 10:00:31 by cdraugr-      ###     ###     #########    #########.ru       #
+#    Updated: 2019/07/11 10:42:35 by cdraugr-      ###     ###     #########    #########.ru       #
 #                                                                                                  #
 # ************************************************************************************************ #
 
@@ -17,9 +17,17 @@ NAME = Test.out
 
 CFLAGS = -std=c++17 -Wall -Wextra -Werror -O2
 
-HEADERS = includes/Monomial.h includes/Tests.h includes/MonomialOrder.h
+HEADERS = includes/rational.h\
+		includes/Monomial.h\
+		includes/Tests.h\
+		includes/MonomialOrder.h\
+		includes/Polinomial.h
 
-SOURCES = srcs/Monomial.cpp srcs/MonomialOrder.cpp srcs/Tests.cpp main.cpp
+SOURCES = srcs/Rational.cpp\
+		srcs/Monomial.cpp\
+		srcs/MonomialOrder.cpp\
+		srcs/Tests.cpp\
+		main.cpp
 
 OBJECTS = $(SOURCES:.cpp=.o)
 

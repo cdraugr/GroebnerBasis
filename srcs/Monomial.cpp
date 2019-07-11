@@ -4,12 +4,15 @@
 
 Monomial::Monomial() = default;
 
-Monomial::Monomial(double value)
-    : count_{value} {}
+Monomial::Monomial(i32 value)
+    : coefficient_{value} {}
 
-Monomial::Monomial(const std::vector<i32>& arguments, const double value) {
-    count_ = value;
-    if (count() != 0 && !arguments.empty()) {
+Monomial::Monomial(Rational value)
+    : coefficient_{value} {}
+
+Monomial::Monomial(const std::vector<i32>& arguments, const Rational value)
+    : coefficient_{value} {
+    if (coefficient() != 0 && !arguments.empty()) {
         for (size_t i = 0; i != arguments.size(); ++i) {
             if (arguments[i] != 0) {
                 data_[static_cast<i32>(i)] = arguments[i];
@@ -18,9 +21,9 @@ Monomial::Monomial(const std::vector<i32>& arguments, const double value) {
     }
 }
 
-Monomial::Monomial(const container& arguments, const double value) {
-    count_ = value;
-    if (count() != 0) {
+Monomial::Monomial(const container& arguments, const Rational value)
+    : coefficient_{value} {
+    if (coefficient() != 0) {
         for (const auto& [num, degree] : arguments) {
             if (num >= 0 && degree > 0) {
                 data_[num] = degree;
@@ -29,16 +32,42 @@ Monomial::Monomial(const container& arguments, const double value) {
     }
 }
 
-double Monomial::count() const noexcept {
-    return count_;
+Rational& Monomial::coefficient() noexcept {
+    return coefficient_;
+}
+
+const Rational& Monomial::coefficient() const noexcept {
+    return coefficient_;
 }
 
 const Monomial::container& Monomial::degrees() const noexcept {
     return data_;
 }
 
+i32 Monomial::GetDegree(i32 index) const noexcept {
+    return degrees().find(index) != degrees().end() ?
+        degrees().at(index) :
+        0;
+}
+
+i32 deg(const Monomial& monom) noexcept {
+    i32 sum = 0;
+    for (const auto& [num, degree] : monom.degrees()) {
+        sum += degree;
+    }
+    return sum;
+}
+
+Monomial Monomial::operator-() const noexcept {
+    return Monomial(degrees(), -coefficient());
+}
+
+Monomial Monomial::operator+() const noexcept {
+    return Monomial(degrees(), coefficient());
+}
+
 Monomial& Monomial::operator*=(const Monomial& other) noexcept {
-    count_ *= other.count();
+    coefficient_ *= other.coefficient();
     for (const auto& [num, degree] : other.degrees()) {
         data_[num] += degree;
     }
@@ -50,8 +79,27 @@ Monomial operator*(Monomial left, const Monomial& right) noexcept {
     return left;
 }
 
+Monomial& Monomial::operator/=(const Monomial& other) noexcept {
+    coefficient_ /= other.coefficient();
+    for (const auto& [num, degree] : other.degrees()) {
+        data_[num] -= degree;
+        if (data_[num] == 0) {
+            data_.erase(num);
+        } else if (data_[num] < 0) {
+            *this = {0};
+            break;
+        }
+    }
+    return *this;
+}
+
+Monomial operator/(Monomial left, const Monomial& right) noexcept {
+    left /= right;
+    return left;
+}
+
 bool operator==(const Monomial& left, const Monomial& right) noexcept {
-    return left.count() == right.count() && left.degrees() == right.degrees();
+    return left.coefficient() == right.coefficient() && left.degrees() == right.degrees();
 }
 
 bool operator!=(const Monomial& left, const Monomial& right) noexcept {
@@ -59,17 +107,10 @@ bool operator!=(const Monomial& left, const Monomial& right) noexcept {
 }
 
 Monomial operator,(const Monomial& left, const Monomial& right) noexcept {  // gcd
-    Monomial result(
-        std::gcd(
-            static_cast<i32>(left.count()),
-            static_cast<i32>(right.count())
-        )
-    );
+    Monomial result((left.coefficient(), right.coefficient()));
     for (const auto& [num, degree] : left.degrees()) {
         if (right.degrees().find(num) != right.degrees().end()) {
             result.data_[num] = std::min(degree, right.degrees().at(num));
-        } else {
-            result.data_.erase(num);
         }
     }
     return result;
@@ -77,39 +118,28 @@ Monomial operator,(const Monomial& left, const Monomial& right) noexcept {  // g
 
 Monomial lcm(const Monomial& left, const Monomial& right) noexcept {
     Monomial result = left;
-    result.count_ = std::lcm(
-            static_cast<i32>(left.count()),
-            static_cast<i32>(right.count())
-        );
+    result.coefficient_ = lcm(left.coefficient(), right.coefficient());
     for (const auto& [num, degree] : right.degrees()) {
         result.data_[num] = std::max(result.data_[num], degree);
     }
     return result;
 }
 
-i32 deg(const Monomial& monom) noexcept {
-    i32 sum = 0;
-    for (const auto& [num, degree] : monom.degrees()) {
-        sum += degree;
-    }
-    return sum;
-}
-
 std::ostream& operator<<(std::ostream& out, const Monomial& monom) noexcept {
     if (monom.degrees().empty()) {
-        return out << monom.count();
+        return out << monom.coefficient();
     }
 
-    if (monom.count() == -1) {
+    if (monom.coefficient() == -1) {
         out << '-';
-    } else if (monom.count() != 1) {
-        out << monom.count() << '*';
+    } else if (monom.coefficient() != 1) {
+        out << monom.coefficient() << '*';
     }
 
     for (const auto& [num, degree] : monom.degrees()) {
         out << "x_(" << num + 1 << ')';
         if (degree > 1) {
-            out << "^(" << degree << ')';
+            out << "^{" << degree << '}';
         }
         if (num < (*monom.degrees().crbegin()).first) {
             out << '*';

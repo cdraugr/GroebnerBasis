@@ -2,5 +2,6 @@
 
 int main() {
     // test_Monomials();
-    test_MonomialOrder();
+    // test_MonomialOrder();
+    test_Polynomial();
 }
