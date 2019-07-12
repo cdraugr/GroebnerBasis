@@ -14,8 +14,9 @@ public:
     Polynomial(const container&);
 
     const container& MonomialSet() const noexcept;
-
     const Monomial& LeadMonom(i32 index = 1) const;
+
+    Polynomial& ReductionBy(const Polynomial&) noexcept;
 
     Polynomial operator-() const noexcept;
     Polynomial operator+() const noexcept;
@@ -36,7 +37,11 @@ public:
     template<typename OtherComp>
     friend Polynomial<OtherComp> SPolynomial(const Polynomial<OtherComp>&, const Polynomial<OtherComp>&) noexcept;
 
-    Polynomial& ReductionBy(const Polynomial&) noexcept;
+    template<typename OtherComp>
+    friend bool operator==(const Polynomial<OtherComp>&, const Polynomial<OtherComp>&) noexcept;
+
+    template<typename OtherComp>
+    friend bool operator!=(const Polynomial<OtherComp>&, const Polynomial<OtherComp>&) noexcept;
 
     template<typename OtherComp>
     friend std::ostream& operator<<(std::ostream& out, const Polynomial<OtherComp>& polynom) noexcept;
@@ -66,7 +71,9 @@ const typename Polynomial<Comp>::container& Polynomial<Comp>::MonomialSet() cons
 
 template <typename Comp>
 const Monomial& Polynomial<Comp>::LeadMonom(i32 index) const {
-    assert(1 <= index && static_cast<size_t>(index) <= MonomialSet().size());
+    assert(1 <= index);
+    assert(static_cast<size_t>(index) <= MonomialSet().size());
+
     auto it = MonomialSet().begin();
     std::advance(it, index - 1);
     return *it;
@@ -87,19 +94,33 @@ Polynomial<Comp> Polynomial<Comp>::operator+() const noexcept {
 }
 
 template <typename Comp>
+Polynomial<Comp>& Polynomial<Comp>::ReductionBy(const Polynomial<Comp>& polynom) noexcept {
+    if (polynom.MonomialSet().empty()) {
+        return *this;
+    }
+
+    for (const auto& monom : monoms_) {
+        if (monom / polynom.LeadMonom() != 0) {
+            *this -= Polynomial<Comp>(monom / polynom.LeadMonom()) * polynom;
+            break;
+        }
+    }
+    return *this;
+}
+
+template <typename Comp>
 Polynomial<Comp>& Polynomial<Comp>::operator+=(const Polynomial<Comp>& polynom) noexcept {
-    Polynomial<Comp>::container monoms(monoms_);
+    Polynomial<Comp>::container monoms(MonomialSet());
     for (const auto& monom : polynom.MonomialSet()) {
         bool was_changed = false;
-
-        for (const auto& this_monom : monoms_) {
+        for (const auto& this_monom : MonomialSet()) {
             if (this_monom.degrees() == monom.degrees()) {
                 monoms.erase(this_monom);
                 if (this_monom.coefficient() + monom.coefficient() != 0) {
                     if (monom.degrees().empty()) {
                         monoms.insert(this_monom.coefficient() + monom.coefficient());
                     } else {
-                        monoms.insert({monom.degrees(), this_monom.coefficient() + monom.coefficient()});
+                        monoms.insert(Monomial(monom.degrees(), this_monom.coefficient() + monom.coefficient()));
                     }
                 }
                 was_changed = true;
@@ -169,18 +190,13 @@ Polynomial<Comp> SPolynomial(const Polynomial<Comp>& left, const Polynomial<Comp
 }
 
 template <typename Comp>
-Polynomial<Comp>& Polynomial<Comp>::ReductionBy(const Polynomial<Comp>& polynom) noexcept {
-    if (polynom.MonomialSet().empty()) {
-        return *this;
-    }
+bool operator==(const Polynomial<Comp>& left, const Polynomial<Comp>& right) noexcept {
+    return left.MonomialSet() == right.MonomialSet();
+}
 
-    for (const auto& monom : monoms_) {
-        if (monom / polynom.LeadMonom() != 0) {
-            *this -= Polynomial<Comp>(monom / polynom.LeadMonom()) * polynom;
-            break;
-        }
-    }
-    return *this;
+template <typename Comp>
+bool operator!=(const Polynomial<Comp>& left, const Polynomial<Comp>& right) noexcept {
+    return !(left == right);
 }
 
 template <typename Comp>

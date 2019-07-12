@@ -83,6 +83,7 @@ Rational operator*(Rational left, const Rational& right) noexcept {
 }
 
 Rational& Rational::operator/=(const Rational& other) noexcept {
+    assert(other != 0);
     *this *= Rational(other.denominator(), other.numerator());
     Reduce();
     return *this;

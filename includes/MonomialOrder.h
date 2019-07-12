@@ -32,3 +32,6 @@ bool CombineComp<FComp, SComp>::operator()(
         second_comp(left, right) :
         first_comp(left, right);
 }
+
+using DegLexComp = CombineComp<DegComp, LexComp>;
+using DegReLexComp = CombineComp<DegComp, ReLexComp>;

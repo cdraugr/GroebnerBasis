@@ -93,7 +93,7 @@ void test_MonomialOrder() {
     test_comp<ReLexComp>(monoms);
 
     std::cout << "deg-lex comp:\n";
-    test_comp<CombineComp<DegComp, LexComp>>(monoms);
+    test_comp<DegLexComp>(monoms);
 }
 
 void test_Polynomial() {
@@ -126,5 +126,70 @@ void test_Polynomial() {
     std::cout << "S(k, k) = " << SPolynomial(k, k) << '\n';
     PrintLine();
     std::cout << "f -> (g) = " << f.ReductionBy(g) << '\n';
+    std::cout << "f -> (f) = " << f.ReductionBy(f) << '\n';
+    PrintLine();
+    {  // HW 06, ex 02
+        Polynomial<ReLexComp> poly_g({
+            {{0, 4, 6}},
+            {{1, 4, 1}, {2}},
+            {{2, 2, 0}}
+        });
+        Polynomial<ReLexComp> poly_f({
+            {{0, 4, 1}},
+            {{1, 1, 2}, {-1}},
+            {{1, 2, 0}}
+        });
+        std::cout << "f = " << poly_f << '\n';
+        std::cout << "g = " << poly_g << "\n\n";
+        auto tmp = poly_g;
+        while (poly_g.ReductionBy(poly_f) != tmp) {
+            tmp = poly_g;
+            std::cout << poly_g << '\n';
+        }
+    }
+    PrintLine();
+}
+
+void test_PolynomialOrder() {
+    std::cout << "Test PolynomialOrder\n";
+    PolynomialOrder<LexComp> comparator;
+    std::cout << "LexComp\n";
+    Polynomial<ReLexComp> f({
+        {{1, 1, 1}},
+        {{1, 1, 0}},
+        {{0, 1, 1}}
+    });
+    Polynomial<ReLexComp> g({
+        {{1, 1, 1}},
+        {{1, 1, 0}},
+        {{0, 2, 1}}
+    });
+    Polynomial<ReLexComp> k({
+        {{2, 1, 1}},
+        {{1, 1, 0}},
+    });
+
+    std::cout << "f = " << f << '\n';
+    std::cout << "g = " << g << '\n';
+    std::cout << "k = " << k << "\n\n";
+    std::cout << "f < g is " << TrueFalse(comparator(f, g)) << '\n';
+    std::cout << "g < f is " << TrueFalse(comparator(g, f)) << "\n\n";
+
+    std::cout << "k < g is " << TrueFalse(comparator(k, g)) << '\n';
+    std::cout << "g < k is " << TrueFalse(comparator(g, k)) << "\n\n";
+
+    std::cout << "k < f is " << TrueFalse(comparator(k, f)) << '\n';
+    std::cout << "f < k is " << TrueFalse(comparator(f, k)) << "\n\n";
+
+    std::cout << "f < f is " << TrueFalse(comparator(f, f)) << '\n';
+    std::cout << "g < g is " << TrueFalse(comparator(g, g)) << '\n';
+    std::cout << "k < k is " << TrueFalse(comparator(k, k)) << '\n';
+    PrintLine();
+
+    std::set<Polynomial<ReLexComp>, PolynomialOrder<LexComp>> polynoms({f, g, k});
+    std::cout << "set:\n";
+    for (const auto& polynom : polynoms) {
+        std::cout << polynom << '\n';
+    }
     PrintLine();
 }
