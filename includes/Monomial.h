@@ -21,6 +21,8 @@ public:
     i32 GetDegree(i32) const noexcept;
     friend i32 deg(const Monomial&) noexcept;
 
+    bool IsDividedBy(const Monomial&) const noexcept;
+
     Monomial operator-() const noexcept;
     Monomial operator+() const noexcept;
 

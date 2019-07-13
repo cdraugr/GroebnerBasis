@@ -58,6 +58,19 @@ i32 deg(const Monomial& monom) noexcept {
     return sum;
 }
 
+bool Monomial::IsDividedBy(const Monomial& other) const noexcept {
+    if (other == 0) {
+        return false;
+    }
+
+    for (const auto& [num, degree] : other.degrees()) {
+        if (GetDegree(num) < degree) {
+            return false;
+        }
+    }
+    return true;
+}
+
 Monomial Monomial::operator-() const noexcept {
     return Monomial(degrees(), -coefficient());
 }

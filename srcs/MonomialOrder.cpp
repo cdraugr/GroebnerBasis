@@ -30,3 +30,7 @@ bool ReLexComp::operator()(const Monomial& left, const Monomial& right) const no
     LexComp lex_comp;
     return left == right ? false : !lex_comp(left, right);
 }
+
+bool CoefComp::operator()(const Monomial& left, const Monomial& right) const noexcept {
+    return left.coefficient() < right.coefficient();
+}

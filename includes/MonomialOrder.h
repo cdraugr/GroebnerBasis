@@ -15,6 +15,11 @@ public:
     bool operator()(const Monomial&, const Monomial&) const noexcept;
 };
 
+class CoefComp {
+public:
+    bool operator()(const Monomial&, const Monomial&) const noexcept;
+};
+
 template <typename FComp, typename SComp>
 class CombineComp {
 public:
@@ -35,3 +40,4 @@ bool CombineComp<FComp, SComp>::operator()(
 
 using DegLexComp = CombineComp<DegComp, LexComp>;
 using DegReLexComp = CombineComp<DegComp, ReLexComp>;
+using LexCoefComp = CombineComp<LexComp, CoefComp>;

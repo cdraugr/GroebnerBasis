@@ -10,7 +10,7 @@ void PrintLine() {
 }
 
 void test_Monomials() {
-    std::cout << "Test Monomials\n";
+    std::cout << "Test Monomials:\n";
     Monomial monom1({1, 4, 0, 0, 0, 0, 1, 0, 0, 12}, 15);
     Monomial monom2({{0, 2}, {2, 1}, {6, 1}, {9, 17}}, 7);
     std::cout << "m1 = " << monom1 << '\n' << "m2 = " << monom2 << '\n';
@@ -70,7 +70,7 @@ void test_comp(const std::vector<Monomial>& monoms) {
 }
 
 void test_MonomialOrder() {
-    std::cout << "Test MonomialOrder\n";
+    std::cout << "Test MonomialOrder:\n";
     std::vector<Monomial> monoms({
         {std::vector<i32>({1, 2, 31}), 0},  // 0
         {std::vector<i32>({2, 3, 7, 3, 7})},
@@ -97,7 +97,7 @@ void test_MonomialOrder() {
 }
 
 void test_Polynomial() {
-    std::cout << "Test Polynomial\n";
+    std::cout << "Test Polynomial:\n";
     Polynomial<ReLexComp> f({{{7, 0, 4}, 2}, {-5}});
     Polynomial<ReLexComp> g({
         {{2, 2, 0}},
@@ -125,8 +125,10 @@ void test_Polynomial() {
     std::cout << "S(k, f) = " << SPolynomial(k, f) << '\n';
     std::cout << "S(k, k) = " << SPolynomial(k, k) << '\n';
     PrintLine();
-    std::cout << "f -> (g) = " << f.ReductionBy(g) << '\n';
-    std::cout << "f -> (f) = " << f.ReductionBy(f) << '\n';
+    f.ReductionBy(g);
+    std::cout << "f -> (g) = " << f << '\n';
+    f.ReductionBy(f);
+    std::cout << "f -> (f) = " << f << '\n';
     PrintLine();
     {  // HW 06, ex 02
         Polynomial<ReLexComp> poly_g({
@@ -141,9 +143,7 @@ void test_Polynomial() {
         });
         std::cout << "f = " << poly_f << '\n';
         std::cout << "g = " << poly_g << "\n\n";
-        auto tmp = poly_g;
-        while (poly_g.ReductionBy(poly_f) != tmp) {
-            tmp = poly_g;
+        while (poly_g.ReductionBy(poly_f)) {
             std::cout << poly_g << '\n';
         }
     }
@@ -151,7 +151,7 @@ void test_Polynomial() {
 }
 
 void test_PolynomialOrder() {
-    std::cout << "Test PolynomialOrder\n";
+    std::cout << "Test PolynomialOrder:\n";
     PolynomialOrder<LexComp> comparator;
     std::cout << "LexComp\n";
     Polynomial<ReLexComp> f({
@@ -191,5 +191,65 @@ void test_PolynomialOrder() {
     for (const auto& polynom : polynoms) {
         std::cout << polynom << '\n';
     }
+    PrintLine();
+}
+
+void test_PolynomialSet() {
+    std::cout << "Test PolynomialSet:\n";
+    Polynomial<ReLexComp> f1({  // HW 06, ex 03
+        {{1, 1, 0}, 2},
+        {{1, 0, 1}, 4},
+        {{0, 1, 2}, 1}
+    });
+    Polynomial<ReLexComp> f2({
+        {{1, 0, 2}, 4},
+        {{0, 1, 3}, 1},
+        {{0, 0, 0}, 4}
+    });
+    Polynomial<ReLexComp> f3({
+        {{0, 2, 3}, 1},
+        {{0, 1, 0}, 4},
+        {{0, 0, 1}, 8}
+    });
+    PolynomialSet<ReLexComp> F({f1, f2, f3});
+    std::cout << "System F = {\n" << F << "\n}\n";
+    std::cout << "Statement that F is Groebner Basis is " << TrueFalse(IsGroebnerBasis(F)) << '\n';
+
+    PrintLine();
+    Polynomial<ReLexComp> i1({  // HW 07, ex 01
+        {{2, 1, 0}, 1},
+        {{1, 0, 1}, -1}
+    });
+    Polynomial<ReLexComp> i2({
+        {{0, 2, 0}, 1},
+        {{0, 1, 1}, 2}
+    });
+    PolynomialSet<ReLexComp> I({i1, i2});
+    std::cout << "Ideal I = {\n" << I << "\n}\n";
+    I.MakeGroebnerBasis();
+    std::cout << "Groebner Basis of ideal I = {\n" << I << "\n}\n";
+    Polynomial<ReLexComp> polynom({
+        {{2, 0, 4}, 5},
+        {{1, 1, 3}, -1}
+    });
+    std::cout << "Statement that " << polynom << " belongs ideal I is " << TrueFalse(I.IsPolynomialInMe(polynom)) << '\n';
+    PrintLine();
+    Polynomial<ReLexComp> polynom_i1({  // Test 01, Variant 01, ex 04
+        {{1, 0, 1}, 2},
+        {{0, 1, 0}, -1}
+    });
+    Polynomial<ReLexComp> polynom_i2({
+        {{2, 0, 0}, 1},
+        {{0, 0, 1}, 2}
+    });
+    PolynomialSet<ReLexComp> ideal_I({polynom_i1, polynom_i2});
+    std::cout << "Ideal I = {\n" << ideal_I << "\n}\n";
+    ideal_I.MakeGroebnerBasis();
+    std::cout << "Groebner Basis of ideal I = {\n" << ideal_I << "\n}\n";
+    Polynomial<ReLexComp> polynom_f({
+        {{1, 0, 4}, 16},
+        {{0, 3, 0}, 1}
+    });
+    std::cout << "Statement that " << polynom_f << " belongs ideal I is " << TrueFalse(ideal_I.IsPolynomialInMe(polynom_f)) << '\n';
     PrintLine();
 }
