@@ -6,14 +6,14 @@
 #                 <vmkuznetsov@edu.hse.ru>            #:#+#:#+#:#    +#:#+#:#      #+#:#+#         #
 #                                                    +#+     +#+           +#+    +#+              #
 #    Created: 2019/07/08 07:33:53 by cdraugr-       #+#     #+#   +#       #+#   #+#               #
-#    Updated: 2019/07/13 10:55:35 by cdraugr-      ###     ###     #########    #########.ru       #
+#    Updated: 2019/07/14 11:31:07 by cdraugr-      ###     ###     #########    #########.ru       #
 #                                                                                                  #
 # ************************************************************************************************ #
 
 
 CC = g++
 
-NAME = GrobnerBasis.out
+NAME = GroebnerBasis.out
 
 CFLAGS = -std=c++17 -Wall -Wextra -Werror
 

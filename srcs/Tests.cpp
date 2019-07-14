@@ -11,8 +11,8 @@ void PrintLine() {
 
 void test_Monomials() {
     std::cout << "Test Monomials:\n";
-    Monomial monom1({1, 4, 0, 0, 0, 0, 1, 0, 0, 12}, 15);
-    Monomial monom2({{0, 2}, {2, 1}, {6, 1}, {9, 17}}, 7);
+    bg::Monomial monom1({1, 4, 0, 0, 0, 0, 1, 0, 0, 12}, 15);
+    bg::Monomial monom2({{0, 2}, {2, 1}, {6, 1}, {9, 17}}, 7);
     std::cout << "m1 = " << monom1 << '\n' << "m2 = " << monom2 << '\n';
 
     std::cout << "lcm(m1, m2) = " << lcm(monom1, monom2) << '\n';
@@ -21,8 +21,8 @@ void test_Monomials() {
     std::cout << "deg(m2) = " << deg(monom2) << '\n';
     PrintLine();
 
-    Monomial monom3({{2, 5}, {4, 2}}, {2, 3});
-    Monomial monom4({{2, 12}, {3, 1}}, -1);
+    bg::Monomial monom3({{2, 5}, {4, 2}}, {2, 3});
+    bg::Monomial monom4({{2, 12}, {3, 1}}, -1);
     std::cout << "m3 = " << monom3 << '\n' << "m4 = " << monom4 << "\n\n";
     std::cout << "m3 * m4 =\t" << monom3 * monom4 << '\n';
     std::cout << "m3 =\t\t" << monom3 << '\n';
@@ -30,8 +30,8 @@ void test_Monomials() {
     std::cout << "m3 =\t\t" << monom3 << '\n';
     PrintLine();
 
-    Monomial monom5({3, 0, 4}, 2);
-    Monomial monom6({3, 0, 4}, 1);
+    bg::Monomial monom5({3, 0, 4}, 2);
+    bg::Monomial monom6({3, 0, 4}, 1);
     std::cout << (monom5 == monom6) << '\t'
             << (monom5 == 2 * monom6) << '\t'
             << (3 * monom5 == monom6 * 6) << '\n';
@@ -50,7 +50,7 @@ std::string TrueFalse(bool value) {
 }
 
 template <typename Comp>
-void test_comp(const std::vector<Monomial>& monoms) {
+void test_comp(const std::vector<bg::Monomial>& monoms) {
     Comp comparator;
     for (size_t i = 0; i != monoms.size(); ++i) {
         for (size_t j = 0; j != monoms.size(); ++j) {
@@ -61,7 +61,7 @@ void test_comp(const std::vector<Monomial>& monoms) {
         }
     }
 
-    std::set<Monomial, Comp> mon_set(monoms.begin(), monoms.end());
+    std::set<bg::Monomial, Comp> mon_set(monoms.begin(), monoms.end());
     std::cout << "\nset:\n";
     for (const auto& monom : mon_set) {
         std::cout << monom << '\n';
@@ -71,7 +71,7 @@ void test_comp(const std::vector<Monomial>& monoms) {
 
 void test_MonomialOrder() {
     std::cout << "Test MonomialOrder:\n";
-    std::vector<Monomial> monoms({
+    std::vector<bg::Monomial> monoms({
         {std::vector<i32>({1, 2, 31}), 0},  // 0
         {std::vector<i32>({2, 3, 7, 3, 7})},
         {std::vector<i32>({4, 1, 7, 10, 0})},
@@ -84,26 +84,26 @@ void test_MonomialOrder() {
     PrintLine();
 
     std::cout << "deg comp:\n";
-    test_comp<DegComp>(monoms);
+    test_comp<bg::DegComp>(monoms);
 
     std::cout << "lex comp:\n";
-    test_comp<LexComp>(monoms);
+    test_comp<bg::LexComp>(monoms);
 
     std::cout << "re_lex comp:\n";
-    test_comp<ReLexComp>(monoms);
+    test_comp<bg::ReLexComp>(monoms);
 
     std::cout << "deg-lex comp:\n";
-    test_comp<DegLexComp>(monoms);
+    test_comp<bg::DegLexComp>(monoms);
 }
 
 void test_Polynomial() {
     std::cout << "Test Polynomial:\n";
-    Polynomial<ReLexComp> f({{{7, 0, 4}, 2}, {-5}});
-    Polynomial<ReLexComp> g({
+    bg::Polynomial<bg::ReLexComp> f({{{7, 0, 4}, 2}, {-5}});
+    bg::Polynomial<bg::ReLexComp> g({
         {{2, 2, 0}},
         {{3, 0, 4}, 3},
     });
-    Polynomial<ReLexComp> k;
+    bg::Polynomial<bg::ReLexComp> k;
 
     std::cout << "f = " << f << '\n';
     std::cout << "g = " << g << '\n';
@@ -118,12 +118,12 @@ void test_Polynomial() {
     PrintLine();
     std::cout << '(' << g << ") * (" << f << ") =\n" << (g * f) << '\n';
     PrintLine();    
-    std::cout << "S(f, g) = " << SPolynomial(f, g) << '\n';
-    std::cout << "S(g, f) = " << SPolynomial(g, f) << '\n';
-    std::cout << "S(f, f) = " << SPolynomial(f, f) << '\n';
-    std::cout << "S(f, k) = " << SPolynomial(f, k) << '\n';
-    std::cout << "S(k, f) = " << SPolynomial(k, f) << '\n';
-    std::cout << "S(k, k) = " << SPolynomial(k, k) << '\n';
+    std::cout << "S(f, g) = " << bg::SPolynomial(f, g) << '\n';
+    std::cout << "S(g, f) = " << bg::SPolynomial(g, f) << '\n';
+    std::cout << "S(f, f) = " << bg::SPolynomial(f, f) << '\n';
+    std::cout << "S(f, k) = " << bg::SPolynomial(f, k) << '\n';
+    std::cout << "S(k, f) = " << bg::SPolynomial(k, f) << '\n';
+    std::cout << "S(k, k) = " << bg::SPolynomial(k, k) << '\n';
     PrintLine();
     f.ReductionBy(g);
     std::cout << "f -> (g) = " << f << '\n';
@@ -131,12 +131,12 @@ void test_Polynomial() {
     std::cout << "f -> (f) = " << f << '\n';
     PrintLine();
     {  // HW 06, ex 02
-        Polynomial<ReLexComp> poly_g({
+        bg::Polynomial<bg::ReLexComp> poly_g({
             {{0, 4, 6}},
             {{1, 4, 1}, {2}},
             {{2, 2, 0}}
         });
-        Polynomial<ReLexComp> poly_f({
+        bg::Polynomial<bg::ReLexComp> poly_f({
             {{0, 4, 1}},
             {{1, 1, 2}, {-1}},
             {{1, 2, 0}}
@@ -152,19 +152,19 @@ void test_Polynomial() {
 
 void test_PolynomialOrder() {
     std::cout << "Test PolynomialOrder:\n";
-    PolynomialOrder<LexComp> comparator;
+    bg::PolynomialOrder<bg::LexComp> comparator;
     std::cout << "LexComp\n";
-    Polynomial<ReLexComp> f({
+    bg::Polynomial<bg::ReLexComp> f({
         {{1, 1, 1}},
         {{1, 1, 0}},
         {{0, 1, 1}}
     });
-    Polynomial<ReLexComp> g({
+    bg::Polynomial<bg::ReLexComp> g({
         {{1, 1, 1}},
         {{1, 1, 0}},
         {{0, 2, 1}}
     });
-    Polynomial<ReLexComp> k({
+    bg::Polynomial<bg::ReLexComp> k({
         {{2, 1, 1}},
         {{1, 1, 0}},
     });
@@ -186,7 +186,7 @@ void test_PolynomialOrder() {
     std::cout << "k < k is " << TrueFalse(comparator(k, k)) << '\n';
     PrintLine();
 
-    std::set<Polynomial<ReLexComp>, PolynomialOrder<LexComp>> polynoms({f, g, k});
+    std::set<bg::Polynomial<bg::ReLexComp>, bg::PolynomialOrder<bg::LexComp>> polynoms({f, g, k});
     std::cout << "set:\n";
     for (const auto& polynom : polynoms) {
         std::cout << polynom << '\n';
@@ -196,57 +196,57 @@ void test_PolynomialOrder() {
 
 void test_PolynomialSet() {
     std::cout << "Test PolynomialSet:\n";
-    Polynomial<ReLexComp> f1({  // HW 06, ex 03
+    bg::Polynomial<bg::ReLexComp> f1({  // HW 06, ex 03
         {{1, 1, 0}, 2},
         {{1, 0, 1}, 4},
         {{0, 1, 2}, 1}
     });
-    Polynomial<ReLexComp> f2({
+    bg::Polynomial<bg::ReLexComp> f2({
         {{1, 0, 2}, 4},
         {{0, 1, 3}, 1},
         {{0, 0, 0}, 4}
     });
-    Polynomial<ReLexComp> f3({
+    bg::Polynomial<bg::ReLexComp> f3({
         {{0, 2, 3}, 1},
         {{0, 1, 0}, 4},
         {{0, 0, 1}, 8}
     });
-    PolynomialSet<ReLexComp> F({f1, f2, f3});
+    bg::PolynomialSet<bg::ReLexComp> F({f1, f2, f3});
     std::cout << "System F = {\n" << F << "\n}\n";
-    std::cout << "Statement that F is Groebner Basis is " << TrueFalse(IsGroebnerBasis(F)) << '\n';
+    std::cout << "Statement that F is Groebner Basis is " << TrueFalse(bg::IsGroebnerBasis(F)) << '\n';
 
     PrintLine();
-    Polynomial<ReLexComp> i1({  // HW 07, ex 01
+    bg::Polynomial<bg::ReLexComp> i1({  // HW 07, ex 01
         {{2, 1, 0}, 1},
         {{1, 0, 1}, -1}
     });
-    Polynomial<ReLexComp> i2({
+    bg::Polynomial<bg::ReLexComp> i2({
         {{0, 2, 0}, 1},
         {{0, 1, 1}, 2}
     });
-    PolynomialSet<ReLexComp> I({i1, i2});
+    bg::PolynomialSet<bg::ReLexComp> I({i1, i2});
     std::cout << "Ideal I = {\n" << I << "\n}\n";
     I.MakeGroebnerBasis();
     std::cout << "Groebner Basis of ideal I = {\n" << I << "\n}\n";
-    Polynomial<ReLexComp> polynom({
+    bg::Polynomial<bg::ReLexComp> polynom({
         {{2, 0, 4}, 5},
         {{1, 1, 3}, -1}
     });
     std::cout << "Statement that " << polynom << " belongs ideal I is " << TrueFalse(I.IsPolynomialInMe(polynom)) << '\n';
     PrintLine();
-    Polynomial<ReLexComp> polynom_i1({  // Test 01, Variant 01, ex 04
+    bg::Polynomial<bg::ReLexComp> polynom_i1({  // Test 01, Variant 01, ex 04
         {{1, 0, 1}, 2},
         {{0, 1, 0}, -1}
     });
-    Polynomial<ReLexComp> polynom_i2({
+    bg::Polynomial<bg::ReLexComp> polynom_i2({
         {{2, 0, 0}, 1},
         {{0, 0, 1}, 2}
     });
-    PolynomialSet<ReLexComp> ideal_I({polynom_i1, polynom_i2});
+    bg::PolynomialSet<bg::ReLexComp> ideal_I({polynom_i1, polynom_i2});
     std::cout << "Ideal I = {\n" << ideal_I << "\n}\n";
     ideal_I.MakeGroebnerBasis();
     std::cout << "Groebner Basis of ideal I = {\n" << ideal_I << "\n}\n";
-    Polynomial<ReLexComp> polynom_f({
+    bg::Polynomial<bg::ReLexComp> polynom_f({
         {{1, 0, 4}, 16},
         {{0, 3, 0}, 1}
     });
