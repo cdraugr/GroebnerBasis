@@ -1,6 +1,6 @@
 #include "Monomial.h"
 
-namespace bg {
+namespace gb {
     class DegComp {
     public:
         bool operator()(const Monomial&, const Monomial&) const noexcept;

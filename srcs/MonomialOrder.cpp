@@ -1,7 +1,7 @@
 #include <algorithm>
 #include "../includes/MonomialOrder.h"
 
-namespace bg {
+namespace gb {
     bool DegComp::operator()(const Monomial& left, const Monomial& right) const noexcept {
         return left == right ? false : deg(left) < deg(right);
     }
@@ -16,8 +16,8 @@ namespace bg {
         }
 
         i32 maximum = std::max(
-            (*left.degrees().crbegin()).first,
-            (*right.degrees().crbegin()).first
+            (left.degrees().crbegin())->first,
+            (right.degrees().crbegin())->first
         );
         for (i32 i = 0; i <= maximum; ++i) {
             if (left.GetDegree(i) != right.GetDegree(i)) {

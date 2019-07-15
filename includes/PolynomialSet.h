@@ -2,7 +2,7 @@
 #include <utility>
 #include "PolynomialOrder.h"
 
-namespace bg {
+namespace gb {
     template <typename Comp>
     class PolynomialSet {
     public:
@@ -14,9 +14,9 @@ namespace bg {
 
         const container& PolSet() const noexcept;
 
-        bool OneReductionByMe(Polynomial<Comp>&) const noexcept;  // changing given Polynomial
-        bool ReductionToResByMe(Polynomial<Comp>&) const noexcept;  // changing given Polynomial
-        // return values same as Polynomial<Comp>::ReductionBy()
+        bool OneReductionByMe(Polynomial<Comp>&) const noexcept;  // Сhanging given Polynomial.
+        bool ReductionToResByMe(Polynomial<Comp>&) const noexcept;  // Changing given Polynomial.
+        // Return true if reduction was, else false.
 
         PolynomialSet<Comp>& MakeGroebnerBasis() noexcept;
 
@@ -26,7 +26,7 @@ namespace bg {
         friend bool IsGroebnerBasis(const PolynomialSet<OtherComp>&) noexcept;
 
         template<typename OtherComp>
-        friend std::ostream& operator<<(std::ostream& out, const PolynomialSet<OtherComp>&) noexcept;
+        friend std::ostream& operator<<(std::ostream&, const PolynomialSet<OtherComp>&) noexcept;
 
     private:
         container polynoms_{};
@@ -60,7 +60,7 @@ namespace bg {
     bool PolynomialSet<Comp>::OneReductionByMe(Polynomial<Comp>& polynom) const noexcept {
         bool was_changed = false;
         for (const auto& redu_poly : PolSet()) {
-            while (polynom.ReductionBy(redu_poly)) {  // polynom is changing here
+            while (polynom.ReductionBy(redu_poly)) {  // Polynom is changing here.
                 was_changed = true;
             }
         }
@@ -70,7 +70,7 @@ namespace bg {
     template <typename Comp>
     bool PolynomialSet<Comp>::ReductionToResByMe(Polynomial<Comp>& polynom) const noexcept {
         bool was_changed = false;
-        while (OneReductionByMe(polynom)) {  // polynom is changing here
+        while (OneReductionByMe(polynom)) {  // Polynom is changing here.
             was_changed = true;
         }
         return was_changed;

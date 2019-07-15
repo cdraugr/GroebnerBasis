@@ -1,6 +1,6 @@
 #include "Polynomial.h"
 
-namespace bg {
+namespace gb {
     template <typename Comp>
     class PolynomialOrder {
     public:
@@ -15,11 +15,7 @@ namespace bg {
         const Polynomial<OtherComp>& right
     ) const noexcept {
         Comp comparator;
-        i32 maximum = std::min(
-            left.MonomialSet().size(),
-            right.MonomialSet().size()
-        );
-
+        i32 maximum = std::min(left.MonomialSet().size(), right.MonomialSet().size());
         for (i32 i = 1; i <= maximum; ++i) {
             if (comparator(left.LeadMonom(i), right.LeadMonom(i)) ||
                 comparator(right.LeadMonom(i), left.LeadMonom(i))) {            

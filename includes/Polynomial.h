@@ -5,7 +5,7 @@
 #include <utility>
 #include "MonomialOrder.h"
 
-namespace bg {
+namespace gb {
     template <typename Comp>
     class Polynomial {
     public:
@@ -16,9 +16,9 @@ namespace bg {
         Polynomial(const container&);
 
         const container& MonomialSet() const noexcept;
-        const Monomial& LeadMonom(i32 index = 1) const;  // numeration starts from 1
+        const Monomial& LeadMonom(i32 index = 1) const;  // Numeration starts from 1.
 
-        bool ReductionBy(const Polynomial&) noexcept;  // True if reduction was, else false 
+        bool ReductionBy(const Polynomial&) noexcept;  // Return true if reduction was, else false. 
 
         Polynomial operator-() const noexcept;
         Polynomial operator+() const noexcept;
@@ -270,10 +270,10 @@ namespace bg {
     template<typename Comp>
     Polynomial<Comp> SPolynomial(const Polynomial<Comp>& left, const Polynomial<Comp>& right) noexcept {
         if (left.MonomialSet().empty()) {
-            return right.MonomialSet().empty() ? {} : -right;
+            return right.MonomialSet().empty() ? Polynomial<Comp>() : -right;
         } else if (right.MonomialSet().empty()) {
             return left;
-        }
+        }  // Incorrect math logic, but better than error.
 
         auto lead_lcm = lcm(left.LeadMonom(), right.LeadMonom());
         auto m1 = lead_lcm / left.LeadMonom();

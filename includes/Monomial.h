@@ -4,7 +4,7 @@
 #include <vector>
 #include "Rational.h"
 
-namespace bg {
+namespace gb {
     class Monomial {
     public:
         using container = std::map<i32, i32>;
@@ -18,21 +18,21 @@ namespace bg {
 
         type_name& coefficient() noexcept; 
         const type_name& coefficient() const noexcept;
-        const container& degrees() const noexcept;
+        const container& degrees() const noexcept;  // x_(i)^{j} = {i - 1, j} [numeration sarts from 0].
 
         i32 GetDegree(i32) const noexcept;
         friend i32 deg(const Monomial&) noexcept;
 
         bool IsDividedBy(const Monomial&) const noexcept;
 
-        Monomial operator-() const noexcept;
         Monomial operator+() const noexcept;
+        Monomial operator-() const noexcept;
 
         Monomial& operator*=(const Monomial&) noexcept;
         friend Monomial operator*(Monomial, const Monomial&) noexcept;
 
-        Monomial& operator/=(const Monomial&) noexcept;
-        friend Monomial operator/(Monomial, const Monomial&) noexcept;
+        Monomial& operator/=(const Monomial&);
+        friend Monomial operator/(Monomial, const Monomial&);
 
         friend bool operator==(const Monomial&, const Monomial&) noexcept;
         friend bool operator!=(const Monomial&, const Monomial&) noexcept;

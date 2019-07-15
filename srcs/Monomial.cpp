@@ -2,7 +2,7 @@
 #include <numeric>
 #include "../includes/Monomial.h"
 
-namespace bg {
+namespace gb {
     Monomial::Monomial() = default;
 
     Monomial::Monomial(i32 value)
@@ -72,16 +72,16 @@ namespace bg {
         return true;
     }
 
-    Monomial Monomial::operator-() const noexcept {
-        return Monomial(degrees(), -coefficient());
-    }
-
     Monomial Monomial::operator+() const noexcept {
         return Monomial(degrees(), coefficient());
     }
 
+    Monomial Monomial::operator-() const noexcept {
+        return Monomial(degrees(), -coefficient());
+    }
+
     Monomial& Monomial::operator*=(const Monomial& other) noexcept {
-        coefficient_ *= other.coefficient();
+        coefficient() *= other.coefficient();
         for (const auto& [num, degree] : other.degrees()) {
             data_[num] += degree;
         }
@@ -93,8 +93,8 @@ namespace bg {
         return left;
     }
 
-    Monomial& Monomial::operator/=(const Monomial& other) noexcept {
-        coefficient_ /= other.coefficient();
+    Monomial& Monomial::operator/=(const Monomial& other) {
+        coefficient() /= other.coefficient();  // May be error here.
         for (const auto& [num, degree] : other.degrees()) {
             data_[num] -= degree;
             if (data_[num] == 0) {
@@ -107,7 +107,7 @@ namespace bg {
         return *this;
     }
 
-    Monomial operator/(Monomial left, const Monomial& right) noexcept {
+    Monomial operator/(Monomial left, const Monomial& right) {
         left /= right;
         return left;
     }
@@ -132,7 +132,7 @@ namespace bg {
 
     Monomial lcm(const Monomial& left, const Monomial& right) noexcept {
         Monomial result = left;
-        result.coefficient_ = lcm(left.coefficient(), right.coefficient());
+        result.coefficient() = lcm(left.coefficient(), right.coefficient());
         for (const auto& [num, degree] : right.degrees()) {
             result.data_[num] = std::max(result.data_[num], degree);
         }

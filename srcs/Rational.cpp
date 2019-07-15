@@ -1,18 +1,19 @@
 #include <algorithm>
 #include <numeric>
+#include <stdexcept>
 #include "../includes/Rational.h"
 
-Rational::Rational(const i32& numerator, const i32& denominator) {
+Rational::Rational(i32 numerator, i32 denominator) {
     numerator_ = denominator < 0 ? -numerator : numerator;
     denominator_ = denominator < 0 ? -denominator : denominator;
     Reduce();
 }
 
-const i32& Rational::numerator() const noexcept {
+i32 Rational::numerator() const noexcept {
     return numerator_;
 }
 
-const i32& Rational::denominator() const noexcept {
+i32 Rational::denominator() const noexcept {
     return denominator_;
 }
 
@@ -49,7 +50,7 @@ Rational Rational::operator-() const noexcept {
 }
 
 Rational& Rational::operator+=(const Rational& other) noexcept {
-    numerator_ = numerator() * other.denominator() + denominator() * other.numerator();
+    numerator_ = numerator() * other.denominator() + other.numerator() * denominator();
     denominator_ *= other.denominator();
     Reduce();
     return *this;
@@ -82,14 +83,16 @@ Rational operator*(Rational left, const Rational& right) noexcept {
     return left;
 }
 
-Rational& Rational::operator/=(const Rational& other) noexcept {
-    assert(other != 0);
+Rational& Rational::operator/=(const Rational& other) {
+    if (other == 0) {
+        throw std::runtime_error("Divide by zero.");
+    }
     *this *= Rational(other.denominator(), other.numerator());
     Reduce();
     return *this;
 }
 
-Rational operator/(Rational left, const Rational& right) noexcept {
+Rational operator/(Rational left, const Rational& right) {
     left /= right;
     return left;
 }
@@ -118,7 +121,7 @@ std::ostream& operator<<(std::ostream& out, const Rational& rational) noexcept {
     return out << " / " << rational.denominator() << ')';
 }
 
-void Rational::Reduce() noexcept {
+void Rational::Reduce() noexcept {  // private
     auto gcd = std::gcd(numerator(), denominator());
     numerator_ /= gcd;
     denominator_ /= gcd;
