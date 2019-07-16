@@ -6,28 +6,36 @@
 #                 <vmkuznetsov@edu.hse.ru>            #:#+#:#+#:#    +#:#+#:#      #+#:#+#         #
 #                                                    +#+     +#+           +#+    +#+              #
 #    Created: 2019/07/08 07:33:53 by cdraugr-       #+#     #+#   +#       #+#   #+#               #
-#    Updated: 2019/07/15 10:34:43 by cdraugr-      ###     ###     #########    #########.ru       #
+#    Updated: 2019/07/16 21:22:47 by cdraugr-      ###     ###     #########    #########.ru       #
 #                                                                                                  #
 # ************************************************************************************************ #
 
-
 CC = g++
 
-NAME = GroebnerBasis.out
+NAME = GroebnerBasis.a
 
-CFLAGS = -std=c++17 -Wall -Wextra -Werror
+FLAGS = -std=c++17 -Wall -Wextra -Werror -c
 
-SOURCES = srcs/Rational.cpp\
-		srcs/Monomial.cpp\
-		srcs/MonomialOrder.cpp\
-		srcs/Tests.cpp\
-		main.cpp
+SOURCES = ./srcs/Rational.cpp\
+		./srcs/Monomial.cpp\
+		./srcs/MonomialOrder.cpp\
 
-COMP = $(CC) $(SOURCES) $(CFLAGS) -o
+OBJECTS = ./Rational.o\
+		./Monomial.o\
+		./MonomialOrder.o
 
-all:
-	@$(COMP) $(NAME)
+all: $(NAME)
+
+$(NAME):
+	@$(CC) $(FLAGS) $(SOURCES)
+	@ar rc $(NAME) $(OBJECTS)
+	@ranlib $(NAME)
+	@make clean
 
 clean:
-	@rm -R $(NAME)
+	@/bin/rm -f $(OBJECTS)
 
+fclean: clean
+	@/bin/rm -f $(NAME)
+
+re: fclean all

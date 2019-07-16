@@ -1,5 +1,4 @@
 #include <list>
-#include <utility>
 #include "PolynomialOrder.h"
 
 namespace gb {

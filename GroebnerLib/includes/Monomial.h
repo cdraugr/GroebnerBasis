@@ -1,5 +1,3 @@
-#include <cstdint>
-#include <iostream>
 #include <map>
 #include <vector>
 #include "Rational.h"
