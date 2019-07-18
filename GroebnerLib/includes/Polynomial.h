@@ -16,9 +16,9 @@ namespace gb {
         Polynomial(const container&);
 
         const container& MonomialSet() const noexcept;
-        const Monomial& LeadMonom(i32 index = 1) const;  // Numeration starts from 1.
+        const Monomial& LeadMonom(i32 = 1) const;  // Numeration starts from 1.
 
-        bool ReductionBy(const Polynomial&) noexcept;  // Return true if reduction was, else false. 
+        bool ReductionBy(const Polynomial&) noexcept;  // Returns true if reduction was, else false. 
 
         Polynomial operator-() const noexcept;
         Polynomial operator+() const noexcept;
@@ -112,8 +112,8 @@ namespace gb {
 
     template <typename Comp>
     const Monomial& Polynomial<Comp>::LeadMonom(i32 index) const {
+        assert(1 <= index);  // Firstly check negative numbers.
         assert(static_cast<size_t>(index) <= MonomialSet().size());
-        assert(1 <= index);
 
         auto it = MonomialSet().begin();
         std::advance(it, index - 1);
@@ -278,7 +278,7 @@ namespace gb {
         auto lead_lcm = lcm(left.LeadMonom(), right.LeadMonom());
         auto m1 = lead_lcm / left.LeadMonom();
         auto m2 = lead_lcm / right.LeadMonom();
-        return left * Polynomial<Comp>(m1) - right * Polynomial<Comp>(m2);
+        return left * m1 - right * m2;
     }
 
     template <typename Comp>

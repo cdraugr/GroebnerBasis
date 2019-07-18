@@ -16,7 +16,7 @@ namespace gb {
 
         type_name& coefficient() noexcept; 
         const type_name& coefficient() const noexcept;
-        const container& degrees() const noexcept;  // x_(i)^{j} = {i - 1, j} [numeration sarts from 0].
+        const container& degrees() const noexcept;  // x_(i)^{j} = {i - 1, j} [numeration starts from 0].
 
         i32 GetDegree(i32) const noexcept;
         friend i32 deg(const Monomial&) noexcept;

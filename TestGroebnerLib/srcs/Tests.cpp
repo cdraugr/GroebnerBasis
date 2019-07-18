@@ -41,8 +41,8 @@ void test_Monomials() {
     std::cout << "3 * m5 == m6 * 6\tis " << TrueFalse(3 * monom5 == monom6 * 6) << '\n';
     PrintLine();
 
-    std::cout << "(-1) * " << monom5 << " = " << -monom5 << '\n';
     std::cout << "(1) * " << monom6 << " = " << +monom6 << '\n';
+    std::cout << "(-1) * " << monom5 << " = " << -monom5 << '\n';
 
     monom5.coefficient() += 10;
     std::cout << monom5 << '\n';

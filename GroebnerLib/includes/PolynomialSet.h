@@ -15,8 +15,9 @@ namespace gb {
 
         bool OneReductionByMe(Polynomial<Comp>&) const noexcept;  // Сhanging given Polynomial.
         bool ReductionToResByMe(Polynomial<Comp>&) const noexcept;  // Changing given Polynomial.
-        // Return true if reduction was, else false.
+        // Returns true if reduction was, else false.
 
+        void AddPolynomial(const Polynomial<Comp>&) noexcept;
         PolynomialSet<Comp>& MakeGroebnerBasis() noexcept;
 
         bool IsPolynomialInMe(const Polynomial<Comp>&) const noexcept;
@@ -73,6 +74,11 @@ namespace gb {
             was_changed = true;
         }
         return was_changed;
+    }
+
+    template <typename Comp>
+    void PolynomialSet<Comp>::AddPolynomial(const Polynomial<Comp>& poly) noexcept {
+        polynoms_.insert(poly);
     }
 
     template <typename Comp>
