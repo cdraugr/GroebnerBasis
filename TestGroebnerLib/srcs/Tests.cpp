@@ -13,6 +13,38 @@ std::string TrueFalse(bool value) {
     return value ? "true" : "false";
 }
 
+void test_Rational() {
+    std::cout << "Test Rational:\n";
+    Rational a(4, 5);
+    Rational b(15, 6);
+    std::cout << "a = " << a << '\n';
+    std::cout << "b = " << b << '\n';
+    std::cout << "a < b is " << TrueFalse(a < b) << '\n';
+    std::cout << "a > b is " << TrueFalse(a > b) << '\n';
+    std::cout << "a <= b is " << TrueFalse(a <= b) << '\n';
+    std::cout << "a >= b is " << TrueFalse(a >= b) << '\n';
+    PrintLine();
+    std::set<Rational> set_rat({b, 2 * a, 3 * b, b / 15, -b, +a, a * b, a / b, b / a, -b + a, -a - b, lcm(a, b), (a, b)});
+    if (a && !b == false) {
+        for (auto it = set_rat.begin(); it != set_rat.end(); ++it) {
+            if (it != set_rat.begin()) {
+                std::cout << ", ";
+            }
+            std::cout << *it;
+        }
+        std::cout << '\n';
+    }
+    PrintLine();
+
+    Rational zero;
+    try {
+        std::cout << (a / zero) << '\n';
+    } catch (const std::runtime_error& exception) {
+        std::cout << exception.what() << '\n';
+    }
+    PrintLine();
+}
+
 void test_Monomials() {
     std::cout << "Test Monomials:\n";
     gb::Monomial monom1({1, 4, 0, 0, 0, 0, 1, 0, 0, 12}, 15);

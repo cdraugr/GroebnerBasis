@@ -41,6 +41,14 @@ bool operator!=(const Rational& left, const Rational& right) noexcept {
     return !(left == right);
 }
 
+Rational::operator bool() const noexcept {
+    return numerator() != 0;
+}
+
+bool Rational::operator!() const noexcept {
+    return !(static_cast<bool>(*this));
+}
+
 Rational Rational::operator+() const noexcept {
     return Rational(numerator(), denominator());
 }
@@ -85,7 +93,7 @@ Rational operator*(Rational left, const Rational& right) noexcept {
 
 Rational& Rational::operator/=(const Rational& other) {
     if (other == 0) {
-        throw std::runtime_error("Divide by zero.");
+        throw std::runtime_error("Division by zero.");
     }
     *this *= Rational(other.denominator(), other.numerator());
     Reduce();
