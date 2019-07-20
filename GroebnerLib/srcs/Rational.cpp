@@ -117,6 +117,20 @@ Rational lcm(const Rational& left, const Rational& right) noexcept {
         left * right;
 }
 
+Rational pow(const Rational& number, i32 power) noexcept {
+    if (power < 0) {
+        return pow(1 / number, -power);
+    } else if (power == 0) {
+        return 1;
+    }
+    if (power % 2 != 0) {
+        return number * pow(number, power - 1);
+    } else {
+        auto tmp = pow(number, power / 2);
+        return tmp * tmp;
+    }
+}
+
 std::ostream& operator<<(std::ostream& out, const Rational& rational) noexcept {
     if (rational.denominator() == 1) {
         return out << rational.numerator();

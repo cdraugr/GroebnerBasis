@@ -3,7 +3,13 @@ CC = g++
 NAME = GroebnerTest.out
 
 SOURCES = ./srcs/main.cpp\
-		./srcs/Tests.cpp
+		./srcs/help_functions.cpp\
+		./srcs/test_Rational.cpp\
+		./srcs/test_Monomial.cpp\
+		./srcs/test_MonomialOrder.cpp\
+		./srcs/test_Polynomial.cpp\
+		./srcs/test_PolynomialOrder.cpp\
+		./srcs/test_PolynomialSet.cpp
 
 PATH_LIB = ../GroebnerLib/
 SOURCES_LIB = ../GroebnerLib/GroebnerBasis.a

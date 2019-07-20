@@ -39,6 +39,8 @@ public:
     friend Rational operator,(const Rational&, const Rational&) noexcept;  // gcd
     friend Rational lcm(const Rational&, const Rational&) noexcept;
 
+    friend Rational pow(const Rational&, i32) noexcept;
+
     friend std::ostream& operator<<(std::ostream&, const Rational&) noexcept;
 
 private:

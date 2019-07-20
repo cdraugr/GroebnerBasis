@@ -33,10 +33,6 @@ namespace gb {
         }
     }
 
-    Monomial::type_name& Monomial::coefficient() noexcept {
-        return coefficient_;
-    }
-
     const Monomial::type_name& Monomial::coefficient() const noexcept {
         return coefficient_;
     }
@@ -81,7 +77,11 @@ namespace gb {
     }
 
     Monomial& Monomial::operator*=(const Monomial& other) noexcept {
-        coefficient() *= other.coefficient();
+        coefficient_ *= other.coefficient();
+        if (coefficient() == 0) {
+            data_.clear();
+            return *this;
+        }
         for (const auto& [num, degree] : other.degrees()) {
             data_[num] += degree;
         }
@@ -94,7 +94,7 @@ namespace gb {
     }
 
     Monomial& Monomial::operator/=(const Monomial& other) {
-        coefficient() /= other.coefficient();  // May be error here.
+        coefficient_ /= other.coefficient();  // May be error here.
         for (const auto& [num, degree] : other.degrees()) {
             data_[num] -= degree;
             if (data_[num] == 0) {
@@ -132,7 +132,7 @@ namespace gb {
 
     Monomial lcm(const Monomial& left, const Monomial& right) noexcept {
         Monomial result = left;
-        result.coefficient() = lcm(left.coefficient(), right.coefficient());
+        result.coefficient_ = lcm(left.coefficient(), right.coefficient());
         for (const auto& [num, degree] : right.degrees()) {
             result.data_[num] = std::max(result.data_[num], degree);
         }

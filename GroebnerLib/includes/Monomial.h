@@ -14,7 +14,6 @@ namespace gb {
         Monomial(const std::vector<i32>&, const type_name& = 1);
         Monomial(const container&, const type_name& = 1);
 
-        type_name& coefficient() noexcept; 
         const type_name& coefficient() const noexcept;
         const container& degrees() const noexcept;  // x_(i)^{j} = {i - 1, j} [numeration starts from 0].
 

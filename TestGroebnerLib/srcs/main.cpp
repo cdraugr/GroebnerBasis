@@ -2,7 +2,7 @@
 
 int main() {
     test_Rational();
-    test_Monomials();
+    test_Monomial();
     test_MonomialOrder();
     test_Polynomial();
     test_PolynomialOrder();
