@@ -1,14 +1,13 @@
-#include <cstdint>
-#include <iostream>
-
-using i32 = int32_t;
+#include "Lib.h"
 
 class Rational {
 public:
-    Rational(i32 = 0, i32 = 1);
+    Rational(const i64& = 0, const i64& = 1);
 
-    i32 numerator() const noexcept;
-    i32 denominator() const noexcept;
+    const i64& numerator() const noexcept;
+    const i64& denominator() const noexcept;
+
+    bool IsInteger() const noexcept;
 
     friend bool operator<(const Rational&, const Rational&) noexcept;
     friend bool operator>(const Rational&, const Rational&) noexcept;
@@ -17,9 +16,6 @@ public:
 
     friend bool operator==(const Rational&, const Rational&) noexcept;
     friend bool operator!=(const Rational&, const Rational&) noexcept;
-
-    explicit operator bool() const noexcept;
-    bool operator!() const noexcept;
 
     Rational operator+() const noexcept;
     Rational operator-() const noexcept;
@@ -36,9 +32,6 @@ public:
     Rational& operator/=(const Rational&);
     friend Rational operator/(Rational, const Rational&);
 
-    friend Rational operator,(const Rational&, const Rational&) noexcept;  // gcd
-    friend Rational lcm(const Rational&, const Rational&) noexcept;
-
     friend Rational pow(const Rational&, i32) noexcept;
 
     friend std::ostream& operator<<(std::ostream&, const Rational&) noexcept;
@@ -46,6 +39,6 @@ public:
 private:
     void Reduce() noexcept;
 
-    i32 numerator_{};
-    i32 denominator_{};
+    i64 numerator_{};
+    i64 denominator_{};
 };

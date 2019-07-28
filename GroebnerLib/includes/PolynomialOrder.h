@@ -4,25 +4,25 @@ namespace gb {
     template <typename Comp>
     class PolynomialOrder {
     public:
-        template <typename OtherComp>
-        bool operator()(const Polynomial<OtherComp>&, const Polynomial<OtherComp>&) const noexcept;
+        template <typename T, typename OtherComp>
+        bool operator()(const Polynomial<T, OtherComp>&, const Polynomial<T, OtherComp>&) const noexcept;
     };
 
     template <typename Comp>
-    template <typename OtherComp>
+    template <typename T, typename OtherComp>
     bool PolynomialOrder<Comp>::operator()(
-        const Polynomial<OtherComp>& left,
-        const Polynomial<OtherComp>& right
+        const Polynomial<T, OtherComp>& left,
+        const Polynomial<T, OtherComp>& right
     ) const noexcept {
         Comp comparator;
-        i32 maximum = std::min(left.MonomialSet().size(), right.MonomialSet().size());
-        for (i32 i = 1; i <= maximum; ++i) {
-            if (comparator(left.LeadMonom(i), right.LeadMonom(i)) ||
-                comparator(right.LeadMonom(i), left.LeadMonom(i))) {            
-                return comparator(left.LeadMonom(i), right.LeadMonom(i));
+        i64 maximum = std::min(left.TermSet().size(), right.TermSet().size());
+        for (i64 i = 1; i <= maximum; ++i) {
+            if (comparator(left.LeadTerm(i), right.LeadTerm(i)) ||
+                comparator(right.LeadTerm(i), left.LeadTerm(i))) {            
+                return comparator(left.LeadTerm(i), right.LeadTerm(i));
             }
         }
 
-        return left.MonomialSet().size() < right.MonomialSet().size();
+        return left.TermSet().size() < right.TermSet().size();
     }
 }

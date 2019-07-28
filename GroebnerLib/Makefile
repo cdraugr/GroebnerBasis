@@ -6,7 +6,7 @@
 #                 <vmkuznetsov@edu.hse.ru>            #:#+#:#+#:#    +#:#+#:#      #+#:#+#         #
 #                                                    +#+     +#+           +#+    +#+              #
 #    Created: 2019/07/08 07:33:53 by cdraugr-       #+#     #+#   +#       #+#   #+#               #
-#    Updated: 2019/07/16 21:22:47 by cdraugr-      ###     ###     #########    #########.ru       #
+#    Updated: 2019/07/26 18:33:13 by cdraugr-      ###     ###     #########    #########.ru       #
 #                                                                                                  #
 # ************************************************************************************************ #
 
@@ -17,12 +17,12 @@ NAME = GroebnerBasis.a
 FLAGS = -std=c++17 -Wall -Wextra -Werror -c
 
 SOURCES = ./srcs/Rational.cpp\
-		./srcs/Monomial.cpp\
-		./srcs/MonomialOrder.cpp\
+			./srcs/Lib.cpp\
+			./srcs/Monomial.cpp
 
 OBJECTS = ./Rational.o\
-		./Monomial.o\
-		./MonomialOrder.o
+			./Lib.o\
+			./Monomial.o
 
 all: $(NAME)
 

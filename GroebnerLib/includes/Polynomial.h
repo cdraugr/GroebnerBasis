@@ -1,24 +1,23 @@
 #include <algorithm>
 #include <cassert>
-#include <iterator>
 #include <set>
 #include <utility>
-#include "MonomialOrder.h"
+#include "TermOrder.h"
 
 namespace gb {
-    template <typename Comp>
+    template <typename T, typename Comp = LexCoefComp>
     class Polynomial {
     public:
-        using container = std::set<Monomial, Comp>;
+        using container = std::set<Term<T>, ReComp<Comp>>;
 
         Polynomial();
-        Polynomial(const Monomial&);
+        Polynomial(Term<T>);
         Polynomial(const container&);
 
-        const container& MonomialSet() const noexcept;
-        const Monomial& LeadMonom(i32 = 1) const;  // Numeration starts from 1.
+        const container& TermSet() const noexcept;
+        const Term<T>& LeadTerm(i32 = 1) const;  // Numeration starts from 1.
 
-        bool ReductionBy(const Polynomial&) noexcept;  // Returns true if reduction was, else false. 
+        bool TryReduceOnceBy(const Polynomial&) noexcept;  // Returns true if there was a reduction otherwise returns false.
 
         Polynomial operator-() const noexcept;
         Polynomial operator+() const noexcept;
@@ -27,301 +26,317 @@ namespace gb {
         Polynomial& operator-=(const Polynomial&) noexcept;
         Polynomial& operator*=(const Polynomial&) noexcept;
 
-        Polynomial& operator+=(const Monomial&) noexcept;
-        Polynomial& operator-=(const Monomial&) noexcept;
-        Polynomial& operator*=(const Monomial&) noexcept;
+        Polynomial& operator+=(const Term<T>&) noexcept;
+        Polynomial& operator-=(const Term<T>&) noexcept;
+        Polynomial& operator*=(const Term<T>&) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> operator+(Polynomial<OtherComp>, const Polynomial<OtherComp>&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> operator+(Polynomial<OtherT, OtherComp>, const Polynomial<OtherT, OtherComp>&) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> operator-(Polynomial<OtherComp>, const Polynomial<OtherComp>&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> operator-(Polynomial<OtherT, OtherComp>, const Polynomial<OtherT, OtherComp>&) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> operator*(Polynomial<OtherComp>, const Polynomial<OtherComp>&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> operator*(Polynomial<OtherT, OtherComp>, const Polynomial<OtherT, OtherComp>&) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> operator+(const Monomial&, Polynomial<OtherComp>) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> operator+(const Term<OtherT>&, Polynomial<OtherT, OtherComp>) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> operator-(const Monomial&, Polynomial<OtherComp>) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> operator-(const Term<OtherT>&, Polynomial<OtherT, OtherComp>) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> operator*(const Monomial&, Polynomial<OtherComp>) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> operator*(const Term<OtherT>&, Polynomial<OtherT, OtherComp>) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> operator+(Polynomial<OtherComp>, const Monomial&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> operator+(Polynomial<OtherT, OtherComp>, const Term<OtherT>&) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> operator-(Polynomial<OtherComp>, const Monomial&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> operator-(Polynomial<OtherT, OtherComp>, const Term<OtherT>&) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> operator*(Polynomial<OtherComp>, const Monomial&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> operator*(Polynomial<OtherT, OtherComp>, const Term<OtherT>&) noexcept;
 
-        template<typename OtherComp>
-        friend Polynomial<OtherComp> SPolynomial(const Polynomial<OtherComp>&, const Polynomial<OtherComp>&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> SPolynomial(const Polynomial<OtherT, OtherComp>&, const Polynomial<OtherT, OtherComp>&) noexcept;
 
-        template<typename OtherComp>
-        friend bool operator==(const Polynomial<OtherComp>&, const Polynomial<OtherComp>&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend bool operator==(const Polynomial<OtherT, OtherComp>&, const Polynomial<OtherT, OtherComp>&) noexcept;
 
-        template<typename OtherComp>
-        friend bool operator!=(const Polynomial<OtherComp>&, const Polynomial<OtherComp>&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend bool operator!=(const Polynomial<OtherT, OtherComp>&, const Polynomial<OtherT, OtherComp>&) noexcept;
 
-        template<typename OtherComp>
-        friend bool operator==(const Polynomial<OtherComp>&, const Monomial&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend bool operator==(const Polynomial<OtherT, OtherComp>&, const Term<OtherT>&) noexcept;
 
-        template<typename OtherComp>
-        friend bool operator!=(const Polynomial<OtherComp>&, const Monomial&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend bool operator!=(const Polynomial<OtherT, OtherComp>&, const Term<OtherT>&) noexcept;
 
-        template<typename OtherComp>
-        friend bool operator==(const Monomial&, const Polynomial<OtherComp>&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend bool operator==(const Term<OtherT>&, const Polynomial<OtherT, OtherComp>&) noexcept;
 
-        template<typename OtherComp>
-        friend bool operator!=(const Monomial&, const Polynomial<OtherComp>&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend bool operator!=(const Term<OtherT>&, const Polynomial<OtherT, OtherComp>&) noexcept;
 
-        template<typename OtherComp>
-        friend std::ostream& operator<<(std::ostream&, const Polynomial<OtherComp>&) noexcept;
+        template <typename OtherT, typename OtherComp>
+        friend Polynomial<OtherT, OtherComp> GiveSigma(const i64&, const i64&);
+
+        template <typename OtherT, typename OtherComp>
+        friend std::ostream& operator<<(std::ostream&, const Polynomial<OtherT, OtherComp>&) noexcept;
 
     private:
-        container monoms_{};
+        container terms_{};
     };
 
-    template <typename Comp>
-    Polynomial<Comp>::Polynomial() = default;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp>::Polynomial() = default;
 
-    template <typename Comp>
-    Polynomial<Comp>::Polynomial(const Monomial& monom) {
-        if (monom != 0) {
-            monoms_ = {monom};
+    template <typename T, typename Comp>
+    Polynomial<T, Comp>::Polynomial(Term<T> term) {
+        if (term != 0) {
+            terms_.insert(std::move(term));
         }
     }
 
-    template <typename Comp>
-    Polynomial<Comp>::Polynomial(const typename Polynomial<Comp>::container& polynom) {
-        for (const auto& monom : polynom) {
-            if (monom != 0) {
-                monoms_.insert(monom);
+    template <typename T, typename Comp>
+    Polynomial<T, Comp>::Polynomial(const typename Polynomial<T, Comp>::container& polynom) {
+        for (const auto& term : polynom) {
+            if (term != 0) {
+                terms_.insert(term);
             }
         }
     }
 
-    template <typename Comp>
-    const typename Polynomial<Comp>::container& Polynomial<Comp>::MonomialSet() const noexcept {
-        return monoms_;
+    template <typename T, typename Comp>
+    const typename Polynomial<T, Comp>::container& Polynomial<T, Comp>::TermSet() const noexcept {
+        return terms_;
     }
 
-    template <typename Comp>
-    const Monomial& Polynomial<Comp>::LeadMonom(i32 index) const {
-        assert(1 <= index);  // Firstly check negative numbers.
-        assert(static_cast<size_t>(index) <= MonomialSet().size());
+    template <typename T, typename Comp>
+    const Term<T>& Polynomial<T, Comp>::LeadTerm(i32 index) const {
+        assert(1 <= index);  // Firstly check negative and zero.
+        assert(static_cast<size_t>(index) <= TermSet().size());
 
-        auto it = MonomialSet().begin();
+        auto it = TermSet().begin();
         std::advance(it, index - 1);
         return *it;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> Polynomial<Comp>::operator-() const noexcept {
-        Polynomial<Comp>::container monoms;
-        for (auto& monom : MonomialSet()) {
-            monoms.insert(-monom);
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> Polynomial<T, Comp>::operator-() const noexcept {
+        Polynomial<T, Comp>::container terms;
+        for (auto& term : TermSet()) {
+            terms.insert(-term);
         }
-        return Polynomial(monoms);
+        return Polynomial(terms);
     }
 
-    template <typename Comp>
-    Polynomial<Comp> Polynomial<Comp>::operator+() const noexcept {
-        return Polynomial<Comp>(*this);;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> Polynomial<T, Comp>::operator+() const noexcept {
+        return *this;
     }
 
-    template <typename Comp>
-    bool Polynomial<Comp>::ReductionBy(const Polynomial<Comp>& other) noexcept {
-        if (MonomialSet().empty() || other.MonomialSet().empty()) {
+    template <typename T, typename Comp>
+    bool Polynomial<T, Comp>::TryReduceOnceBy(const Polynomial<T, Comp>& other) noexcept {
+        if (*this == Term<T>(0) || other == Term<T>(0)) {
             return false;
         }
 
-        for (const auto& monom : monoms_) {
-            if (monom.IsDividedBy(other.LeadMonom())) {
-                *this -= Polynomial<Comp>(monom / other.LeadMonom()) * other;
+        for (const auto& term : TermSet()) {
+            if (term.IsDivisibleBy(other.LeadTerm())) {
+                *this -= Polynomial<T, Comp>(term / other.LeadTerm()) * other;
                 return true;
             }
         }
         return false;
     }
 
-    template <typename Comp>
-    Polynomial<Comp>& Polynomial<Comp>::operator+=(const Polynomial<Comp>& polynom) noexcept {
-        for (const auto& monom : polynom.MonomialSet()) {
-            *this += monom;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp>& Polynomial<T, Comp>::operator+=(const Polynomial<T, Comp>& polynom) noexcept {
+        for (const auto& term : polynom.TermSet()) {
+            *this += term;
         }
 
         return *this;
     }
 
-    template <typename Comp>
-    Polynomial<Comp>& Polynomial<Comp>::operator-=(const Polynomial<Comp>& polynom) noexcept {
+    template <typename T, typename Comp>
+    Polynomial<T, Comp>& Polynomial<T, Comp>::operator-=(const Polynomial<T, Comp>& polynom) noexcept {
         *this += -polynom;
         return *this;
     }
 
-    template <typename Comp>
-    Polynomial<Comp>& Polynomial<Comp>::operator*=(const Polynomial<Comp>& polynom) noexcept {
-        Polynomial<Comp> answer;
-        for (const auto& monom : MonomialSet()) {
-            answer += polynom * monom;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp>& Polynomial<T, Comp>::operator*=(const Polynomial<T, Comp>& polynom) noexcept {
+        Polynomial<T, Comp> answer;
+        for (const auto& term : TermSet()) {
+            answer += polynom * term;
         }
 
-        std::swap(*this, answer);
+        *this = std::move(answer);
         return *this;
     }
 
-    template <typename Comp>
-    Polynomial<Comp>& Polynomial<Comp>::operator+=(const Monomial& monom) noexcept {
-        bool was_changed = false;
-        for (const auto& this_monom : MonomialSet()) {
-            if (this_monom.degrees() == monom.degrees()) {
-                auto count = this_monom.coefficient() + monom.coefficient();
-                monoms_.erase(this_monom);
+    template <typename T, typename Comp>
+    Polynomial<T, Comp>& Polynomial<T, Comp>::operator+=(const Term<T>& term) noexcept {
+        for (const auto& this_term : TermSet()) {
+            if (this_term.monom() == term.monom()) {
+                auto count = this_term.coefficient() + term.coefficient();
+                terms_.erase(this_term);
                 if (count != 0) {
-                    monoms_.insert(Monomial(monom.degrees(), count));
+                    terms_.insert(Term<T>(term.monom(), count));
                 }
-                was_changed = true;
-                break;
+                return *this;
             }
         }
-        if (was_changed == false) {
-            monoms_.insert(monom);
-        }
+        terms_.insert(term);
         return *this;
     }
 
-    template <typename Comp>
-    Polynomial<Comp>& Polynomial<Comp>::operator-=(const Monomial& monom) noexcept {
-        *this += -monom;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp>& Polynomial<T, Comp>::operator-=(const Term<T>& term) noexcept {
+        *this += -term;
         return *this;
     }
 
-    template <typename Comp>
-    Polynomial<Comp>& Polynomial<Comp>::operator*=(const Monomial& monom) noexcept {
-        Polynomial<Comp> answer;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp>& Polynomial<T, Comp>::operator*=(const Term<T>& term) noexcept {
+        Polynomial<T, Comp> answer;
 
-        for (const auto& other_monom : MonomialSet()) {
-            answer += Polynomial<Comp>(monom * other_monom);
+        for (const auto& other_term : TermSet()) {
+            answer += Polynomial<T, Comp>(term * other_term);
         }
 
-        std::swap(*this, answer);
+        *this = std::move(answer);
         return *this;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> operator+(const Monomial& monom, Polynomial<Comp> polynom) noexcept {
-        polynom += monom;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> operator+(const Term<T>& term, Polynomial<T, Comp> polynom) noexcept {
+        polynom += term;
         return polynom;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> operator-(const Monomial& monom, Polynomial<Comp> polynom) noexcept {
-        polynom -= monom;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> operator-(const Term<T>& term, Polynomial<T, Comp> polynom) noexcept {
+        polynom -= term;
         return polynom;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> operator*(const Monomial& monom, Polynomial<Comp> polynom) noexcept {
-        polynom *= monom;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> operator*(const Term<T>& term, Polynomial<T, Comp> polynom) noexcept {
+        polynom *= term;
         return polynom;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> operator+(Polynomial<Comp> polynom, const Monomial& monom) noexcept {
-        polynom += monom;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> operator+(Polynomial<T, Comp> polynom, const Term<T>& term) noexcept {
+        polynom += term;
         return polynom;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> operator-(Polynomial<Comp> polynom, const Monomial& monom) noexcept {
-        polynom -= monom;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> operator-(Polynomial<T, Comp> polynom, const Term<T>& term) noexcept {
+        polynom -= term;
         return polynom;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> operator*(Polynomial<Comp> polynom, const Monomial& monom) noexcept {
-        polynom *= monom;
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> operator*(Polynomial<T, Comp> polynom, const Term<T>& term) noexcept {
+        polynom *= term;
         return polynom;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> operator+(Polynomial<Comp> left, const Polynomial<Comp>& right) noexcept {
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> operator+(Polynomial<T, Comp> left, const Polynomial<T, Comp>& right) noexcept {
         left += right;
         return left;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> operator-(Polynomial<Comp> left, const Polynomial<Comp>& right) noexcept {
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> operator-(Polynomial<T, Comp> left, const Polynomial<T, Comp>& right) noexcept {
         left -= right;
         return left;
     }
 
-    template <typename Comp>
-    Polynomial<Comp> operator*(Polynomial<Comp> left, const Polynomial<Comp>& right) noexcept {
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> operator*(Polynomial<T, Comp> left, const Polynomial<T, Comp>& right) noexcept {
         left *= right;
         return left;
     }
 
-    template<typename Comp>
-    Polynomial<Comp> SPolynomial(const Polynomial<Comp>& left, const Polynomial<Comp>& right) noexcept {
-        if (left.MonomialSet().empty()) {
-            return right.MonomialSet().empty() ? Polynomial<Comp>() : -right;
-        } else if (right.MonomialSet().empty()) {
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> SPolynomial(const Polynomial<T, Comp>& left, const Polynomial<T, Comp>& right) noexcept {
+        if (left == Term<T>(0)) {
+            return right == Term<T>(0) ? Polynomial<T, Comp>() : -right;
+        } else if (right == Term<T>(0)) {
             return left;
         }  // Incorrect math logic, but better than error.
 
-        auto lead_lcm = lcm(left.LeadMonom(), right.LeadMonom());
-        auto m1 = lead_lcm / left.LeadMonom();
-        auto m2 = lead_lcm / right.LeadMonom();
+        auto lead_lcm = lcm(left.LeadTerm(), right.LeadTerm());
+        auto m1 = lead_lcm / left.LeadTerm();
+        auto m2 = lead_lcm / right.LeadTerm();
         return left * m1 - right * m2;
     }
 
-    template <typename Comp>
-    bool operator==(const Polynomial<Comp>& left, const Polynomial<Comp>& right) noexcept {
-        return left.MonomialSet() == right.MonomialSet();
+    template <typename T, typename Comp>
+    bool operator==(const Polynomial<T, Comp>& left, const Polynomial<T, Comp>& right) noexcept {
+        return left.TermSet() == right.TermSet();
     }
 
-    template <typename Comp>
-    bool operator!=(const Polynomial<Comp>& left, const Polynomial<Comp>& right) noexcept {
+    template <typename T, typename Comp>
+    bool operator!=(const Polynomial<T, Comp>& left, const Polynomial<T, Comp>& right) noexcept {
         return !(left == right);
     }
 
-    template <typename Comp>
-    bool operator==(const Polynomial<Comp>& polynom, const Monomial& monom) noexcept {
-        return polynom == Polynomial<Comp>(monom);
+    template <typename T, typename Comp>
+    bool operator==(const Polynomial<T, Comp>& polynom, const Term<T>& term) noexcept {
+        return polynom == Polynomial<T, Comp>(term);
     }
 
-    template <typename Comp>
-    bool operator!=(const Polynomial<Comp>& polynom, const Monomial& monom) noexcept {
-        return !(polynom == monom);
+    template <typename T, typename Comp>
+    bool operator!=(const Polynomial<T, Comp>& polynom, const Term<T>& term) noexcept {
+        return !(polynom == term);
     }
 
-    template <typename Comp>
-    bool operator==(const Monomial& monom, const Polynomial<Comp>& polynom) noexcept {
-        return polynom == monom;
+    template <typename T, typename Comp>
+    bool operator==(const Term<T>& term, const Polynomial<T, Comp>& polynom) noexcept {
+        return polynom == term;
     }
 
-    template <typename Comp>
-    bool operator!=(const Monomial& monom, const Polynomial<Comp>& polynom) noexcept {
-        return !(polynom == monom);
+    template <typename T, typename Comp>
+    bool operator!=(const Term<T>& term, const Polynomial<T, Comp>& polynom) noexcept {
+        return !(polynom == term);
     }
 
-    template <typename Comp>
-    std::ostream& operator<<(std::ostream& out, const Polynomial<Comp>& polynom) noexcept {
-        if (polynom.MonomialSet().empty()) {
+
+    template <typename T, typename Comp>
+    Polynomial<T, Comp> GiveSigma(const i64& degree_max, const i64& variable_count) {
+        assert(degree_max >= 0);
+
+        Polynomial<T, Comp> answer;
+        auto all_combinations = makeCombi(degree_max, variable_count);
+        for (const auto& one_comination : all_combinations) {
+            std::map<i64, i64> buffer_map;
+            for (const auto& degree : one_comination) {
+                buffer_map[degree] = 1;
+            }
+            answer += Term<T>(Monomial(buffer_map), 1);
+        }
+        return answer;
+    }
+
+    template <typename T, typename Comp>
+    std::ostream& operator<<(std::ostream& out, const Polynomial<T, Comp>& polynom) noexcept {
+        if (polynom == Term<T>(0)) {
             return out << 0;
         }
 
-        for (const auto& monom : polynom.MonomialSet()) {
-            if (monom != polynom.LeadMonom() && monom.coefficient() > 0) {
+        for (const auto& term : polynom.TermSet()) {
+            if (term != polynom.LeadTerm() && term.coefficient() > 0) {
                 out << '+';
             }
-            out << monom;
+            out << term;
         }
         return out;
     }

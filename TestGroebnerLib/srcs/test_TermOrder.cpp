@@ -1,16 +1,16 @@
 #include "../includes/Tests.h"
 
 template <typename Comp>
-void test_comp(const std::vector<gb::Monomial>& monoms) {
+void test_comp(const std::vector<gb::Term<Rational>>& monoms) {
     Comp comparator;
     for (size_t i = 0; i != monoms.size(); ++i) {
         for (size_t j = 0; j != monoms.size(); ++j) {
-            std::cout << 'm' << i + 1 << " < m" << j + 1 << " is "
+            std::cout << 't' << i + 1 << " < t" << j + 1 << " is "
                     << TrueFalse(comparator(monoms[i], monoms[j])) << '\n';
         }
     }
 
-    std::set<gb::Monomial, Comp> mon_set(monoms.begin(), monoms.end());
+    std::set<gb::Term<Rational>, Comp> mon_set(monoms.begin(), monoms.end());
     std::cout << "\nset:\n";
     for (const auto& monom : mon_set) {
         std::cout << monom << '\n';
@@ -18,17 +18,16 @@ void test_comp(const std::vector<gb::Monomial>& monoms) {
     PrintLine();
 }
 
-void test_MonomialOrder() {
-    std::cout << "Test MonomialOrder:\n";
-    std::vector<gb::Monomial> monoms({
-        {std::vector<i32>(0)},
-        {std::vector<i32>({2, 3, 7, 3, 7})},
-        {std::vector<i32>({4, 1, 7, 10})},
-        {std::vector<i32>({2, 3, 7, 0, 11})}
+void test_TermOrder() {
+    std::cout << "Test TermOrder:\n";
+    std::vector<gb::Term<Rational>> monoms({
+        {0},
+        {gb::Monomial({2, 3, 7, 3, 7}), 1},
+        {gb::Monomial({4, 1, 7, 10}), 1},
+        {gb::Monomial({2, 3, 7, 0, 11}), 1}
     });
-
     for (size_t i = 0; i != monoms.size(); ++i) {
-        std::cout << 'm' << i + 1 << " = " << monoms[i] << '\n';
+        std::cout << "term" << i + 1 << " = " << monoms[i] << '\n';
     }
     PrintLine();
 

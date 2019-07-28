@@ -2,12 +2,15 @@
 
 void test_Polynomial() {
     std::cout << "Test Polynomial:\n";
-    gb::Polynomial<gb::ReLexComp> f({{{7, 0, 4}, 2}, {-5}});
-    gb::Polynomial<gb::ReLexComp> g({
-        {{2, 2, 0}},
-        {{3, 0, 4}, 3},
+    gb::Polynomial<Rational, gb::LexComp> f({
+        gb::Term<Rational>(gb::Monomial({7, 0, 4}), 2),
+        gb::Term<Rational>(-5),
     });
-    gb::Polynomial<gb::ReLexComp> k;
+    gb::Polynomial<Rational, gb::LexComp> g({
+        gb::Term<Rational>(gb::Monomial({2, 2, 0}), 1),
+        gb::Term<Rational>(gb::Monomial({3, 0, 4}), 3),
+    });
+    gb::Polynomial<Rational, gb::LexComp> k;
 
     std::cout << "f = " << f << '\n';
     std::cout << "g = " << g << '\n';
@@ -29,26 +32,26 @@ void test_Polynomial() {
     std::cout << "S(k, f) = " << gb::SPolynomial(k, f) << '\n';
     std::cout << "S(k, k) = " << gb::SPolynomial(k, k) << '\n';
     PrintLine();
-    f.ReductionBy(g);
+    f.TryReduceOnceBy(g);
     std::cout << "f -> (g) = " << f << '\n';
-    f.ReductionBy(f);
+    f.TryReduceOnceBy(f);
     std::cout << "f -> (f) = " << f << '\n';
     PrintLine();
     {  // HW 06, ex 02
-        gb::Polynomial<gb::ReLexComp> poly_g({
-            {{0, 4, 6}},
-            {{1, 4, 1}, {2}},
-            {{2, 2, 0}}
+        gb::Polynomial<Rational, gb::LexComp> poly_g({
+            gb::Term<Rational>(gb::Monomial({0, 4, 6}), 1),
+            gb::Term<Rational>(gb::Monomial({1, 4, 1}), 2),
+            gb::Term<Rational>(gb::Monomial({2, 2, 0}), 1)
         });
-        gb::Polynomial<gb::ReLexComp> poly_f({
-            {{0, 4, 1}},
-            {{1, 1, 2}, {-1}},
-            {{1, 2, 0}}
+        gb::Polynomial<Rational, gb::LexComp> poly_f({
+            gb::Term<Rational>(gb::Monomial({0, 4, 1}), 1),
+            gb::Term<Rational>(gb::Monomial({1, 1, 2}), -1),
+            gb::Term<Rational>(gb::Monomial({1, 2, 0}), 1),
         });
         std::cout << "f = " << poly_f << '\n';
         std::cout << "g = " << poly_g << "\n\n";
         std::cout << "Reductions g fo res by f:\n";
-        while (poly_g.ReductionBy(poly_f)) {
+        while (poly_g.TryReduceOnceBy(poly_f)) {
             std::cout << poly_g << '\n';
         }
     }

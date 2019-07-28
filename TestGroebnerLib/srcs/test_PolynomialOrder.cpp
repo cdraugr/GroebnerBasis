@@ -3,20 +3,20 @@
 void test_PolynomialOrder() {
     std::cout << "Test PolynomialOrder:\n";
     gb::PolynomialOrder<gb::LexComp> comparator;
-    std::cout << "LexComp\n";
-    gb::Polynomial<gb::ReLexComp> f({
-        {{1, 1, 1}},
-        {{1, 1, 0}},
-        {{0, 1, 1}}
+    std::cout << "ReLexComp\n";
+    gb::Polynomial<Rational, gb::LexComp> f({
+        gb::Term<Rational>(gb::Monomial({1, 1, 1}), 1),
+        gb::Term<Rational>(gb::Monomial({1, 1, 0}), 1),
+        gb::Term<Rational>(gb::Monomial({0, 1, 1}), 1)
     });
-    gb::Polynomial<gb::ReLexComp> g({
-        {{1, 1, 1}},
-        {{1, 1, 0}},
-        {{0, 2, 1}}
+    gb::Polynomial<Rational, gb::LexComp> g({
+        gb::Term<Rational>(gb::Monomial({1, 1, 1}), 1),
+        gb::Term<Rational>(gb::Monomial({1, 1, 0}), 1),
+        gb::Term<Rational>(gb::Monomial({0, 2, 1}), 1)
     });
-    gb::Polynomial<gb::ReLexComp> k({
-        {{2, 1, 1}},
-        {{1, 1, 0}},
+    gb::Polynomial<Rational, gb::LexComp> k({
+        gb::Term<Rational>(gb::Monomial({2, 1, 1}), 1),
+        gb::Term<Rational>(gb::Monomial({1, 1, 0}), 1)
     });
 
     std::cout << "f = " << f << '\n';
@@ -36,7 +36,7 @@ void test_PolynomialOrder() {
     std::cout << "k < k is " << TrueFalse(comparator(k, k)) << '\n';
     PrintLine();
 
-    std::set<gb::Polynomial<gb::ReLexComp>, gb::PolynomialOrder<gb::LexComp>> polynoms({f, g, k});
+    std::set<gb::Polynomial<Rational, gb::LexComp>, gb::PolynomialOrder<gb::LexComp>> polynoms({f, g, k});
     std::cout << "set:\n";
     for (const auto& polynom : polynoms) {
         std::cout << polynom << '\n';

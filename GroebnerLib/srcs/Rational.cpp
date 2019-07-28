@@ -3,18 +3,22 @@
 #include <stdexcept>
 #include "../includes/Rational.h"
 
-Rational::Rational(i32 numerator, i32 denominator) {
+Rational::Rational(const i64& numerator, const i64& denominator) {
     numerator_ = denominator < 0 ? -numerator : numerator;
     denominator_ = denominator < 0 ? -denominator : denominator;
     Reduce();
 }
 
-i32 Rational::numerator() const noexcept {
+const i64& Rational::numerator() const noexcept {
     return numerator_;
 }
 
-i32 Rational::denominator() const noexcept {
+const i64& Rational::denominator() const noexcept {
     return denominator_;
+}
+
+bool Rational::IsInteger() const noexcept {
+    return denominator() == 1;
 }
 
 bool operator<(const Rational& left, const Rational& right) noexcept {
@@ -34,19 +38,11 @@ bool operator>=(const Rational& left, const Rational& right) noexcept {
 }
 
 bool operator==(const Rational& left, const Rational& right) noexcept {
-    return left.numerator() == right.numerator() && left.denominator() == right.denominator();
+    return left <= right && left >= right;
 }
 
 bool operator!=(const Rational& left, const Rational& right) noexcept {
     return !(left == right);
-}
-
-Rational::operator bool() const noexcept {
-    return numerator() != 0;
-}
-
-bool Rational::operator!() const noexcept {
-    return !(static_cast<bool>(*this));
 }
 
 Rational Rational::operator+() const noexcept {
@@ -105,18 +101,6 @@ Rational operator/(Rational left, const Rational& right) {
     return left;
 }
 
-Rational operator,(const Rational& left, const Rational& right) noexcept {
-    return left.denominator() == 1 && right.denominator() == 1 ?
-        Rational(std::gcd(left.numerator(), right.numerator())) :
-        Rational(1);
-}
-
-Rational lcm(const Rational& left, const Rational& right) noexcept {
-    return left.denominator() == 1 && right.denominator() == 1 ?
-        Rational(std::lcm(left.numerator(), right.numerator())) :
-        left * right;
-}
-
 Rational pow(const Rational& number, i32 power) noexcept {
     if (power < 0) {
         return pow(1 / number, -power);
@@ -132,7 +116,7 @@ Rational pow(const Rational& number, i32 power) noexcept {
 }
 
 std::ostream& operator<<(std::ostream& out, const Rational& rational) noexcept {
-    if (rational.denominator() == 1) {
+    if (rational.IsInteger()) {
         return out << rational.numerator();
     }
     if (rational.numerator() < 0) {
