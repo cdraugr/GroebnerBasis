@@ -2,11 +2,11 @@
 #include "../includes/Modular.h"
 
 bool is_prime(const u64& number) {
-    if (number < 2 || number % 2 == 0) {
-        return false;
-    }
     if (number == 2) {
         return true;
+    }
+    if (number < 2 || number % 2 == 0) {
+        return false;
     }
     for(u64 i = 3, max = std::sqrt(number); i <= max; i += 2){
         if (number % i == 0) {
@@ -16,8 +16,8 @@ bool is_prime(const u64& number) {
     return true;
 }
 
-void makeCombiUtil(std::vector<std::vector<i64>>* ans, 
-    std::vector<i64>* tmp, const i64& n, const i64& left, const i64& k) {
+static void makeCombiUtil(std::vector<std::vector<i64>>* ans, std::vector<i64>* tmp,
+        const i64& n, const i64& left, const i64& k) {
     if (k == 0) {
         ans->push_back(*tmp);
         return;
@@ -30,7 +30,7 @@ void makeCombiUtil(std::vector<std::vector<i64>>* ans,
     }
 }
 
-std::vector<std::vector<i64>> makeCombi(const i64& k, const i64& n) {
+std::vector<std::vector<i64>> make_combinations(const i64& k, const i64& n) {
     std::vector<std::vector<i64>> ans;
     std::vector<i64> tmp;
     makeCombiUtil(&ans, &tmp, n, 0, k);

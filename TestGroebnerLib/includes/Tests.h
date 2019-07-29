@@ -15,7 +15,7 @@ void test_Polynomial();
 void test_PolynomialOrder();
 void test_PolynomialSet();
 void test_Sigma(i32);
-void test_Time();
+void test_Time(i32);
 
 template <typename TFunction>
 class TimerWrapper {
@@ -34,11 +34,11 @@ public:
     }
 
     TFunction call;
+
 private:
     const clock_t startTime_;
     clock_t& elapsedTime_;
 };
-
 
 template <typename TFunction>
 TimerWrapper<TFunction> test_time(TFunction function, clock_t& elapsedTime) {

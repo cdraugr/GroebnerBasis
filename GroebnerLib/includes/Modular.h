@@ -3,7 +3,7 @@
 template <u64 TBase>
 class Modular {
 public:
-    Modular(const i64& = 0);
+    Modular(i64 = 0);
 
     const i64& GetNumber() const noexcept;
 
@@ -102,11 +102,11 @@ private:
 };
 
 template <u64 TBase>
-Modular<TBase>::Modular(const i64& value) {
+Modular<TBase>::Modular(i64 value) {
     if (!is_prime(TBase)) {
         throw std::runtime_error("Base is not a prime number.");
     }
-    number_ = value;
+    number_ = std::move(value);
     Reduce();
 }
 

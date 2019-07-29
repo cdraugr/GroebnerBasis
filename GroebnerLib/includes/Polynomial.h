@@ -1,7 +1,3 @@
-#include <algorithm>
-#include <cassert>
-#include <set>
-#include <utility>
 #include "TermOrder.h"
 
 namespace gb {
@@ -291,7 +287,9 @@ namespace gb {
 
     template <typename T, typename Comp>
     bool operator==(const Polynomial<T, Comp>& polynom, const Term<T>& term) noexcept {
-        return polynom == Polynomial<T, Comp>(term);
+        return term == 0 ?
+            polynom.TermSet().size() == static_cast<size_t>(0) :
+            polynom.TermSet().size() == static_cast<size_t>(1) && polynom.LeadTerm() == term;
     }
 
     template <typename T, typename Comp>
@@ -315,10 +313,10 @@ namespace gb {
         assert(degree_max >= 0);
 
         Polynomial<T, Comp> answer;
-        auto all_combinations = makeCombi(degree_max, variable_count);
-        for (const auto& one_comination : all_combinations) {
+        auto all_combinations = make_combinations(degree_max, variable_count);
+        for (const auto& one_combination : all_combinations) {
             std::map<i64, i64> buffer_map;
-            for (const auto& degree : one_comination) {
+            for (const auto& degree : one_combination) {
                 buffer_map[degree] = 1;
             }
             answer += Term<T>(Monomial(buffer_map), 1);

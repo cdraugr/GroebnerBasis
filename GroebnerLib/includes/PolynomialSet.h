@@ -1,4 +1,3 @@
-#include <list>
 #include "PolynomialOrder.h"
 
 namespace gb {
@@ -21,6 +20,8 @@ namespace gb {
         void AddPolynomial(const Polynomial<T, Comp>&) noexcept;
 
         PolynomialSet<T, Comp>& MakeGroebnerBasis() noexcept;
+        void ReduceCoefficients() noexcept;
+        PolynomialSet<T, Comp>& ReduceBasis() noexcept;
 
         bool IsPolynomialInMyIdeal(const Polynomial<T, Comp>&) const noexcept;
 
@@ -49,7 +50,7 @@ namespace gb {
     template <typename T, typename Comp>
     PolynomialSet<T, Comp>::PolynomialSet(const Polynomial<T, Comp>& polynom) {
         if (polynom != Term<T>(0)) {
-            polynoms_.insert(polynom);
+            AddPolynomial(polynom);
         }
     }
 
@@ -57,7 +58,7 @@ namespace gb {
     PolynomialSet<T, Comp>::PolynomialSet(const PolynomialSet<T, Comp>::container& poly_set) {
         for (const auto& polynom : poly_set) {
             if (polynom != Term<T>(0)) {
-                polynoms_.insert(polynom);
+                AddPolynomial(polynom);
             }
         }
     }
@@ -106,10 +107,10 @@ namespace gb {
     std::list<Polynomial<T, Comp>> AllSPolynoms(const PolynomialSet<T, Comp>& pol_set) noexcept {
         PolynomialOrder<LexCoefComp> comparator;
         std::list<Polynomial<T, Comp>> s_polys;
-        for (const auto& polymon_f : pol_set.PolSet()) {
-            for (const auto& polymon_g : pol_set.PolSet()) {
-                if (comparator(polymon_f, polymon_g) && polymon_f != polymon_g) {
-                    s_polys.push_back(SPolynomial(polymon_f, polymon_g));
+        for (const auto& polynom_f : pol_set.PolSet()) {
+            for (const auto& polynom_g : pol_set.PolSet()) {
+                if (comparator(polynom_f, polynom_g) && polynom_f != polynom_g) {
+                    s_polys.push_back(SPolynomial(polynom_f, polynom_g));
                 }
             }
         }
@@ -125,9 +126,45 @@ namespace gb {
                 for (const auto& polynom : PolSet()) {
                     s_polys.push_back(SPolynomial(polynom, s_polynomial));
                 }
-                polynoms_.insert(s_polynomial);
+                AddPolynomial(s_polynomial);
             }
         }
+        return *this;
+    }
+
+    template <typename T, typename Comp>
+    void PolynomialSet<T, Comp>::ReduceCoefficients() noexcept {
+        PolynomialSet<T, Comp>::container tmp;
+        for (const auto& polynom : PolSet()) {
+            tmp.insert(polynom * Term<T>(pow(polynom.LeadTerm().coefficient(), -1)));
+        }
+        polynoms_ = std::move(tmp);
+    }
+
+    template <typename T, typename Comp>
+    PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::ReduceBasis() noexcept {
+        PolynomialSet<T, Comp>::container tmp;
+        for (const auto& polynom_f : PolSet()) {
+            bool need_to_insert = true;
+            for (const auto& term : polynom_f.TermSet()) {
+                for (const auto& polynom_g : PolSet()) {  // Dima, ne rugaysya, pozhalujsta.
+                    if (polynom_f == polynom_g) {
+                        break;
+                    }
+                    if (term.IsDivisibleBy(polynom_g.LeadTerm())) {
+                        need_to_insert = false;
+                        continue;
+                    }
+                }
+                if (!need_to_insert) {
+                    break;
+                }
+            }
+            if (need_to_insert) {
+                tmp.insert(polynom_f * Term<T>(pow(polynom_f.LeadTerm().coefficient(), -1)));
+            }
+        }
+        polynoms_ = std::move(tmp);
         return *this;
     }
 
@@ -142,12 +179,12 @@ namespace gb {
     template <typename T, typename Comp>
     bool IsGroebnerBasis(const PolynomialSet<T, Comp>& pol_set) noexcept {
         PolynomialOrder<LexCoefComp> comparator;
-        for (const auto& polymon_f : pol_set.PolSet()) {
-            for (const auto& polymon_g : pol_set.PolSet()) {
-                if (comparator(polymon_f, polymon_g) || polymon_f == polymon_g) {
+        for (const auto& polynom_f : pol_set.PolSet()) {
+            for (const auto& polynom_g : pol_set.PolSet()) {
+                if (comparator(polynom_f, polynom_g) || polynom_f == polynom_g) {
                     continue;
                 }
-                auto s_polynomial = SPolynomial(polymon_f, polymon_g);
+                auto s_polynomial = SPolynomial(polynom_f, polynom_g);
                 pol_set.ReductionToResByMe(&s_polynomial);
                 if (s_polynomial != Term<T>(0)) {
                     return false;
@@ -168,7 +205,7 @@ namespace gb {
 
     template <typename T, typename Comp>
     PolynomialSet<T, Comp> GiveGroebnerSigmaSet(const i64& variable_count) {
-        return GiveSigmaSet<T, Comp>(variable_count).MakeGroebnerBasis();
+        return GiveSigmaSet<T, Comp>(variable_count).MakeGroebnerBasis().ReduceBasis();
     }
 
     template <typename T, typename Comp>

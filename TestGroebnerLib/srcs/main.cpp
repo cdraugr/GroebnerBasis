@@ -9,5 +9,6 @@ int main() {
     test_Polynomial();
     test_PolynomialOrder();
     test_PolynomialSet();
-    // test_Time();
+    test_Sigma(6);
+    // test_Time(8);
 }

@@ -1,7 +1,7 @@
 #include "../includes/Tests.h"
 
-void test_Time() {
-    for (i32 i = 1; i != 9; ++i) {
+void test_Time(i32 maximum_variables) {
+    for (i32 i = 1; i <= maximum_variables; ++i) {
         clock_t elapsedTime = 0;
         test_time(test_Sigma, elapsedTime)(i);
 
@@ -13,4 +13,5 @@ void test_Time() {
         std::cout << seconds - 60.0 * static_cast<i32>(seconds / 60) << " seconds." << std::endl;
         PrintLine();
     }
+    PrintLine();
 }
