@@ -13,7 +13,7 @@ SOURCES = ./srcs/main.cpp\
 		./srcs/test_PolynomialOrder.cpp\
 		./srcs/test_PolynomialSet.cpp\
 		./srcs/test_Sigma.cpp\
-		./srcs/test_Time.cpp
+		./srcs/test_SigmaTime.cpp
 
 PATH_LIB = ../GroebnerLib/
 SOURCES_LIB = ../GroebnerLib/GroebnerBasis.a

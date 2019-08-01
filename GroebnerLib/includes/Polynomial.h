@@ -10,6 +10,9 @@ namespace gb {
         Polynomial(Term<T>);
         Polynomial(const container&);
 
+        template <typename OtherComp>
+        Polynomial(const Polynomial<T, OtherComp>&);
+
         const container& TermSet() const noexcept;
         const Term<T>& LeadTerm(i32 = 1) const;  // Numeration starts from 1.
 
@@ -100,6 +103,14 @@ namespace gb {
             if (term != 0) {
                 terms_.insert(term);
             }
+        }
+    }
+
+    template <typename T, typename Comp>
+    template <typename OtherComp>
+    Polynomial<T, Comp>::Polynomial(const Polynomial<T, OtherComp>& polynom) {
+        for (const auto& term : polynom.TermSet()) {
+            terms_.insert(term);
         }
     }
 
@@ -306,7 +317,6 @@ namespace gb {
     bool operator!=(const Term<T>& term, const Polynomial<T, Comp>& polynom) noexcept {
         return !(polynom == term);
     }
-
 
     template <typename T, typename Comp>
     Polynomial<T, Comp> GiveSigma(const i64& degree_max, const i64& variable_count) {

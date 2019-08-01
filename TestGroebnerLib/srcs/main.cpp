@@ -10,5 +10,5 @@ int main() {
     test_PolynomialOrder();
     test_PolynomialSet();
     // test_Sigma(6);
-    // test_Time(8);
+    // test_SigmaTime(6);
 }

@@ -1,7 +1,7 @@
 #include "PolynomialOrder.h"
 
 namespace gb {
-    template <typename T, typename Comp>
+    template <typename T, typename Comp = LexCoefComp>
     class PolynomialSet {
     public:
         using container = std::set<Polynomial<T, Comp>, PolynomialOrder<LexCoefComp>>;
@@ -9,6 +9,9 @@ namespace gb {
         PolynomialSet();
         PolynomialSet(const Polynomial<T, Comp>&);
         PolynomialSet(const container&);
+
+        template <typename OtherComp>
+        PolynomialSet(const PolynomialSet<T, OtherComp>&);
 
         const container& PolSet() const noexcept;
         const Polynomial<T, Comp>& LeadPolynom(const i64& = 1) const;
@@ -62,6 +65,15 @@ namespace gb {
             }
         }
     }
+
+    template <typename T, typename Comp>
+    template <typename OtherComp>
+    PolynomialSet<T, Comp>::PolynomialSet(const PolynomialSet<T, OtherComp>& poly_set) {
+        for (const auto& polynom : poly_set.PolSet()) {
+            AddPolynomial(polynom);
+        }
+    }
+
 
     template <typename T, typename Comp>
     const typename PolynomialSet<T, Comp>::container& PolynomialSet<T, Comp>::PolSet() const noexcept {

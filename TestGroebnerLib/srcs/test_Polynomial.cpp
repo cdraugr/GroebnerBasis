@@ -2,15 +2,15 @@
 
 void test_Polynomial() {
     std::cout << "Test Polynomial:\n";
-    gb::Polynomial<Rational, gb::LexComp> f({
+    gb::Polynomial<Rational> f({
         gb::Term<Rational>(gb::Monomial({7, 0, 4}), 2),
         gb::Term<Rational>(-5),
     });
-    gb::Polynomial<Rational, gb::LexComp> g({
+    gb::Polynomial<Rational> g({
         gb::Term<Rational>(gb::Monomial({2, 2, 0}), 1),
         gb::Term<Rational>(gb::Monomial({3, 0, 4}), 3),
     });
-    gb::Polynomial<Rational, gb::LexComp> k;
+    gb::Polynomial<Rational> k;
 
     std::cout << "f = " << f << '\n';
     std::cout << "g = " << g << '\n';
@@ -38,12 +38,12 @@ void test_Polynomial() {
     std::cout << "f -> (f) = " << f << '\n';
     PrintLine();
     {  // HW 06, ex 02
-        gb::Polynomial<Rational, gb::LexComp> poly_g({
+        gb::Polynomial<Rational> poly_g({
             gb::Term<Rational>(gb::Monomial({0, 4, 6}), 1),
             gb::Term<Rational>(gb::Monomial({1, 4, 1}), 2),
             gb::Term<Rational>(gb::Monomial({2, 2, 0}), 1)
         });
-        gb::Polynomial<Rational, gb::LexComp> poly_f({
+        gb::Polynomial<Rational> poly_f({
             gb::Term<Rational>(gb::Monomial({0, 4, 1}), 1),
             gb::Term<Rational>(gb::Monomial({1, 1, 2}), -1),
             gb::Term<Rational>(gb::Monomial({1, 2, 0}), 1),

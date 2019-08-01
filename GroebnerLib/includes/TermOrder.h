@@ -79,4 +79,5 @@ namespace gb {
     using DegReLexComp = CombineComp<DegComp, ReLexComp>;
     using LexCoefComp = CombineComp<LexComp, CoefComp>;
     using ReLexCoefComp = CombineComp<ReLexComp, CoefComp>;
+    using DegReLexCoefComp = CombineComp<DegReLexComp, CoefComp>;
 }
