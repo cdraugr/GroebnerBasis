@@ -11,7 +11,7 @@ namespace gb {
 
         const container& degrees() const noexcept;  // x_(i)^{j} = {i - 1, j} [numeration starts from 0].
 
-        i64 GetDegree(i64) const noexcept;
+        i64 GetDegree(const i64&) const noexcept;
         i64 GetLastVariableIndex() const noexcept;
         friend i64 deg(const Monomial&) noexcept;
 

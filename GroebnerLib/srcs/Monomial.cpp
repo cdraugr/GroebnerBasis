@@ -29,7 +29,7 @@ namespace gb {
         return data_;
     }
 
-    i64 Monomial::GetDegree(i64 index) const noexcept {
+    i64 Monomial::GetDegree(const i64& index) const noexcept {
         return degrees().find(index) != degrees().end() ?
             degrees().at(index) :
             0;

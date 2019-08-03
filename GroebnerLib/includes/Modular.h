@@ -15,76 +15,49 @@ public:
     Modular& operator*=(const Modular&) noexcept;
     Modular& operator/=(const Modular&);
 
-    Modular& operator+=(const i64&) noexcept;
-    Modular& operator-=(const i64&) noexcept;
-    Modular& operator*=(const i64&) noexcept;
-    Modular& operator/=(const i64&);
+    friend Modular<TBase> operator+(Modular left, const Modular& right) noexcept {
+        left += right;
+        return left;
+    }
 
-    template <u64 OtherBase>
-    friend Modular<OtherBase> operator+(Modular<OtherBase>, const Modular<OtherBase>&) noexcept;
+    friend Modular<TBase> operator-(Modular left, const Modular& right) noexcept {
+        left -= right;
+        return left;
+    }
 
-    template <u64 OtherBase>
-    friend Modular<OtherBase> operator-(Modular<OtherBase>, const Modular<OtherBase>&) noexcept;
+    friend Modular<TBase> operator*(Modular left, const Modular& right) noexcept {
+        left *= right;
+        return left;
+    }
 
-    template <u64 OtherBase>
-    friend Modular<OtherBase> operator*(Modular<OtherBase>, const Modular<OtherBase>&) noexcept;
+    friend Modular<TBase> operator/(Modular left, const Modular& right) {
+        left /= right;
+        return left;
+    }
 
-    template <u64 OtherBase>
-    friend Modular<OtherBase> operator/(Modular<OtherBase>, const Modular<OtherBase>&);
+    friend bool operator<(const Modular& left, const Modular& right) noexcept {
+        return left.GetNumber() < right.GetNumber();
+    }
 
-    template <u64 OtherBase>
-    friend bool operator<(const Modular<OtherBase>&, const Modular<OtherBase>&) noexcept;  // operator<
+    friend bool operator>(const Modular& left, const Modular& right) noexcept {
+        return right < left;
+    }
 
-    template <u64 OtherBase>
-    friend bool operator<(const i64&, const Modular<OtherBase>&) noexcept;
+    friend bool operator<=(const Modular& left, const Modular& right) noexcept {
+        return !(left > right);
+    }
 
-    template <u64 OtherBase>
-    friend bool operator<(const Modular<OtherBase>&, const i64&) noexcept;
-
-    template <u64 OtherBase>
-    friend bool operator>(const Modular<OtherBase>&, const Modular<OtherBase>&) noexcept;  // operator>
-
-    template <u64 OtherBase>
-    friend bool operator>(const i64&, const Modular<OtherBase>&) noexcept;
-
-    template <u64 OtherBase>
-    friend bool operator>(const Modular<OtherBase>&, const i64&) noexcept;
+    friend bool operator>=(const Modular& left, const Modular& right) noexcept {
+        return !(left < right);
+    }
     
-    template <u64 OtherBase>
-    friend bool operator<=(const Modular<OtherBase>&, const Modular<OtherBase>&) noexcept;  // operator<=
+    friend bool operator==(const Modular& left, const Modular& right) noexcept {
+        return left <= right && left >= right;;
+    }
 
-    template <u64 OtherBase>
-    friend bool operator<=(const i64&, const Modular<OtherBase>&) noexcept;
-
-    template <u64 OtherBase>
-    friend bool operator<=(const Modular<OtherBase>&, const i64&) noexcept;
-    
-    template <u64 OtherBase>
-    friend bool operator>=(const Modular<OtherBase>&, const Modular<OtherBase>&) noexcept;  // operator>=
-
-    template <u64 OtherBase>
-    friend bool operator>=(const i64&, const Modular<OtherBase>&) noexcept;
-
-    template <u64 OtherBase>
-    friend bool operator>=(const Modular<OtherBase>&, const i64&) noexcept;
-    
-    template <u64 OtherBase>
-    friend bool operator==(const Modular<OtherBase>&, const Modular<OtherBase>&) noexcept;  // operator==
-
-    template <u64 OtherBase>
-    friend bool operator==(const i64&, const Modular<OtherBase>&) noexcept;
-
-    template <u64 OtherBase>
-    friend bool operator==(const Modular<OtherBase>&, const i64&) noexcept;
-    
-    template <u64 OtherBase>
-    friend bool operator!=(const Modular<OtherBase>&, const Modular<OtherBase>&) noexcept;  // operator!=
-
-    template <u64 OtherBase>
-    friend bool operator!=(const i64&, const Modular<OtherBase>&) noexcept;
-
-    template <u64 OtherBase>
-    friend bool operator!=(const Modular<OtherBase>&, const i64&) noexcept;
+    friend bool operator!=(const Modular& left, const Modular& right) noexcept {
+        return !(left == right);
+    }
 
     template <u64 OtherBase>
     friend Modular<OtherBase> pow(const Modular<OtherBase>&, i32) noexcept;
@@ -151,196 +124,6 @@ Modular<TBase>& Modular<TBase>::operator/=(const Modular<TBase>& other) {
     *this *= InverseElement(other);
     Reduce();
     return *this;
-}
-
-template <u64 TBase>
-Modular<TBase>& Modular<TBase>::operator+=(const i64& number) noexcept {
-    number_ += number;
-    Reduce();
-    return *this;
-}
-
-template <u64 TBase>
-Modular<TBase>& Modular<TBase>::operator-=(const i64& number) noexcept {
-    number_ -= number;
-    Reduce();
-    return *this;
-}
-
-template <u64 TBase>
-Modular<TBase>& Modular<TBase>::operator*=(const i64& number) noexcept {
-    number_ *= number;
-    Reduce();
-    return *this;
-}
-
-template <u64 TBase>
-Modular<TBase>& Modular<TBase>::operator/=(const i64& number) {
-    *this *= InverseElement(Modular<TBase>(number));
-    Reduce();
-    return *this;
-}
-
-template <u64 TBase>
-Modular<TBase> operator+(Modular<TBase> left, const Modular<TBase>& right) noexcept {  // opeartor+
-    left += right;
-    return left;
-}
-
-template <u64 TBase>
-Modular<TBase> operator+(Modular<TBase> mod, const i64& number) noexcept {
-    mod += number;
-    return mod;
-}
-
-template <u64 TBase>
-Modular<TBase> operator+(const i64& number, Modular<TBase> mod) noexcept {
-    mod += number;
-    return mod;
-}
-
-template <u64 TBase>
-Modular<TBase> operator-(Modular<TBase> left, const Modular<TBase>& right) noexcept {  // operator-
-    left -= right;
-    return left;
-}
-
-template <u64 TBase>
-Modular<TBase> operator-(Modular<TBase> mod, const i64& number) noexcept {
-    mod -= number;
-    return mod;
-}
-
-template <u64 TBase>
-Modular<TBase> operator-(const i64& number, Modular<TBase> mod) noexcept {
-    mod -= number;
-    return mod;
-}
-
-template <u64 TBase>
-Modular<TBase> operator*(Modular<TBase> left, const Modular<TBase>& right) noexcept {  // opearor*
-    left *= right;
-    return left;
-}
-
-template <u64 TBase>
-Modular<TBase> operator*(Modular<TBase> mod, const i64& number) noexcept {
-    mod *= number;
-    return mod;
-}
-
-template <u64 TBase>
-Modular<TBase> operator*(const i64& number, Modular<TBase> mod) noexcept {
-    mod *= number;
-    return mod;
-}
-
-template <u64 TBase>
-Modular<TBase> operator/(Modular<TBase> left, const Modular<TBase>& right) {  // operator/
-    left /= right;
-    return left;
-}
-
-template <u64 TBase>
-Modular<TBase> operator/(Modular<TBase> mod, const i64& number) {
-    mod /= number;
-    return mod;
-}
-
-template <u64 TBase>
-Modular<TBase> operator/(const i64& number, Modular<TBase> mod) {
-    mod /= number;
-    return mod;
-}
-
-template <u64 TBase>
-bool operator<(const Modular<TBase>& left, const Modular<TBase>& right) noexcept {  // operator<
-    return left.GetNumber() < right.GetNumber();
-}
-
-template <u64 TBase>
-bool operator<(const Modular<TBase>& mod, const i64& number) noexcept {
-    return mod < Modular<TBase>(number);
-}
-
-template <u64 TBase>
-bool operator<(const i64& number, const Modular<TBase>& mod) noexcept {
-    return Modular<TBase>(number) < mod;
-}
-
-template <u64 TBase>
-bool operator>(const Modular<TBase>& left, const Modular<TBase>& right) noexcept {  // operator>
-    return right < left;
-}
-
-template <u64 TBase>
-bool operator>(const Modular<TBase>& mod, const i64& number) noexcept {
-    return number < mod;
-}
-
-template <u64 TBase>
-bool operator>(const i64& number, const Modular<TBase>& mod) noexcept {
-    return mod < number;
-}
-
-template <u64 TBase>
-bool operator<=(const Modular<TBase>& left, const Modular<TBase>& right) noexcept {  // operator<=
-    return !(left > right);
-}
-
-template <u64 TBase>
-bool operator<=(const Modular<TBase>& mod, const i64& number) noexcept {
-    return !(mod > number);
-}
-
-template <u64 TBase>
-bool operator<=(const i64& number, const Modular<TBase>& mod) noexcept {
-    return !(number > mod);
-}
-
-template <u64 TBase>
-bool operator>=(const Modular<TBase>& left, const Modular<TBase>& right) noexcept {  // operator>=
-    return !(left < right);
-}
-
-template <u64 TBase>
-bool operator>=(const Modular<TBase>& mod, const i64& number) noexcept {
-    return !(mod < number);
-}
-
-template <u64 TBase>
-bool operator>=(const i64& number, const Modular<TBase>& mod) noexcept {
-    return !(number < mod);
-}
-
-template <u64 TBase>
-bool operator==(const Modular<TBase>& left, const Modular<TBase>& right) noexcept {  // operator==
-    return left <= right && left >= right;
-}
-
-template <u64 TBase>
-bool operator==(const Modular<TBase>& mod, const i64& number) noexcept {
-    return mod <= number && mod >= number;
-}
-
-template <u64 TBase>
-bool operator==(const i64& number, const Modular<TBase>& mod) noexcept {
-    return mod <= number && mod >= number;
-}
-
-template <u64 TBase>
-bool operator!=(const Modular<TBase>& left, const Modular<TBase>& right) noexcept {  // operator!=
-    return !(left == right);
-}
-
-template <u64 TBase>
-bool operator!=(const Modular<TBase>& mod, const i64& number) noexcept {
-    return !(mod == number);
-}
-
-template <u64 TBase>
-bool operator!=(const i64& number, const Modular<TBase>& mod) noexcept {
-    return !(mod == number);
 }
 
 template <u64 TBase>

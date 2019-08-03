@@ -17,6 +17,7 @@ void test_Modular() {
     std::cout << "a > b is " << TrueFalse(a > b) << '\n';
     std::cout << "a <= b is " << TrueFalse(a <= b) << '\n';
     std::cout << "a >= b is " << TrueFalse(a >= b) << '\n';
+    std::cout << "a == 4 is " << TrueFalse(a == 4) << '\n';
     PrintLine();
 
     std::cout << "+a = " << +a << '\n';
@@ -24,7 +25,7 @@ void test_Modular() {
     std::cout << "-zero = " << -zero << '\n';
     std::cout << "5 * a = " << 5 * a << '\n';
     std::cout << "b * 4 = " << b * 4 << '\n';
-    std::cout << "one / a = " << one / a << '\n';
+    std::cout << "1 / a = " << 1 / a << '\n';
     std::cout << "pow(a, 5) = " << pow(a, 5) << '\n';
     std::cout << "pow(b, -5) = " << pow(b, -5) << '\n';
     std::cout << "a / b = " << a / b << '\n';

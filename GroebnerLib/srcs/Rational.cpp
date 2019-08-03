@@ -4,6 +4,9 @@
 #include "../includes/Rational.h"
 
 Rational::Rational(const i64& numerator, const i64& denominator) {
+    if (denominator == 0) {
+        throw std::runtime_error("Division by zero.");
+    }
     numerator_ = denominator < 0 ? -numerator : numerator;
     denominator_ = denominator < 0 ? -denominator : denominator;
     Reduce();

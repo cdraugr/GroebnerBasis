@@ -28,9 +28,6 @@ void test_Polynomial() {
     std::cout << "S(f, g) = " << gb::SPolynomial(f, g) << '\n';
     std::cout << "S(g, f) = " << gb::SPolynomial(g, f) << '\n';
     std::cout << "S(f, f) = " << gb::SPolynomial(f, f) << '\n';
-    std::cout << "S(f, k) = " << gb::SPolynomial(f, k) << '\n';
-    std::cout << "S(k, f) = " << gb::SPolynomial(k, f) << '\n';
-    std::cout << "S(k, k) = " << gb::SPolynomial(k, k) << '\n';
     PrintLine();
     f.TryReduceOnceBy(g);
     std::cout << "f -> (g) = " << f << '\n';

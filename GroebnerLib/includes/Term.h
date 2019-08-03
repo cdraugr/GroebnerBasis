@@ -15,7 +15,7 @@ namespace gb {
         const type_name& coefficient() const noexcept;
         const Monomial& monom() const noexcept;
 
-        i64 GetDegree(i64) const noexcept;
+        i64 GetDegree(const i64&) const noexcept;
         bool IsInteger() const noexcept;
         bool IsDivisibleBy(const Term&) const noexcept;
         i64 GetLastVariableIndex() const noexcept;
@@ -108,7 +108,7 @@ namespace gb {
     }
 
     template <typename T>
-    i64 Term<T>::GetDegree(i64 index) const noexcept {
+    i64 Term<T>::GetDegree(const i64& index) const noexcept {
         return monom().GetDegree(index);
     }
 

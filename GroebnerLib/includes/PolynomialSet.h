@@ -14,7 +14,7 @@ namespace gb {
         PolynomialSet(const PolynomialSet<T, OtherComp>&);
 
         const container& PolSet() const noexcept;
-        const Polynomial<T, Comp>& LeadPolynom(const i64& = 1) const;
+        const Polynomial<T, Comp>& LeadPolynom(const i64& = 0) const;
 
         bool OneReductionByMe(Polynomial<T, Comp>*) const noexcept;  // Сhanging given Polynomial.
         bool ReductionToResByMe(Polynomial<T, Comp>*) const noexcept;  // Changing given Polynomial.
@@ -82,11 +82,11 @@ namespace gb {
 
     template <typename T, typename Comp>
     const Polynomial<T, Comp>& PolynomialSet<T, Comp>::LeadPolynom(const i64& index) const {
-        assert(1 <= index);  // Firstly check negative and zero.
+        assert(0 <= index);  // Firstly check negative.
         assert(static_cast<size_t>(index) <= PolSet().size());
 
         auto it = PolSet().begin();
-        std::advance(it, index - 1);
+        std::advance(it, index);
         return *it;
     }
 
@@ -131,7 +131,7 @@ namespace gb {
 
     template <typename T, typename Comp>
     PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::MakeGroebnerBasis() noexcept {
-        auto s_polys = std::move(AllSPolynoms(*this));
+        auto s_polys = AllSPolynoms(*this);
         for (auto& s_polynomial : s_polys) {
             ReductionToResByMe(&s_polynomial);
             if (s_polynomial != Term<T>(0)) {
@@ -155,28 +155,17 @@ namespace gb {
 
     template <typename T, typename Comp>
     PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::ReduceBasis() noexcept {
-        PolynomialSet<T, Comp>::container tmp;
-        for (const auto& polynom_f : PolSet()) {
-            bool need_to_insert = true;
-            for (const auto& term : polynom_f.TermSet()) {
-                for (const auto& polynom_g : PolSet()) {  // Dima, ne rugaysya, pozhalujsta.
-                    if (polynom_f == polynom_g) {
-                        break;
-                    }
-                    if (term.IsDivisibleBy(polynom_g.LeadTerm())) {
-                        need_to_insert = false;
-                        continue;
-                    }
-                }
-                if (!need_to_insert) {
-                    break;
-                }
-            }
-            if (need_to_insert) {
-                tmp.insert(polynom_f * Term<T>(pow(polynom_f.LeadTerm().coefficient(), -1)));
+        PolynomialSet<T, Comp> tmp;
+        while (!polynoms_.empty()) {
+            auto polynom = *PolSet().begin();
+            polynoms_.erase(*PolSet().begin());
+            ReductionToResByMe(&polynom);
+            tmp.ReductionToResByMe(&polynom);
+            if (polynom != Term<T>(0)) {
+                tmp.AddPolynomial(polynom * Term<T>(pow(polynom.LeadTerm().coefficient(), -1)));
             }
         }
-        polynoms_ = std::move(tmp);
+        *this = std::move(tmp);
         return *this;
     }
 

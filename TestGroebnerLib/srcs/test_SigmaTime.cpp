@@ -13,7 +13,7 @@ static void test_Time_Lex(i32 variable_count) {
 }
 
 void test_SigmaTime(i32 maximum_variables) {
-    for (i32 i = maximum_variables; i <= maximum_variables; ++i) {
+    for (i32 i = 1; i <= maximum_variables; ++i) {
         std::cout << "Test \\sigma with " << i << (i > 1 ? " variables" : " variable") << ":\n";
 
         std::string text = "Time spended for calculate Cyclic ";

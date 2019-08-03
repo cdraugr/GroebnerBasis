@@ -14,7 +14,7 @@ namespace gb {
         Polynomial(const Polynomial<T, OtherComp>&);
 
         const container& TermSet() const noexcept;
-        const Term<T>& LeadTerm(i32 = 1) const;  // Numeration starts from 1.
+        const Term<T>& LeadTerm(const i64& = 0) const;
 
         bool TryReduceOnceBy(const Polynomial&) noexcept;  // Returns true if there was a reduction otherwise returns false.
 
@@ -57,7 +57,7 @@ namespace gb {
         friend Polynomial<OtherT, OtherComp> operator*(Polynomial<OtherT, OtherComp>, const Term<OtherT>&) noexcept;
 
         template <typename OtherT, typename OtherComp>
-        friend Polynomial<OtherT, OtherComp> SPolynomial(const Polynomial<OtherT, OtherComp>&, const Polynomial<OtherT, OtherComp>&) noexcept;
+        friend Polynomial<OtherT, OtherComp> SPolynomial(const Polynomial<OtherT, OtherComp>&, const Polynomial<OtherT, OtherComp>&);
 
         template <typename OtherT, typename OtherComp>
         friend bool operator==(const Polynomial<OtherT, OtherComp>&, const Polynomial<OtherT, OtherComp>&) noexcept;
@@ -120,12 +120,12 @@ namespace gb {
     }
 
     template <typename T, typename Comp>
-    const Term<T>& Polynomial<T, Comp>::LeadTerm(i32 index) const {
-        assert(1 <= index);  // Firstly check negative and zero.
-        assert(static_cast<size_t>(index) <= TermSet().size());
+    const Term<T>& Polynomial<T, Comp>::LeadTerm(const i64& index) const {
+        assert(0 <= index);  // Firstly check negative.
+        assert(static_cast<size_t>(index) < TermSet().size());
 
         auto it = TermSet().begin();
-        std::advance(it, index - 1);
+        std::advance(it, index);
         return *it;
     }
 
@@ -186,6 +186,9 @@ namespace gb {
 
     template <typename T, typename Comp>
     Polynomial<T, Comp>& Polynomial<T, Comp>::operator+=(const Term<T>& term) noexcept {
+        if (term == 0) {
+            return *this;
+        }
         for (const auto& this_term : TermSet()) {
             if (this_term.monom() == term.monom()) {
                 auto count = this_term.coefficient() + term.coefficient();
@@ -273,12 +276,10 @@ namespace gb {
     }
 
     template <typename T, typename Comp>
-    Polynomial<T, Comp> SPolynomial(const Polynomial<T, Comp>& left, const Polynomial<T, Comp>& right) noexcept {
-        if (left == Term<T>(0)) {
-            return right == Term<T>(0) ? Polynomial<T, Comp>() : -right;
-        } else if (right == Term<T>(0)) {
-            return left;
-        }  // Incorrect math logic, but better than error.
+    Polynomial<T, Comp> SPolynomial(const Polynomial<T, Comp>& left, const Polynomial<T, Comp>& right) {
+        if (left == Term<T>(0) || right == Term<T>(0)) {
+            throw std::runtime_error("No S-Polynomial from 0.");
+        }
 
         auto lead_lcm = lcm(left.LeadTerm(), right.LeadTerm());
         auto m1 = lead_lcm / left.LeadTerm();
