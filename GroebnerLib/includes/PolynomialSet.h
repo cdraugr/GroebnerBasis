@@ -52,17 +52,13 @@ namespace gb {
 
     template <typename T, typename Comp>
     PolynomialSet<T, Comp>::PolynomialSet(const Polynomial<T, Comp>& polynom) {
-        if (polynom != Term<T>(0)) {
-            AddPolynomial(polynom);
-        }
+        AddPolynomial(polynom);
     }
 
     template <typename T, typename Comp>
     PolynomialSet<T, Comp>::PolynomialSet(const PolynomialSet<T, Comp>::container& poly_set) {
         for (const auto& polynom : poly_set) {
-            if (polynom != Term<T>(0)) {
-                AddPolynomial(polynom);
-            }
+            AddPolynomial(polynom);
         }
     }
 
@@ -83,7 +79,7 @@ namespace gb {
     template <typename T, typename Comp>
     const Polynomial<T, Comp>& PolynomialSet<T, Comp>::LeadPolynom(const i64& index) const {
         assert(0 <= index);  // Firstly check negative.
-        assert(static_cast<size_t>(index) <= PolSet().size());
+        assert(static_cast<size_t>(index) < PolSet().size());
 
         auto it = PolSet().begin();
         std::advance(it, index);
@@ -111,8 +107,10 @@ namespace gb {
     }
 
     template <typename T, typename Comp>
-    void PolynomialSet<T, Comp>::AddPolynomial(const Polynomial<T, Comp>& poly) noexcept {
-        polynoms_.insert(poly);
+    void PolynomialSet<T, Comp>::AddPolynomial(const Polynomial<T, Comp>& polynom) noexcept {
+        if (polynom != Term<T>(0)) {
+            polynoms_.insert(polynom);
+        }
     }
 
     template <typename T, typename Comp>
@@ -158,12 +156,12 @@ namespace gb {
         PolynomialSet<T, Comp> tmp;
         while (!polynoms_.empty()) {
             auto polynom = *PolSet().begin();
-            polynoms_.erase(*PolSet().begin());
+            polynoms_.erase(PolSet().begin());
             ReductionToResByMe(&polynom);
             tmp.ReductionToResByMe(&polynom);
             if (polynom != Term<T>(0)) {
-                tmp.AddPolynomial(polynom * Term<T>(pow(polynom.LeadTerm().coefficient(), -1)));
-            }
+                tmp.polynoms_.insert(polynom * Term<T>(pow(polynom.LeadTerm().coefficient(), -1)));
+            }  // I don't use AddPolynomial here for small uptimisation.
         }
         *this = std::move(tmp);
         return *this;

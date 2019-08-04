@@ -248,15 +248,17 @@ namespace gb {
 
     template <typename T>
     std::ostream& operator<<(std::ostream& out, const Term<T>& term) noexcept {
-        if (term.coefficient() != 1) {
-            out << term.coefficient();
-            if (!term.monom().IsOne()) {
-                out << '*' << term.monom();
-            }
-        } else {
-            out << term.monom();
+        if (term.monom().IsOne()) {
+            return out << term.coefficient();
         }
-        return out;
+
+        if (term.coefficient() == static_cast<T>(-1) && term.coefficient() < static_cast<T>(0)) {
+            out << '-';
+        } else if (term.coefficient() != static_cast<T>(1)) {
+            out << term.coefficient() << '*';
+        }
+
+        return out << term.monom();
     }
 
     template <typename T>
