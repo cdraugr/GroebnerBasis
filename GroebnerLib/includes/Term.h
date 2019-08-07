@@ -218,7 +218,7 @@ namespace gb {
 
     template <typename T>
     bool operator==(const Term<T>& term, const typename Term<T>::type_name& type_elem) noexcept {
-        return term.coefficient() == type_elem && term.monom().IsOne();
+        return term.coefficient() == type_elem && term.IsInteger();
     }
 
     template <typename T>
@@ -248,7 +248,7 @@ namespace gb {
 
     template <typename T>
     std::ostream& operator<<(std::ostream& out, const Term<T>& term) noexcept {
-        if (term.monom().IsOne()) {
+        if (term.IsInteger()) {
             return out << term.coefficient();
         }
 
