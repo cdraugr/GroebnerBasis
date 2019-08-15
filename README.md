@@ -17,3 +17,4 @@ You can compile it like any other `.a` lib. (Example on `TestGroebnerLib/Makefil
 ## how to use it
 
 Just write `include "PolynomialSet.h"` in your .cpp/.h file to use all `gb::` features.
+Check [wiki](https://github.com/cdraugr/GroebnerBasis/wiki) for more info.
