@@ -1,6 +1,3 @@
-#include <algorithm>
-#include <numeric>
-#include <stdexcept>
 #include "../includes/Rational.h"
 
 Rational::Rational(const i64& numerator, const i64& denominator) {
@@ -104,7 +101,7 @@ Rational operator/(Rational left, const Rational& right) {
     return left;
 }
 
-Rational pow(const Rational& number, i32 power) noexcept {
+Rational pow(const Rational& number, const i64& power) noexcept {
     if (power < 0) {
         return pow(1 / number, -power);
     } else if (power == 0) {

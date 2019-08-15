@@ -1,4 +1,3 @@
-#include <cmath>
 #include "../includes/Modular.h"
 
 bool is_prime(const u64& number) {

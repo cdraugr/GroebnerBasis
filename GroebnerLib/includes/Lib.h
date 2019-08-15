@@ -3,14 +3,15 @@
 #include <cmath>
 #include <cstdint>
 #include <iostream>
+#include <iterator>
 #include <list>
 #include <map>
+#include <numeric>
 #include <set>
 #include <stdexcept>
 #include <utility>
 #include <vector>
 
-using i32 = int32_t;
 using u64 = uint64_t;
 using i64 = int64_t;
 

@@ -1,6 +1,3 @@
-#include <algorithm>
-#include <numeric>
-#include <iterator>
 #include "../includes/Monomial.h"
 
 namespace gb {

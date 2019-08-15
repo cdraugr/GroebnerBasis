@@ -60,7 +60,7 @@ public:
     }
 
     template <u64 OtherBase>
-    friend Modular<OtherBase> pow(const Modular<OtherBase>&, i32);
+    friend Modular<OtherBase> pow(const Modular<OtherBase>&, const i64&);
 
     template <u64 OtherBase>
     friend Modular<OtherBase> InverseElement(const Modular<OtherBase>&);
@@ -127,7 +127,7 @@ Modular<TBase>& Modular<TBase>::operator/=(const Modular<TBase>& other) {
 }
 
 template <u64 TBase>
-Modular<TBase> pow(const Modular<TBase>& number, i32 power) {
+Modular<TBase> pow(const Modular<TBase>& number, const i64& power) {
     if (power < 0) {
         return pow(InverseElement(number), -power);
     } else if (power == 0) {

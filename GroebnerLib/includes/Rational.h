@@ -32,7 +32,7 @@ public:
     Rational& operator/=(const Rational&);
     friend Rational operator/(Rational, const Rational&);
 
-    friend Rational pow(const Rational&, i32) noexcept;
+    friend Rational pow(const Rational&, const i64&) noexcept;
 
     friend std::ostream& operator<<(std::ostream&, const Rational&) noexcept;
 

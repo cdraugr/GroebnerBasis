@@ -3,6 +3,8 @@
 #include <string>
 #include "PolynomialSet.h"  // not GroebnerLib.h or smf like that
 
+using i32 = int32_t;
+
 void PrintLine(i32 = 1);
 std::string TrueFalse(bool);
 
