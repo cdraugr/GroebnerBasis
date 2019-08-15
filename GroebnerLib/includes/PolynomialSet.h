@@ -23,8 +23,8 @@ namespace gb {
         void AddPolynomial(const Polynomial<T, Comp>&) noexcept;
 
         PolynomialSet<T, Comp>& MakeGroebnerBasis() noexcept;
-        void ReduceCoefficients() noexcept;
-        PolynomialSet<T, Comp>& ReduceBasis() noexcept;
+        void ReduceCoefficients();
+        PolynomialSet<T, Comp>& ReduceBasis();
 
         bool IsPolynomialInMyIdeal(const Polynomial<T, Comp>&) const noexcept;
 
@@ -143,7 +143,7 @@ namespace gb {
     }
 
     template <typename T, typename Comp>
-    void PolynomialSet<T, Comp>::ReduceCoefficients() noexcept {
+    void PolynomialSet<T, Comp>::ReduceCoefficients() {
         PolynomialSet<T, Comp>::container tmp;
         for (const auto& polynom : PolSet()) {
             tmp.insert(polynom * Term<T>(pow(polynom.LeadTerm().coefficient(), -1)));
@@ -152,7 +152,7 @@ namespace gb {
     }
 
     template <typename T, typename Comp>
-    PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::ReduceBasis() noexcept {
+    PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::ReduceBasis() {
         PolynomialSet<T, Comp> tmp;
         while (!polynoms_.empty()) {
             auto polynom = *PolSet().begin();
