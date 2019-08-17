@@ -26,8 +26,8 @@ void test_Term() {
     gb::Term<Rational> term4({3, 5});
     std::cout << "t3 = " << term3 << '\n';
     std::cout << "t4 = " << term4 << '\n';
-    std::cout << "t3 == 2 is " << TrueFalse(term3 == 2) << '\n';
-    std::cout << "2 == t4 is " << TrueFalse(2 == term4) << '\n';
+    std::cout << std::boolalpha << "t3 == 2 is " << (term3 == 2) << '\n';
+    std::cout << std::boolalpha << "2 == t4 is " << (2 == term4) << '\n';
     std::cout << "t4 * 25 = " << term4 * 25 << '\n';
     PrintLine(2);
 }

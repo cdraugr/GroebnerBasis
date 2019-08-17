@@ -25,9 +25,9 @@ void test_Monomial() {
     gb::Monomial monom5({3, 0, 4});
     gb::Monomial monom6({3, 0, 4});
     std::cout << "m5 = " << monom5 << '\n' << "m6 = " << monom6 << "\n\n";
-    std::cout << "m5 == m6\t\tis " << TrueFalse(monom5 == monom6) << '\n';
+    std::cout << std::boolalpha << "m5 == m6\t\tis " << (monom5 == monom6) << '\n';
     std::cout << "m5 / m6 =\t\t" << monom5 / monom6 << '\n';
-    std::cout << "m5 divided by m6\tis " << TrueFalse(monom5.IsDivisibleBy(monom6)) << "\n\n";
+    std::cout << std::boolalpha << "m5 divided by m6\tis " << monom5.IsDivisibleBy(monom6) << "\n\n";
     PrintLine();
 
     gb::Monomial monom7({1, 2, 5});

@@ -19,7 +19,7 @@ void test_PolynomialSet() {
     });
     gb::PolynomialSet<Rational> F({f1, f2, f3});
     std::cout << "System F = {\n" << F << "\n}\n";
-    std::cout << "Statement that F is Groebner Basis is " << TrueFalse(gb::IsGroebnerBasis(F)) << '\n';
+    std::cout << std::boolalpha << "Statement that F is Groebner Basis is " << gb::IsGroebnerBasis(F) << '\n';
     PrintLine();
 
     gb::Polynomial<Rational> i1({  // HW 07, ex 01
@@ -38,7 +38,7 @@ void test_PolynomialSet() {
         gb::Term<Rational>(gb::Monomial({2, 0, 4}), 5),
         gb::Term<Rational>(gb::Monomial({1, 1, 3}), -1),
     });
-    std::cout << "Statement that " << polynom << " belongs ideal I is " << TrueFalse(I.IsPolynomialInMyIdeal(polynom)) << '\n';
+    std::cout << std::boolalpha << "Statement that " << polynom << " belongs ideal I is " << I.IsPolynomialInMyIdeal(polynom) << '\n';
     PrintLine();
 
     gb::Polynomial<Rational> polynom_i1({  // Test 01, Variant 01, ex 04
@@ -57,6 +57,6 @@ void test_PolynomialSet() {
         gb::Term<Rational>(gb::Monomial({1, 0, 4}), 16),
         gb::Term<Rational>(gb::Monomial({0, 3, 0}), 1),
     });
-    std::cout << "Statement that " << polynom_f << " belongs ideal I is " << TrueFalse(ideal_I.IsPolynomialInMyIdeal(polynom_f)) << '\n';
+    std::cout << std::boolalpha << "Statement that " << polynom_f << " belongs ideal I is " << ideal_I.IsPolynomialInMyIdeal(polynom_f) << '\n';
     PrintLine(2);
 }

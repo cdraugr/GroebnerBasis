@@ -22,18 +22,18 @@ void test_PolynomialOrder() {
     std::cout << "f = " << f << '\n';
     std::cout << "g = " << g << '\n';
     std::cout << "k = " << k << "\n\n";
-    std::cout << "f < g is " << TrueFalse(comparator(f, g)) << '\n';
-    std::cout << "g < f is " << TrueFalse(comparator(g, f)) << "\n\n";
+    std::cout << std::boolalpha << "f < g is " << comparator(f, g) << '\n';
+    std::cout << std::boolalpha << "g < f is " << comparator(g, f) << "\n\n";
 
-    std::cout << "k < g is " << TrueFalse(comparator(k, g)) << '\n';
-    std::cout << "g < k is " << TrueFalse(comparator(g, k)) << "\n\n";
+    std::cout << std::boolalpha << "k < g is " << comparator(k, g) << '\n';
+    std::cout << std::boolalpha << "g < k is " << comparator(g, k) << "\n\n";
 
-    std::cout << "k < f is " << TrueFalse(comparator(k, f)) << '\n';
-    std::cout << "f < k is " << TrueFalse(comparator(f, k)) << "\n\n";
+    std::cout << std::boolalpha << "k < f is " << comparator(k, f) << '\n';
+    std::cout << std::boolalpha << "f < k is " << comparator(f, k) << "\n\n";
 
-    std::cout << "f < f is " << TrueFalse(comparator(f, f)) << '\n';
-    std::cout << "g < g is " << TrueFalse(comparator(g, g)) << '\n';
-    std::cout << "k < k is " << TrueFalse(comparator(k, k)) << '\n';
+    std::cout << std::boolalpha << "f < f is " << comparator(f, f) << '\n';
+    std::cout << std::boolalpha << "g < g is " << comparator(g, g) << '\n';
+    std::cout << std::boolalpha << "k < k is " << comparator(k, k) << '\n';
     PrintLine();
 
     std::set<gb::Polynomial<Rational, gb::LexComp>, gb::PolynomialOrder<gb::LexComp>> polynoms({f, g, k});

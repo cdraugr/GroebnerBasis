@@ -8,7 +8,3 @@ void PrintLine(i32 count) {
         std::cout << '\n';
     }
 }
-
-std::string TrueFalse(bool value) {
-    return value ? "true" : "false";
-}

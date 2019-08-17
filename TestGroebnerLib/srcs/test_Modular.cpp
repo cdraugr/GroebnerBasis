@@ -13,11 +13,11 @@ void test_Modular() {
     std::cout << "b = " << b << '\n';
     std::cout << "one = " << one << '\n';
     std::cout << "zero = " << zero << '\n';
-    std::cout << "a < b is " << TrueFalse(a < b) << '\n';
-    std::cout << "a > b is " << TrueFalse(a > b) << '\n';
-    std::cout << "a <= b is " << TrueFalse(a <= b) << '\n';
-    std::cout << "a >= b is " << TrueFalse(a >= b) << '\n';
-    std::cout << "a == 4 is " << TrueFalse(a == 4) << '\n';
+    std::cout << std::boolalpha << "a < b is " << (a < b) << '\n';
+    std::cout << std::boolalpha << "a > b is " << (a > b) << '\n';
+    std::cout << std::boolalpha << "a <= b is " << (a <= b) << '\n';
+    std::cout << std::boolalpha << "a >= b is " << (a >= b) << '\n';
+    std::cout << std::boolalpha << "a == 4 is " << (a == 4) << '\n';
     PrintLine();
 
     std::cout << "+a = " << +a << '\n';

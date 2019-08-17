@@ -5,8 +5,8 @@ void test_comp(const std::vector<gb::Term<Rational>>& monoms) {
     Comp comparator;
     for (size_t i = 0; i != monoms.size(); ++i) {
         for (size_t j = 0; j != monoms.size(); ++j) {
-            std::cout << 't' << i + 1 << " < t" << j + 1 << " is "
-                    << TrueFalse(comparator(monoms[i], monoms[j])) << '\n';
+            std::cout << std::boolalpha << 't' << i + 1 << " < t" << j + 1 << " is "
+                    << comparator(monoms[i], monoms[j]) << '\n';
         }
     }
 

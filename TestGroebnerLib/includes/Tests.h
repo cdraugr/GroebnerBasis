@@ -1,8 +1,8 @@
 #include "TimerWrapper.h"
 #include "PolynomialSet.h"  // not GroebnerLib.h or smf like that
+#include <ios>
 
 void PrintLine(i32 = 1);
-std::string TrueFalse(bool);
 
 void test_Rational();
 void test_Modular();

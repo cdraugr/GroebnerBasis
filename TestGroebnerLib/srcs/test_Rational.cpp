@@ -11,10 +11,10 @@ void test_Rational() {
     std::cout << "b = " << b << '\n';
     std::cout << "one = " << one << '\n';
     std::cout << "zero = " << zero << '\n';
-    std::cout << "a < b is " << TrueFalse(a < b) << '\n';
-    std::cout << "a > b is " << TrueFalse(a > b) << '\n';
-    std::cout << "a <= b is " << TrueFalse(a <= b) << '\n';
-    std::cout << "a >= b is " << TrueFalse(a >= b) << '\n';
+    std::cout << std::boolalpha << "a < b is " << (a < b) << '\n';
+    std::cout << std::boolalpha << "a > b is " << (a > b) << '\n';
+    std::cout << std::boolalpha << "a <= b is " << (a <= b) << '\n';
+    std::cout << std::boolalpha << "a >= b is " << (a >= b) << '\n';
     PrintLine();
 
     std::cout << "+a = " << +a << '\n';
