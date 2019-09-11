@@ -1,4 +1,7 @@
-#include "Polynomial.h"
+#ifndef POLYNOMIALORDER_H
+# define POLYNOMIALORDER_H
+
+# include "Polynomial.h"
 
 namespace gb {
     template <typename Comp>
@@ -18,7 +21,7 @@ namespace gb {
         i64 min_max_index = std::min(left.TermSet().size(), right.TermSet().size());
         for (i64 i = 0; i != min_max_index; ++i) {
             if (comparator(left.LeadTerm(i), right.LeadTerm(i)) ||
-                comparator(right.LeadTerm(i), left.LeadTerm(i))) {            
+                comparator(right.LeadTerm(i), left.LeadTerm(i))) {
                 return comparator(left.LeadTerm(i), right.LeadTerm(i));
             }
         }
@@ -26,3 +29,5 @@ namespace gb {
         return left.TermSet().size() < right.TermSet().size();
     }
 }
+
+#endif

@@ -1,4 +1,7 @@
-#include "Lib.h"
+#ifndef MODULAR_H
+# define MODULAR_H
+
+# include "Lib.h"
 
 template <u64 TBase>
 class Modular {
@@ -50,7 +53,7 @@ public:
     friend bool operator>=(const Modular& left, const Modular& right) noexcept {
         return !(left < right);
     }
-    
+
     friend bool operator==(const Modular& left, const Modular& right) noexcept {
         return left <= right && left >= right;;
     }
@@ -160,3 +163,5 @@ void Modular<TBase>::Reduce() noexcept {  // private
     }
     number_ %= TBase;
 }
+
+#endif

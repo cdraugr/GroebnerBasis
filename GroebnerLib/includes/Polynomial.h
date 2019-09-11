@@ -1,4 +1,7 @@
-#include "TermOrder.h"
+#ifndef POLYNOMIAL_H
+# define POLYNOMIAL_H
+
+# include "TermOrder.h"
 
 namespace gb {
     template <typename T, typename Comp = LexCoefComp>
@@ -350,3 +353,5 @@ namespace gb {
         return out;
     }
 }
+
+#endif

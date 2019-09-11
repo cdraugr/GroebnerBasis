@@ -1,6 +1,9 @@
-#include "Modular.h"
-#include "Monomial.h"
-#include "Rational.h"
+#ifndef TERM_H
+# define TERM_H
+
+# include "Modular.h"
+# include "Monomial.h"
+# include "Rational.h"
 
 namespace gb {
     template <typename T>
@@ -268,3 +271,5 @@ namespace gb {
         }
     }
 }
+
+#endif

@@ -1,4 +1,7 @@
-#include "Lib.h"
+#ifndef RATIONAL_H
+# define RATIONAL_H
+
+# include "Lib.h"
 
 class Rational {
 public:
@@ -42,3 +45,5 @@ private:
     i64 numerator_{};
     i64 denominator_{};
 };
+
+#endif

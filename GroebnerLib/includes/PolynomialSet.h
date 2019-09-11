@@ -1,4 +1,7 @@
-#include "PolynomialOrder.h"
+#ifndef POLYNOMIALSET_H
+# define POLYNOMIALSET_H
+
+# include "PolynomialOrder.h"
 
 namespace gb {
     template <typename T, typename Comp = LexCoefComp>
@@ -218,3 +221,5 @@ namespace gb {
         return out;
     }
 }
+
+#endif
