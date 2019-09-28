@@ -29,6 +29,8 @@ OBJ := $(SRCNAMES:.cpp=.o)
 CC := g++
 FLAGS = -std=c++17 -Wall -Wextra -Werror
 
+.PHONY: all fclean clean
+
 all: $(NAME)
 
 $(NAME): $(OBJ)

@@ -1,4 +1,4 @@
-#include "../includes/Tests.h"
+#include "Tests.h"
 
 void test_PolynomialSet() {
     std::cout << "Test PolynomialSet:\n";
@@ -43,7 +43,7 @@ void test_PolynomialSet() {
 
     gb::Polynomial<Rational> polynom_i1({  // Test 01, Variant 01, ex 04
         gb::Term<Rational>(gb::Monomial({1, 0, 1}), 2),
-        gb::Term<Rational>(gb::Monomial({0, 1, 0}), -1),        
+        gb::Term<Rational>(gb::Monomial({0, 1, 0}), -1),
     });
     gb::Polynomial<Rational> polynom_i2({
         gb::Term<Rational>(gb::Monomial({2, 0, 0}), 1),

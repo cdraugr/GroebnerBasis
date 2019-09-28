@@ -1,4 +1,4 @@
-#include "../includes/Tests.h"
+#include "Tests.h"
 
 gb::PolynomialSet<Rational, gb::LexCoefComp> LexGroebnerSystem;
 

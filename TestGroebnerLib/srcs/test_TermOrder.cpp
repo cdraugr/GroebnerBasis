@@ -1,4 +1,4 @@
-#include "../includes/Tests.h"
+#include "Tests.h"
 
 template <typename Comp>
 void test_comp(const std::vector<gb::Term<Rational>>& monoms) {

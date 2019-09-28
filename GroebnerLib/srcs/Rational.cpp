@@ -1,4 +1,4 @@
-#include "../includes/Rational.h"
+#include "Rational.h"
 
 Rational::Rational(const i64& numerator, const i64& denominator) {
     if (denominator == 0) {

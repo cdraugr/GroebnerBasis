@@ -1,4 +1,4 @@
-#include "../includes/Tests.h"
+#include "Tests.h"
 
 void test_PolynomialOrder() {
     std::cout << "Test PolynomialOrder:\n";

@@ -1,4 +1,4 @@
-#include "../includes/Tests.h"
+#include "Tests.h"
 
 void test_Monomial() {
     std::cout << "Test Monomial:\n";

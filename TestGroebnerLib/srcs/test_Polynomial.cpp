@@ -1,4 +1,4 @@
-#include "../includes/Tests.h"
+#include "Tests.h"
 
 void test_Polynomial() {
     std::cout << "Test Polynomial:\n";
@@ -24,7 +24,7 @@ void test_Polynomial() {
     std::cout << "g =\t\t" << g << '\n';
     PrintLine();
     std::cout << '(' << g << ") * (" << f << ") =\n" << (g * f) << '\n';
-    PrintLine();    
+    PrintLine();
     std::cout << "S(f, g) = " << gb::SPolynomial(f, g) << '\n';
     std::cout << "S(g, f) = " << gb::SPolynomial(g, f) << '\n';
     std::cout << "S(f, f) = " << gb::SPolynomial(f, f) << '\n';

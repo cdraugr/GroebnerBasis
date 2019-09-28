@@ -50,8 +50,8 @@ $(LIB):
 	@make -C $(LIBDIR)
 
 clean:
-	@/bin/rm -rf $(OBJDIR)
 	@make -C $(LIBDIR) clean
+	@/bin/rm -rf $(OBJDIR)
 
 fclean: clean
 	@make -C $(LIBDIR) fclean

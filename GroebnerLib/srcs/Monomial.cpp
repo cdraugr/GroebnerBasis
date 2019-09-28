@@ -1,4 +1,4 @@
-#include "../includes/Monomial.h"
+#include "Monomial.h"
 
 namespace gb {
     Monomial::Monomial() = default;

@@ -1,4 +1,4 @@
-#include "../includes/Tests.h"
+#include "Tests.h"
 
 void PrintLine(i32 count) {
     while (count--) {

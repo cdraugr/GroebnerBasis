@@ -1,4 +1,4 @@
-#include "../includes/Modular.h"
+#include "Modular.h"
 
 bool is_prime(const u64& number) {
     if (number == 2) {
