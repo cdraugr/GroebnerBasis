@@ -15,8 +15,8 @@
 # include <utility>
 # include <vector>
 
-using u64 = uint64_t;
-using i64 = int64_t;
+using u64 = std::uint64_t;
+using i64 = std::int64_t;
 
 namespace gb {
     using std::pow;  // I want to do Term<i32> and smf like.

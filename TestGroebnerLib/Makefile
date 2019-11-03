@@ -1,4 +1,3 @@
-
 # Project executable
 NAME := GroebnerTest.out
 
@@ -8,7 +7,7 @@ SRCDIR := ./srcs/
 OBJDIR := ./obj/
 
 # Srcs, objs
-SRCNAMES := main.cpp \
+SRCNAMES :=	main.cpp \
 			help_functions.cpp \
 			test_Rational.cpp \
 			test_Modular.cpp \

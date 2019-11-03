@@ -19,7 +19,7 @@ static void makeCombiUtil(std::vector<std::vector<i64>>* ans, std::vector<i64>* 
         const i64& n, const i64& left, const i64& k) {
     if (k == 0) {
         ans->push_back(*tmp);
-        return;
+        return ;
     }
 
     for (i64 i = left; i < n; ++i) {

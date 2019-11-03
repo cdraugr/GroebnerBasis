@@ -5,7 +5,7 @@ namespace gb {
 
     Monomial::Monomial(const std::vector<i64>& arguments) {
         if (arguments.empty()) {
-            return;
+            return ;
         }
         for (size_t i = 0; i != arguments.size(); ++i) {
             if (arguments[i] != 0) {
@@ -95,7 +95,7 @@ namespace gb {
         return !(left == right);
     }
 
-    Monomial gcd(const Monomial& left, const Monomial& right) noexcept {  // gcd
+    Monomial gcd(const Monomial& left, const Monomial& right) noexcept {
         Monomial result;
         for (const auto& [num, degree] : left.degrees()) {
             if (right.degrees().find(num) != right.degrees().end()) {
