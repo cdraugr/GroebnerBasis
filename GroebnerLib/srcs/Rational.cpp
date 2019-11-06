@@ -92,7 +92,6 @@ Rational& Rational::operator/=(const Rational& other) {
         throw std::runtime_error("Division by zero.");
     }
     *this *= Rational(other.denominator(), other.numerator());
-    Reduce();
     return *this;
 }
 
