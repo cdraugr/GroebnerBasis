@@ -122,7 +122,7 @@ namespace gb {
 
     template <typename T>
     bool Term<T>::IsDivisibleBy(const Term<T>& other) const noexcept {
-        return other.coefficient() != 0 && monom().IsDivisibleBy(other.monom());
+        return other.coefficient() != static_cast<T>(0) && monom().IsDivisibleBy(other.monom());
     }
 
     template <typename T>
@@ -266,7 +266,7 @@ namespace gb {
 
     template <typename T>
     void Term<T>::Reduce() noexcept {  // private
-        if (coefficient() == 0) {
+        if (coefficient() == static_cast<T>(0)) {
             monom_ = Monomial();
         }
     }

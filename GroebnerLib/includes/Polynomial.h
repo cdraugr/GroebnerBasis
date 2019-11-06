@@ -95,7 +95,7 @@ namespace gb {
 
     template <typename T, typename Comp>
     Polynomial<T, Comp>::Polynomial(Term<T> term) {
-        if (term != 0) {
+        if (term != static_cast<T>(0)) {
             terms_.insert(std::move(term));
         }
     }
@@ -103,7 +103,7 @@ namespace gb {
     template <typename T, typename Comp>
     Polynomial<T, Comp>::Polynomial(const typename Polynomial<T, Comp>::container& polynom) {
         for (const auto& term : polynom) {
-            if (term != 0) {
+            if (term != static_cast<T>(0)) {
                 terms_.insert(term);
             }
         }
@@ -189,14 +189,14 @@ namespace gb {
 
     template <typename T, typename Comp>
     Polynomial<T, Comp>& Polynomial<T, Comp>::operator+=(const Term<T>& term) noexcept {
-        if (term == 0) {
+        if (term == static_cast<T>(0)) {
             return *this;
         }
         for (const auto& this_term : TermSet()) {
             if (this_term.monom() == term.monom()) {
                 auto count = this_term.coefficient() + term.coefficient();
                 terms_.erase(this_term);
-                if (count != 0) {
+                if (count != static_cast<T>(0)) {
                     terms_.insert(Term<T>(term.monom(), count));
                 }
                 return *this;
@@ -302,7 +302,7 @@ namespace gb {
 
     template <typename T, typename Comp>
     bool operator==(const Polynomial<T, Comp>& polynom, const Term<T>& term) noexcept {
-        return term == 0 ?
+        return term == static_cast<T>(0) ?
             polynom.TermSet().size() == static_cast<size_t>(0) :
             polynom.TermSet().size() == static_cast<size_t>(1) && polynom.LeadTerm() == term;
     }
@@ -341,7 +341,7 @@ namespace gb {
     template <typename T, typename Comp>
     std::ostream& operator<<(std::ostream& out, const Polynomial<T, Comp>& polynom) noexcept {
         if (polynom == Term<T>(0)) {
-            return out << 0;
+            return out << static_cast<T>(0);
         }
 
         for (const auto& term : polynom.TermSet()) {

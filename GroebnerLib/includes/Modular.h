@@ -145,7 +145,7 @@ Modular<TBase> pow(const Modular<TBase>& number, const i64& power) {
 
 template <u64 TBase>
 Modular<TBase> InverseElement(const Modular<TBase>& number) {
-    if (number == 0) {
+    if (number.GetNumber() == 0) {
         throw std::runtime_error("Division by zero.");
     }
     return pow(number, TBase - 2);
