@@ -1,7 +1,6 @@
-#ifndef MONOMIAL_H
-# define MONOMIAL_H
+#pragma once
 
-# include "Lib.h"
+#include "Lib.h"
 
 namespace gb {
     class Monomial {
@@ -39,5 +38,3 @@ namespace gb {
         container data_{};  // (variable number) && (power)
     };
 }
-
-#endif

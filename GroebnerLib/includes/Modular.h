@@ -1,7 +1,6 @@
-#ifndef MODULAR_H
-# define MODULAR_H
+#pragma once
 
-# include "Lib.h"
+#include "Lib.h"
 
 template <u64 TBase>
 class Modular {
@@ -163,5 +162,3 @@ void Modular<TBase>::Reduce() noexcept {  // private
     }
     number_ %= TBase;
 }
-
-#endif

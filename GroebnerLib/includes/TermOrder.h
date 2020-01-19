@@ -1,7 +1,6 @@
-#ifndef TERMORDER_H
-# define TERMORDER_H
+#pragma once
 
-# include "Term.h"
+#include "Term.h"
 
 namespace gb {
     class DegComp {
@@ -84,5 +83,3 @@ namespace gb {
     using ReLexCoefComp = CombineComp<ReLexComp, CoefComp>;
     using DegReLexCoefComp = CombineComp<DegReLexComp, CoefComp>;
 }
-
-#endif

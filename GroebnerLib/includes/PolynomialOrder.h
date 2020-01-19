@@ -1,7 +1,6 @@
-#ifndef POLYNOMIALORDER_H
-# define POLYNOMIALORDER_H
+#pragma once
 
-# include "Polynomial.h"
+#include "Polynomial.h"
 
 namespace gb {
     template <typename Comp>
@@ -29,5 +28,3 @@ namespace gb {
         return left.TermSet().size() < right.TermSet().size();
     }
 }
-
-#endif
