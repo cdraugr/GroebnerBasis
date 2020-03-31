@@ -19,6 +19,9 @@ public:
     const container& TermSet() const noexcept;
     const Term<T>& LeadTerm(const i64& = 0) const;
 
+    template <typename OtherT, typename OtherComp>
+    friend i64 deg(const Polynomial<OtherT, OtherComp>&) noexcept;
+
     bool TryReduceOnceBy(const Polynomial&) noexcept;  // Returns true if there was a reduction otherwise returns false.
 
     Polynomial operator-() const noexcept;
@@ -130,6 +133,18 @@ const Term<T>& Polynomial<T, Comp>::LeadTerm(const i64& index) const {
     auto it = TermSet().begin();
     std::advance(it, index);
     return *it;
+}
+
+template <typename T, typename Comp>
+i64 deg(const Polynomial<T, Comp>& polynom) noexcept {
+    i64 max_degree = -1;
+    for (const auto& term : polynom.TermSet()) {
+        const auto current_degree = deg(term);
+        if (current_degree > max_degree) {
+            max_degree = current_degree;
+        }
+    }
+    return max_degree;
 }
 
 template <typename T, typename Comp>

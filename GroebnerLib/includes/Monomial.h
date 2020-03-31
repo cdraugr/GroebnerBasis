@@ -30,7 +30,7 @@ public:
     friend bool operator==(const Monomial&, const Monomial&) noexcept;
     friend bool operator!=(const Monomial&, const Monomial&) noexcept;
 
-    friend Monomial gcd(const Monomial&, const Monomial&) noexcept;  // gcd
+    friend Monomial gcd(const Monomial&, const Monomial&) noexcept;
     friend Monomial lcm(const Monomial&, const Monomial&) noexcept;
 
     friend std::ostream& operator<<(std::ostream&, const Monomial&) noexcept;
