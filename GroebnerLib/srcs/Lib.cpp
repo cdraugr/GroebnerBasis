@@ -7,7 +7,7 @@ bool is_prime(const u64& number) {
     if (number < 2 || number % 2 == 0) {
         return false;
     }
-    for(u64 i = 3, max = std::sqrt(number); i <= max; i += 2){
+    for(u64 i = 3, root = std::sqrt(number); i <= root; i += 2) {
         if (number % i == 0) {
             return false;
         }
