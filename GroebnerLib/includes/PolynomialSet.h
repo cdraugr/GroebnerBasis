@@ -23,7 +23,9 @@ public:
     bool ReductionToResByMe(Polynomial<T, Comp>*) const noexcept;  // Changing given Polynomial.
     // Returns true if there was a reduction otherwise returns false.
 
-    void AddPolynomial(const Polynomial<T, Comp>&) noexcept;
+    typename container::iterator AddPolynomial(const Polynomial<T, Comp>&) noexcept;
+    void RemovePolynomial(const Polynomial<T, Comp>&) noexcept;
+    typename container::iterator RemovePolynomial(typename container::const_iterator) noexcept;
 
     PolynomialSet<T, Comp>& MakeGroebnerBasis() noexcept;
     void ReduceCoefficients();
@@ -32,7 +34,8 @@ public:
     bool IsPolynomialInMyIdeal(const Polynomial<T, Comp>&) const noexcept;
 
     template <typename OtherT, typename OtherComp>
-    friend std::list<Polynomial<OtherT, OtherComp>> AllSPolynoms(const PolynomialSet<OtherT, OtherComp>& pol_set) noexcept;
+    friend std::list<Polynomial<OtherT, OtherComp>>
+        AllSPolynoms(const PolynomialSet<OtherT, OtherComp>& pol_set) noexcept;
 
     template <typename OtherT, typename OtherComp>
     friend bool IsGroebnerBasis(const PolynomialSet<OtherT, OtherComp>&) noexcept;
@@ -110,10 +113,23 @@ bool PolynomialSet<T, Comp>::ReductionToResByMe(Polynomial<T, Comp>* polynom) co
 }
 
 template <typename T, typename Comp>
-void PolynomialSet<T, Comp>::AddPolynomial(const Polynomial<T, Comp>& polynom) noexcept {
+typename PolynomialSet<T, Comp>::container::iterator
+PolynomialSet<T, Comp>::AddPolynomial(const Polynomial<T, Comp>& polynom) noexcept {
     if (polynom != Term<T>(0)) {
-        polynoms_.insert(polynom);
+        return polynoms_.insert(polynom);
     }
+    return PolSet().end();  // Kind of return nullptr.
+}
+
+template <typename T, typename Comp>
+void PolynomialSet<T, Comp>::RemovePolynomial(const Polynomial<T, Comp>& polynom) noexcept {
+    polynoms_.erase(polynom);
+}
+
+template <typename T, typename Comp>
+typename PolynomialSet<T, Comp>::container::iterator
+PolynomialSet<T, Comp>::RemovePolynomial(typename PolynomialSet<T, Comp>::container::const_iterator polynom) noexcept {
+    return polynoms_.erase(polynom);
 }
 
 template <typename T, typename Comp>

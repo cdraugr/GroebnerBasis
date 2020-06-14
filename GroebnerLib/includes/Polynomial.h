@@ -18,6 +18,7 @@ public:
 
     const container& TermSet() const noexcept;
     const Term<T>& LeadTerm(const i64& = 0) const;
+    const Monomial& LeadMonomial(const i64& = 0) const;
 
     template <typename OtherT, typename OtherComp>
     friend i64 deg(const Polynomial<OtherT, OtherComp>&) noexcept;
@@ -133,6 +134,11 @@ const Term<T>& Polynomial<T, Comp>::LeadTerm(const i64& index) const {
     auto it = TermSet().begin();
     std::advance(it, index);
     return *it;
+}
+
+template <typename T, typename Comp>
+const Monomial& Polynomial<T, Comp>::LeadMonomial(const i64& index) const {
+    return LeadTerm(index).monom();
 }
 
 template <typename T, typename Comp>
