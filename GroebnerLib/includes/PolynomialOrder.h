@@ -18,11 +18,11 @@ bool PolynomialOrder<Comp>::operator()(
     const Polynomial<T, OtherComp>& right
 ) const noexcept {
     Comp comparator;
-    i64 min_max_index = std::min(left.TermSet().size(), right.TermSet().size());
-    for (i64 i = 0; i != min_max_index; ++i) {
-        if (comparator(left.LeadTerm(i), right.LeadTerm(i)) ||
-            comparator(right.LeadTerm(i), left.LeadTerm(i))) {
-            return comparator(left.LeadTerm(i), right.LeadTerm(i));
+    auto left_it = left.TermSet().begin();
+    auto right_it = right.TermSet().begin();
+    for (; left_it != left.TermSet().end() && right_it != right.TermSet().end(); ++left_it, ++right_it) {
+        if (comparator(*left_it, *right_it) || comparator(*right_it, *left_it)) {
+            return comparator(*left_it, *right_it);
         }
     }
 
