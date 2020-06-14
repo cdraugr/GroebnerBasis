@@ -38,7 +38,7 @@ bool operator>=(const Rational& left, const Rational& right) noexcept {
 }
 
 bool operator==(const Rational& left, const Rational& right) noexcept {
-    return left <= right && left >= right;
+    return left.numerator() == right.numerator() && left.denominator() * right.denominator();
 }
 
 bool operator!=(const Rational& left, const Rational& right) noexcept {
@@ -46,7 +46,7 @@ bool operator!=(const Rational& left, const Rational& right) noexcept {
 }
 
 Rational Rational::operator+() const noexcept {
-    return Rational(numerator(), denominator());
+    return *this;
 }
 
 Rational Rational::operator-() const noexcept {

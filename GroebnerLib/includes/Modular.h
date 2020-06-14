@@ -54,7 +54,7 @@ public:
     }
 
     friend bool operator==(const Modular& left, const Modular& right) noexcept {
-        return left <= right && left >= right;;
+        return left.GetNumber() == right.GetNumber();
     }
 
     friend bool operator!=(const Modular& left, const Modular& right) noexcept {
