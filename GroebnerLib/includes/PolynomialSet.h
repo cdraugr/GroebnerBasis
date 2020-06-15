@@ -116,7 +116,7 @@ template <typename T, typename Comp>
 typename PolynomialSet<T, Comp>::container::iterator
 PolynomialSet<T, Comp>::AddPolynomial(const Polynomial<T, Comp>& polynom) noexcept {
     if (polynom != Term<T>(0)) {
-        return polynoms_.insert(polynom);
+        return polynoms_.insert(polynom).first;
     }
     return PolSet().end();  // Kind of return nullptr.
 }
