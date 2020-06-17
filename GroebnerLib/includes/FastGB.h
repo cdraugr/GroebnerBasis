@@ -60,7 +60,7 @@ sym_preproc(
     typename Polynomial<T, Comp>::container relative_complement;
     for (const auto& polynomial : to_reduce.PolSet()) {
         for (const auto& term : polynomial.TermSet()) {
-            relative_complement.insert(Term<T>(term.monom(), value_type_one));
+            relative_complement.insert(Term<T>(term.monomial(), value_type_one));
         }
     }
 
@@ -85,7 +85,7 @@ sym_preproc(
             to_reduce.AddPolynomial(polynomial_to_add);
 
             for (const auto& term : polynomial_to_add.TermSet()) {
-                Term<T> term_to_add(term.monom(), value_type_one);
+                Term<T> term_to_add(term.monomial(), value_type_one);
                 if (done_terms.find(term_to_add) == done_terms.end()) {
                     relative_complement.insert(term_to_add);
                 }
@@ -106,7 +106,7 @@ static PolynomialSet<T, Comp> reduction(
     const T value_type_one(1);
     Polynomial<T, Comp> lead_terms;
     for (const auto& polynomial : results.PolSet()) {
-        Term<T> term_to_add(polynomial.LeadTerm().monom(), value_type_one);
+        Term<T> term_to_add(polynomial.LeadTerm().monomial(), value_type_one);
         if (lead_terms.TermSet().find(term_to_add) == lead_terms.TermSet().end()) {
             lead_terms += term_to_add;
         }

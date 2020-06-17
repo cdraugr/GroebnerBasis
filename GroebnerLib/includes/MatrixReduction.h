@@ -97,7 +97,7 @@ PolynomialSet<T, Comp> matrix_reduction(
         size_t jndex = 0;
         auto poly_it = it->TermSet().begin();
         for (auto jt = all_terms.begin(); poly_it != it->TermSet().end(); ++jt, ++jndex) {
-            if (poly_it->monom() == jt->monom()) {
+            if (poly_it->monomial() == jt->monomial()) {
                 matrix[index][jndex] = poly_it->coefficient();
                 ++poly_it;
             }
@@ -120,13 +120,13 @@ PolynomialSet<T, Comp> matrix_reduction(
             std::advance(it, index - last_index);
             last_index = index;
             if (is_first) {
-                if (lead_terms.TermSet().find(Term<T>(it->monom(), value_type_one)) !=
+                if (lead_terms.TermSet().find(Term<T>(it->monomial(), value_type_one)) !=
                         lead_terms.TermSet().end()) {
                     break;
                 }
                 is_first = false;
             }
-            polynomial.insert(Term<T>(it->monom(), coefficient));
+            polynomial.insert(Term<T>(it->monomial(), coefficient));
         }
         reduced_results.AddPolynomial(polynomial);
     }
@@ -208,7 +208,7 @@ PolynomialSet<T, Comp> matrix_reduction (
         size_t jndex = 0;
         auto poly_it = it->TermSet().begin();
         for (auto jt = all_terms.begin(); poly_it != it->TermSet().end(); ++jt, ++jndex) {
-            if (poly_it->monom() == jt->monom()) {
+            if (poly_it->monomial() == jt->monomial()) {
                 matrix[index][jndex] = poly_it->coefficient();
                 ++poly_it;
             }
@@ -231,14 +231,14 @@ PolynomialSet<T, Comp> matrix_reduction (
             is_all_zeros = false;
 
             if (!was_first) {
-                if (lead_terms.TermSet().find(Term<T>(it->monom(), value_type_one)) !=
+                if (lead_terms.TermSet().find(Term<T>(it->monomial(), value_type_one)) !=
                         lead_terms.TermSet().end()) {
                     break;
                 }
                 was_first = true;
             }
 
-            polynomial.insert(Term<T>(it->monom(), coefficient));
+            polynomial.insert(Term<T>(it->monomial(), coefficient));
             ++it;
         }
         if (is_all_zeros) {

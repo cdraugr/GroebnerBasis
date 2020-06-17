@@ -138,7 +138,7 @@ const Term<T>& Polynomial<T, Comp>::LeadTerm(const i64& index) const {
 
 template <typename T, typename Comp>
 const Monomial& Polynomial<T, Comp>::LeadMonomial(const i64& index) const {
-    return LeadTerm(index).monom();
+    return LeadTerm(index).monomial();
 }
 
 template <typename T, typename Comp>
@@ -214,11 +214,11 @@ Polynomial<T, Comp>& Polynomial<T, Comp>::operator+=(const Term<T>& term) noexce
         return *this;
     }
     for (const auto& this_term : TermSet()) {
-        if (this_term.monom() == term.monom()) {
+        if (this_term.monomial() == term.monomial()) {
             auto count = this_term.coefficient() + term.coefficient();
             terms_.erase(this_term);
             if (count != static_cast<T>(0)) {
-                terms_.insert(Term<T>(term.monom(), count));
+                terms_.insert(Term<T>(term.monomial(), count));
             }
             return *this;
         }

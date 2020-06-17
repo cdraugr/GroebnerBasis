@@ -16,7 +16,7 @@ public:
     Term(const Monomial&, const type_name&);
 
     const type_name& coefficient() const noexcept;
-    const Monomial& monom() const noexcept;
+    const Monomial& monomial() const noexcept;
 
     i64 GetDegree(const i64&) const noexcept;
     bool IsInteger() const noexcept;
@@ -84,7 +84,7 @@ private:
     void Reduce() noexcept;
 
     type_name coefficient_{};
-    Monomial monom_{};
+    Monomial monomial_{};
 };
 
 template <typename T>
@@ -95,8 +95,8 @@ Term<T>::Term(const Term<T>::type_name& coefficient)
     : coefficient_{coefficient} {}
 
 template <typename T>
-Term<T>::Term(const Monomial& monom, const Term<T>::type_name& coefficient)
-    : coefficient_{coefficient}, monom_{monom} {
+Term<T>::Term(const Monomial& monomial, const Term<T>::type_name& coefficient)
+    : coefficient_{coefficient}, monomial_{monomial} {
         Reduce();
     }
 
@@ -106,44 +106,44 @@ const typename Term<T>::type_name& Term<T>::coefficient() const noexcept {
 }
 
 template <typename T>
-const Monomial& Term<T>::monom() const noexcept {
-    return monom_;
+const Monomial& Term<T>::monomial() const noexcept {
+    return monomial_;
 }
 
 template <typename T>
 i64 Term<T>::GetDegree(const i64& index) const noexcept {
-    return monom().GetDegree(index);
+    return monomial().GetDegree(index);
 }
 
 template <typename T>
 bool Term<T>::IsInteger() const noexcept {
-    return monom().IsOne();
+    return monomial().IsOne();
 }
 
 template <typename T>
 bool Term<T>::IsDivisibleBy(const Term<T>& other) const noexcept {
-    return other.coefficient() != static_cast<T>(0) && monom().IsDivisibleBy(other.monom());
+    return other.coefficient() != static_cast<T>(0) && monomial().IsDivisibleBy(other.monomial());
 }
 
 template <typename T>
 i64 Term<T>::GetLastVariableIndex() const noexcept {
-    return monom().GetLastVariableIndex();
+    return monomial().GetLastVariableIndex();
 }
 
 template <typename T>
 Term<T> Term<T>::operator+() const noexcept {
-    return Term<T>(monom(), coefficient());
+    return Term<T>(monomial(), coefficient());
 }
 
 template <typename T>
 Term<T> Term<T>::operator-() const noexcept {
-    return Term<T>(monom(), -coefficient());
+    return Term<T>(monomial(), -coefficient());
 }
 
 template <typename T>
 Term<T>& Term<T>::operator*=(const Term<T>& other) noexcept {
     coefficient_ *= other.coefficient();
-    monom_ *= other.monom();
+    monomial_ *= other.monomial();
     Reduce();
     return *this;
 }
@@ -151,7 +151,7 @@ Term<T>& Term<T>::operator*=(const Term<T>& other) noexcept {
 template <typename T>
 Term<T>& Term<T>::operator/=(const Term<T>& other) {
     coefficient_ /= other.coefficient();
-    monom_ /= other.monom();
+    monomial_ /= other.monomial();
     return *this;
 }
 
@@ -206,12 +206,12 @@ Term<T> operator/(Term<T> left, const Term<T>& right) {
 
 template <typename T>
 i64 deg(const Term<T>& term) noexcept {
-    return deg(term.monom());
+    return deg(term.monomial());
 }
 
 template <typename T>
 bool operator==(const Term<T>& left, const Term<T>& right) noexcept {
-    return left.coefficient() == right.coefficient() && left.monom() == right.monom();
+    return left.coefficient() == right.coefficient() && left.monomial() == right.monomial();
 }
 
 template <typename T>
@@ -241,12 +241,12 @@ bool operator!=(const typename Term<T>::type_name& type_elem, const Term<T>& ter
 
 template <typename T>
 Term<T> gcd(const Term<T>& left, const Term<T>& right) noexcept {
-    return Term<T>(gcd(left.monom(), right.monom()), 1);
+    return Term<T>(gcd(left.monomial(), right.monomial()), 1);
 }
 
 template <typename T>
 Term<T> lcm(const Term<T>& left, const Term<T>& right) noexcept {
-    return Term<T>(lcm(left.monom(), right.monom()), left.coefficient() * right.coefficient());
+    return Term<T>(lcm(left.monomial(), right.monomial()), left.coefficient() * right.coefficient());
 }
 
 template <typename T>
@@ -261,13 +261,13 @@ std::ostream& operator<<(std::ostream& out, const Term<T>& term) noexcept {
         out << term.coefficient() << '*';
     }
 
-    return out << term.monom();
+    return out << term.monomial();
 }
 
 template <typename T>
 void Term<T>::Reduce() noexcept {  // private
     if (coefficient() == static_cast<T>(0)) {
-        monom_ = Monomial();
+        monomial_ = Monomial();
     }
 }
 
