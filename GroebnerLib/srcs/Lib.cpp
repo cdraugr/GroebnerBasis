@@ -15,7 +15,7 @@ bool is_prime(const u64& number) {
     return true;
 }
 
-static void makeCombiUtil(std::vector<std::vector<i64>>* ans, std::vector<i64>* tmp,
+static void make_combi_util(std::vector<std::vector<i64>>* ans, std::vector<i64>* tmp,
         const i64& n, const i64& left, const i64& k) {
     if (k == 0) {
         ans->push_back(*tmp);
@@ -24,7 +24,7 @@ static void makeCombiUtil(std::vector<std::vector<i64>>* ans, std::vector<i64>* 
 
     for (i64 i = left; i < n; ++i) {
         tmp->push_back(i);
-        makeCombiUtil(ans, tmp, n, i + 1, k - 1);
+        make_combi_util(ans, tmp, n, i + 1, k - 1);
         tmp->pop_back();
     }
 }
@@ -32,6 +32,6 @@ static void makeCombiUtil(std::vector<std::vector<i64>>* ans, std::vector<i64>* 
 std::vector<std::vector<i64>> make_combinations(const i64& k, const i64& n) {
     std::vector<std::vector<i64>> ans;
     std::vector<i64> tmp;
-    makeCombiUtil(&ans, &tmp, n, 0, k);
+    make_combi_util(&ans, &tmp, n, 0, k);
     return ans;
 }
