@@ -8,6 +8,7 @@ template <typename T, typename Comp = LexCoefComp>
 class PolynomialSet {
 public:
     using container = std::set<Polynomial<T, Comp>, PolynomialOrder<LexCoefComp>>;
+    using iterator = typename container::iterator;
 
     PolynomialSet();
     PolynomialSet(const Polynomial<T, Comp>&);
@@ -24,8 +25,8 @@ public:
     // Returns true if there was a reduction otherwise returns false.
 
     typename container::iterator AddPolynomial(const Polynomial<T, Comp>&) noexcept;
-    void RemovePolynomial(const Polynomial<T, Comp>&) noexcept;
-    typename container::iterator RemovePolynomial(typename container::const_iterator) noexcept;
+    void RemovePolynomial(const Polynomial<T, Comp>&);
+    iterator RemovePolynomial(iterator);
 
     PolynomialSet<T, Comp>& MakeGroebnerBasis() noexcept;
     void ReduceCoefficients();
@@ -122,13 +123,14 @@ PolynomialSet<T, Comp>::AddPolynomial(const Polynomial<T, Comp>& polynom) noexce
 }
 
 template <typename T, typename Comp>
-void PolynomialSet<T, Comp>::RemovePolynomial(const Polynomial<T, Comp>& polynom) noexcept {
+void PolynomialSet<T, Comp>::RemovePolynomial(const Polynomial<T, Comp>& polynom) {
     polynoms_.erase(polynom);
 }
 
 template <typename T, typename Comp>
-typename PolynomialSet<T, Comp>::container::iterator
-PolynomialSet<T, Comp>::RemovePolynomial(typename PolynomialSet<T, Comp>::container::const_iterator polynom) noexcept {
+typename PolynomialSet<T, Comp>::iterator
+PolynomialSet<T, Comp>::RemovePolynomial(
+        typename PolynomialSet<T, Comp>::iterator polynom) {
     return polynoms_.erase(polynom);
 }
 
