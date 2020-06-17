@@ -1,5 +1,6 @@
 #include "TimerWrapper.h"
 #include "PolynomialSet.h"  // not GroebnerLib.h or smf like that
+#include "FastGB.h"
 #include <ios>
 
 void PrintLine(i32 = 1);
@@ -14,3 +15,5 @@ void test_PolynomialOrder();
 void test_PolynomialSet();
 void test_Sigma(i32);
 void test_SigmaTime(i32);
+void test_CriticalPair();
+void test_FastGB();
