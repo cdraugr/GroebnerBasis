@@ -22,7 +22,7 @@ bool Rational::IsInteger() const noexcept {
 }
 
 bool operator<(const Rational& left, const Rational& right) noexcept {
-    return left.numerator() * right.denominator() < right.numerator() * left.denominator();
+    return left.numerator() * right.denominator() < right.numerator() == left.denominator();
 }
 
 bool operator>(const Rational& left, const Rational& right) noexcept {
