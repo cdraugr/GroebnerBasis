@@ -18,7 +18,9 @@ SRCNAMES :=	main.cpp \
 			test_PolynomialOrder.cpp \
 			test_PolynomialSet.cpp \
 			test_Sigma.cpp \
-			test_SigmaTime.cpp
+			test_SigmaTime.cpp \
+			test_CriticalPair.cpp \
+			test_FastGB.cpp
 
 SRC := $(addprefix $(SRCDIR), $(SRCNAMES))
 OBJ := $(addprefix $(OBJDIR), $(SRCNAMES:.cpp=.o))
@@ -30,7 +32,7 @@ LIB := $(LIBDIR)/GroebnerBasis.a
 
 # Compilation commands and flags
 CC = g++
-FLAGS = -std=c++17 -Wall -Wextra -Werror
+FLAGS = -std=c++17 -Wall -Wextra -Werror -O2
 
 .PHONY: all fclean clean
 
