@@ -1,6 +1,5 @@
-#include "TimerWrapper.h"
-#include "PolynomialSet.h"  // not GroebnerLib.h or smf like that
 #include "FastGB.h"
+#include "TimerWrapper.h"
 #include <ios>
 
 void PrintLine(i32 = 1);
