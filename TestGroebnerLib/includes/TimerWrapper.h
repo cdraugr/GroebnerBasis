@@ -21,7 +21,7 @@ public:
         i32 minuties = static_cast<i32>(seconds / 60);
         std::cout << text_;
         if (minuties > 0) {
-            std::cout << minuties << (minuties > 1 ? " minuties " : " minutie ");
+            std::cout << minuties << (minuties > 1 ? " minutes " : " minute ");
         }
         std::cout << seconds - 60.0 * minuties << " seconds." << std::endl;
     }
