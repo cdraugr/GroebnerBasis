@@ -32,7 +32,7 @@ LIB := $(LIBDIR)/GroebnerBasis.a
 
 # Compilation commands and flags
 CC = g++
-FLAGS = -std=c++17 -Wall -Wextra -Werror -O2
+FLAGS = -std=c++17 -Wall -Wextra -Werror
 
 .PHONY: all fclean clean
 
