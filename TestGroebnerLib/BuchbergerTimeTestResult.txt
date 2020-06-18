@@ -75,7 +75,7 @@ x_(1)+x_(2)+x_(3)+x_(4)+x_(5)+x_(6)+x_(7)
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 8 variables:
-Time spended for calculate Cyclic 8 using only Lex = 7 minuties 26.7767 seconds.
+Time spended for calculate Cyclic 8 using only Lex = 7 minutes 26.7767 seconds.
 Result System: {
 x_(8)^{8}-1
 x_(7)^{7}+x_(7)^{6}*x_(8)+x_(7)^{5}*x_(8)^{2}+x_(7)^{4}*x_(8)^{3}+x_(7)^{3}*x_(8)^{4}+x_(7)^{2}*x_(8)^{5}+x_(7)*x_(8)^{6}+x_(8)^{7}
@@ -89,7 +89,7 @@ x_(1)+x_(2)+x_(3)+x_(4)+x_(5)+x_(6)+x_(7)+x_(8)
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 9 variables:
-Time spended for calculate Cyclic 8 using only Lex = 75 minuties 23.539 seconds.
+Time spended for calculate Cyclic 8 using only Lex = 75 minutes 23.539 seconds.
 Result System: {
 x_(9)^{9}-1
 x_(8)^{8}+x_(8)^{7}*x_(9)+x_(8)^{6}*x_(9)^{2}+x_(8)^{5}*x_(9)^{3}+x_(8)^{4}*x_(9)^{4}+x_(8)^{3}*x_(9)^{5}+x_(8)^{2}*x_(9)^{6}+x_(8)*x_(9)^{7}+x_(9)^{8}
