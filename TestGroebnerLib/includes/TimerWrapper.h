@@ -2,7 +2,7 @@
 #include <string>
 #include <iostream>
 
-using i32 = int32_t;
+using u32 = int32_t;
 
 template <typename TFunction>
 class TimerWrapper {
@@ -18,7 +18,7 @@ public:
         const clock_t end_time_ = ::clock();
         const clock_t diff = (end_time_ - start_time_);
         double seconds = static_cast<double>(diff) / CLOCKS_PER_SEC;
-        i32 minuties = static_cast<i32>(seconds / 60);
+        u32 minuties = static_cast<u32>(seconds / 60);
         std::cout << text_;
         if (minuties > 0) {
             std::cout << minuties << (minuties > 1 ? " minutes " : " minute ");

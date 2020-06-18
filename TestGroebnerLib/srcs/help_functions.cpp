@@ -1,8 +1,8 @@
 #include "Tests.h"
 
-void PrintLine(i32 count) {
+void PrintLine(u32 count) {
     while (count--) {
-        for (i32 i = 0; i != 50; ++i) {
+        for (u32 i = 0; i != 50; ++i) {
             std::cout << '-';
         }
         std::cout << '\n';
