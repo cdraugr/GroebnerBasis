@@ -37,9 +37,9 @@ i64 Monomial::GetLastVariableIndex() const noexcept {
     return IsOne() ? 0 : degrees().crbegin()->first;
 }
 
-i64 deg(const Monomial& monom) noexcept {
+i64 deg(const Monomial& monomial) noexcept {
     i64 sum = 0;
-    for (const auto& [num, degree] : monom.degrees()) {
+    for (const auto& [num, degree] : monomial.degrees()) {
         sum += degree;
     }
     return sum;
@@ -114,17 +114,17 @@ Monomial lcm(const Monomial& left, const Monomial& right) noexcept {
     return result;
 }
 
-std::ostream& operator<<(std::ostream& out, const Monomial& monom) noexcept {
-    if (monom.IsOne()) {
+std::ostream& operator<<(std::ostream& out, const Monomial& monomial) noexcept {
+    if (monomial.IsOne()) {
         return out << 1;
     }
 
-    for (auto it = monom.degrees().begin(); it != monom.degrees().end(); ++it) {
+    for (auto it = monomial.degrees().begin(); it != monomial.degrees().end(); ++it) {
         out << "x_(" << it->first + 1 << ')';
         if (it->second > 1) {
             out << "^{" << it->second << '}';
         }
-        if (it != std::prev(monom.degrees().end())) {
+        if (it != std::prev(monomial.degrees().end())) {
             out << '*';
         }
     }
