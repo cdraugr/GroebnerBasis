@@ -232,7 +232,7 @@ template <typename T, typename Comp>
 std::ostream& operator<<(std::ostream& out, const PolynomialSet<T, Comp>& poly_set) noexcept {
     for (auto it = poly_set.PolSet().begin(); it != poly_set.PolSet().end(); ++it) {
         if (it != poly_set.PolSet().begin()) {
-            out << '\n';
+            out << "\n\n";
         }
         out << *it;
     }
