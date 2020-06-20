@@ -104,12 +104,9 @@ static PolynomialSet<T, Comp> reduction(
     auto [results, all_terms] = sym_preproc(critical_pairs, poly_set);
 
     const T value_type_one(1);
-    Polynomial<T, Comp> lead_terms;
+    typename Polynomial<T, Comp>::container lead_terms;
     for (const auto& polynomial : results.PolSet()) {
-        Term<T> term_to_add(polynomial.LeadTerm().monomial(), value_type_one);
-        if (lead_terms.TermSet().find(term_to_add) == lead_terms.TermSet().end()) {
-            lead_terms += term_to_add;
-        }
+        lead_terms.insert(Term<T>(polynomial.LeadTerm().monomial(), value_type_one));
     }
 
     return matrix_reduction(results, all_terms, lead_terms);

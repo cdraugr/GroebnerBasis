@@ -9,7 +9,7 @@ PolynomialSet<T, Comp>
 matrix_reduction(
     const PolynomialSet<T, Comp>&,  // Polynomials to reduce.
     const typename Polynomial<T, Comp>::container&,  // Set of all terms.
-    const Polynomial<T, Comp>&  // Set of all lead terms.
+    const typename Polynomial<T, Comp>::container&  // Set of all lead terms.
 );
 
 // #define VECTOR_MAP
@@ -90,7 +90,7 @@ template <typename T, typename Comp>
 PolynomialSet<T, Comp> matrix_reduction(
         const PolynomialSet<T, Comp>& results,
         const typename Polynomial<T, Comp>::container& all_terms,
-        const Polynomial<T, Comp>& lead_terms) {
+        const typename Polynomial<T, Comp>::container& lead_terms) {
     std::vector<std::map<size_t, T>> matrix(results.PolSet().size());
     size_t index = matrix.size() - 1;
     for (auto it = results.PolSet().begin(); it != results.PolSet().end(); ++it, --index) {
@@ -120,8 +120,7 @@ PolynomialSet<T, Comp> matrix_reduction(
             std::advance(it, index - last_index);
             last_index = index;
             if (is_first) {
-                if (lead_terms.TermSet().find(Term<T>(it->monomial(), value_type_one)) !=
-                        lead_terms.TermSet().end()) {
+                if (lead_terms.find(Term<T>(it->monomial(), value_type_one)) != lead_terms.end()) {
                     break;
                 }
                 is_first = false;
@@ -200,7 +199,7 @@ template <typename T, typename Comp>
 PolynomialSet<T, Comp> matrix_reduction (
         const PolynomialSet<T, Comp>& results,
         const typename Polynomial<T, Comp>::container& all_terms,
-        const Polynomial<T, Comp>& lead_terms) {
+        const typename Polynomial<T, Comp>::container& lead_terms) {
     std::vector<std::vector<T>> matrix(results.PolSet().size(), std::vector<T>(all_terms.size()));
 
     size_t index = matrix.size() - 1;
@@ -231,8 +230,7 @@ PolynomialSet<T, Comp> matrix_reduction (
             is_all_zeros = false;
 
             if (!was_first) {
-                if (lead_terms.TermSet().find(Term<T>(it->monomial(), value_type_one)) !=
-                        lead_terms.TermSet().end()) {
+                if (lead_terms.find(Term<T>(it->monomial(), value_type_one)) != lead_terms.end()) {
                     break;
                 }
                 was_first = true;
