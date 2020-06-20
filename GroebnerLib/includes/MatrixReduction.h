@@ -221,7 +221,7 @@ PolynomialSet<T, Comp> matrix_reduction (
     for (const auto& row : matrix) {
         typename Polynomial<T, Comp>::container polynomial;
         auto it = all_terms.begin();
-        bool was_first = false, is_all_zeros = true;
+        bool is_first = true, is_all_zeros = true;
         for (const auto& coefficient : row) {
             if (coefficient == value_type_zero) {
                 ++it;
@@ -229,11 +229,11 @@ PolynomialSet<T, Comp> matrix_reduction (
             }
             is_all_zeros = false;
 
-            if (!was_first) {
+            if (is_first) {
                 if (lead_terms.find(Term<T>(it->monomial(), value_type_one)) != lead_terms.end()) {
                     break;
                 }
-                was_first = true;
+                is_first = false;
             }
 
             polynomial.insert(Term<T>(it->monomial(), coefficient));
