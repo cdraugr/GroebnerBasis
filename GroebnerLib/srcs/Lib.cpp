@@ -15,7 +15,7 @@ bool is_prime(const u64& number) {
     return true;
 }
 
-static void make_combi_util(std::vector<std::vector<i64>>* ans, std::vector<i64>* tmp,
+static void make_combi_util(std::vector<std::vector<i64>> *ans, std::vector<i64> *tmp,
         const i64& n, const i64& left, const i64& k) {
     if (k == 0) {
         ans->push_back(*tmp);

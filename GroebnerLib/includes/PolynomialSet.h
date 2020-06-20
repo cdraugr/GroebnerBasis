@@ -94,7 +94,7 @@ const Polynomial<T, Comp>& PolynomialSet<T, Comp>::LeadPolynom(const i64& index)
 }
 
 template <typename T, typename Comp>
-bool PolynomialSet<T, Comp>::OneReductionByMe(Polynomial<T, Comp>* polynom) const noexcept {
+bool PolynomialSet<T, Comp>::OneReductionByMe(Polynomial<T, Comp> *polynom) const noexcept {
     bool was_changed = false;
     for (const auto& redu_poly : PolSet()) {
         while (polynom->TryReduceOnceBy(redu_poly)) {  // Polynom is changing here.
@@ -105,7 +105,7 @@ bool PolynomialSet<T, Comp>::OneReductionByMe(Polynomial<T, Comp>* polynom) cons
 }
 
 template <typename T, typename Comp>
-bool PolynomialSet<T, Comp>::ReductionToResByMe(Polynomial<T, Comp>* polynom) const noexcept {
+bool PolynomialSet<T, Comp>::ReductionToResByMe(Polynomial<T, Comp> *polynom) const noexcept {
     bool was_changed = false;
     while (OneReductionByMe(polynom)) {  // Polynom is changing here.
         was_changed = true;
