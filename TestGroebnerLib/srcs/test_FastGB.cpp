@@ -23,7 +23,7 @@ void test_FastGB(u32 maximum_variables) {
     for (u32 i = 1; i <= maximum_variables ; ++i) {
         auto ideal = gb::GiveSigmaSet<Rational, gb::LexComp>(i);
 
-        std::string text = "Time spent for calculate Cyclic ";
+        std::string text = "Time spent for calculate Root ";
         text.push_back('0' + i);
         test_time(test_FastGBTime, text + " Groebner Basis is ")(ideal);
 

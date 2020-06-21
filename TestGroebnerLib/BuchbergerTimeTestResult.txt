@@ -1,14 +1,14 @@
 Test \sigma with 1 variable:
-Time spended for calculate Cyclic 1 using DegRevLex = 0.000418 seconds.
-Time spended for calculate Cyclic 1 using only Lex = 0.000175 seconds.
+Time spended for calculate Root 1 using DegRevLex = 0.000418 seconds.
+Time spended for calculate Root 1 using only Lex = 0.000175 seconds.
 Result System: {
 x_(1)-1
 }
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 2 variables:
-Time spended for calculate Cyclic 2 using DegRevLex = 0.00266 seconds.
-Time spended for calculate Cyclic 2 using only Lex = 0.001073 seconds.
+Time spended for calculate Root 2 using DegRevLex = 0.00266 seconds.
+Time spended for calculate Root 2 using only Lex = 0.001073 seconds.
 Result System: {
 x_(2)^{2}-1
 x_(1)+x_(2)
@@ -16,8 +16,8 @@ x_(1)+x_(2)
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 3 variables:
-Time spended for calculate Cyclic 3 using DegRevLex = 0.029186 seconds.
-Time spended for calculate Cyclic 3 using only Lex = 0.006002 seconds.
+Time spended for calculate Root 3 using DegRevLex = 0.029186 seconds.
+Time spended for calculate Root 3 using only Lex = 0.006002 seconds.
 Result System: {
 x_(3)^{3}-1
 x_(2)^{2}+x_(2)*x_(3)+x_(3)^{2}
@@ -26,8 +26,8 @@ x_(1)+x_(2)+x_(3)
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 4 variables:
-Time spended for calculate Cyclic 4 using DegRevLex = 0.408013 seconds.
-Time spended for calculate Cyclic 4 using only Lex = 0.052871 seconds.
+Time spended for calculate Root 4 using DegRevLex = 0.408013 seconds.
+Time spended for calculate Root 4 using only Lex = 0.052871 seconds.
 Result System: {
 x_(4)^{4}-1
 x_(3)^{3}+x_(3)^{2}*x_(4)+x_(3)*x_(4)^{2}+x_(4)^{3}
@@ -37,8 +37,8 @@ x_(1)+x_(2)+x_(3)+x_(4)
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 5 variables:
-Time spended for calculate Cyclic 5 using DegRevLex = 5.92596 seconds.
-Time spended for calculate Cyclic 5 using only Lex = 0.553953 seconds.
+Time spended for calculate Root 5 using DegRevLex = 5.92596 seconds.
+Time spended for calculate Root 5 using only Lex = 0.553953 seconds.
 Result System: {
 x_(5)^{5}-1
 x_(4)^{4}+x_(4)^{3}*x_(5)+x_(4)^{2}*x_(5)^{2}+x_(4)*x_(5)^{3}+x_(5)^{4}
@@ -49,8 +49,8 @@ x_(1)+x_(2)+x_(3)+x_(4)+x_(5)
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 6 variables:
-Time spended for calculate Cyclic 6 using DegRevLex = 1 minutie 26.1314 seconds.
-Time spended for calculate Cyclic 6 using only Lex = 5.11809 seconds.
+Time spended for calculate Root 6 using DegRevLex = 1 minutie 26.1314 seconds.
+Time spended for calculate Root 6 using only Lex = 5.11809 seconds.
 Result System: {
 x_(6)^{6}-1
 x_(5)^{5}+x_(5)^{4}*x_(6)+x_(5)^{3}*x_(6)^{2}+x_(5)^{2}*x_(6)^{3}+x_(5)*x_(6)^{4}+x_(6)^{5}
@@ -62,7 +62,7 @@ x_(1)+x_(2)+x_(3)+x_(4)+x_(5)+x_(6)
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 7 variables:
-Time spended for calculate Cyclic 7 using only Lex = 48.4746 seconds.
+Time spended for calculate Root 7 using only Lex = 48.4746 seconds.
 Result System: {
 x_(7)^{7}-1
 x_(6)^{6}+x_(6)^{5}*x_(7)+x_(6)^{4}*x_(7)^{2}+x_(6)^{3}*x_(7)^{3}+x_(6)^{2}*x_(7)^{4}+x_(6)*x_(7)^{5}+x_(7)^{6}
@@ -75,7 +75,7 @@ x_(1)+x_(2)+x_(3)+x_(4)+x_(5)+x_(6)+x_(7)
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 8 variables:
-Time spended for calculate Cyclic 8 using only Lex = 7 minutes 26.7767 seconds.
+Time spended for calculate Root 8 using only Lex = 7 minutes 26.7767 seconds.
 Result System: {
 x_(8)^{8}-1
 x_(7)^{7}+x_(7)^{6}*x_(8)+x_(7)^{5}*x_(8)^{2}+x_(7)^{4}*x_(8)^{3}+x_(7)^{3}*x_(8)^{4}+x_(7)^{2}*x_(8)^{5}+x_(7)*x_(8)^{6}+x_(8)^{7}
@@ -89,7 +89,7 @@ x_(1)+x_(2)+x_(3)+x_(4)+x_(5)+x_(6)+x_(7)+x_(8)
 --------------------------------------------------
 --------------------------------------------------
 Test \sigma with 9 variables:
-Time spended for calculate Cyclic 8 using only Lex = 75 minutes 23.539 seconds.
+Time spended for calculate Root 8 using only Lex = 75 minutes 23.539 seconds.
 Result System: {
 x_(9)^{9}-1
 x_(8)^{8}+x_(8)^{7}*x_(9)+x_(8)^{6}*x_(9)^{2}+x_(8)^{5}*x_(9)^{3}+x_(8)^{4}*x_(9)^{4}+x_(8)^{3}*x_(9)^{5}+x_(8)^{2}*x_(9)^{6}+x_(8)*x_(9)^{7}+x_(9)^{8}

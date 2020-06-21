@@ -16,11 +16,11 @@ void test_SigmaTime(u32 maximum_variables) {
     for (u32 i = 1; i <= maximum_variables; ++i) {
         std::cout << "Test \\sigma with " << i << (i > 1 ? " variables" : " variable") << ":\n";
 
-        std::string text = "Time spended for calculate Cyclic ";
+        std::string text = "Time spended for calculate Root ";
         text.push_back('0' + i);
         test_time(test_Time_DegRevLex, text + " using DegRevLex = ")(i);
 
-        text = "Time spended for calculate Cyclic ";
+        text = "Time spended for calculate Root ";
         text.push_back('0' + i);
         test_time(test_Time_Lex, text + " using only Lex = ")(i);
         std::cout << "Result System: {\n" << LexGroebnerSystem << "\n}\n";
