@@ -201,7 +201,6 @@ PolynomialSet<T, Comp> matrix_reduction (
         const typename Polynomial<T, Comp>::container& all_terms,
         const typename Polynomial<T, Comp>::container& lead_terms) {
     std::vector<std::vector<T>> matrix(results.PolSet().size(), std::vector<T>(all_terms.size()));
-
     size_t index = matrix.size() - 1;
     for (auto it = results.PolSet().begin(); it != results.PolSet().end(); ++it, --index) {
         size_t jndex = 0;
