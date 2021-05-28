@@ -1,5 +1,7 @@
 #include "FastGB.h"
 #include "TimerWrapper.h"
+
+#include <string>
 #include <ios>
 
 void PrintLine(u32 = 1);

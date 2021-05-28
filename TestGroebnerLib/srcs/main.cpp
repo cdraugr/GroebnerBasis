@@ -12,5 +12,5 @@ int main() {
     // test_Sigma(6);
     // test_SigmaTime(6);
     // test_CriticalPair();
-    test_FastGB(7);
+    test_FastGB(12);
 }
