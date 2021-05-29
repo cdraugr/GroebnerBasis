@@ -42,10 +42,10 @@ public:
     friend bool IsGroebnerBasis(const PolynomialSet<OtherT, OtherComp>&) noexcept;
 
     template <typename OtherT, typename OtherComp>
-    friend PolynomialSet<OtherT, OtherComp> GiveSigmaSet(const i64&);
+    friend PolynomialSet<OtherT, OtherComp> GiveRootSet(const i64&);
 
     template <typename OtherT, typename OtherComp>
-    friend PolynomialSet<OtherT, OtherComp> GiveGroebnerSigmaSet(const i64&);
+    friend PolynomialSet<OtherT, OtherComp> GiveGroebnerRootSet(const i64&);
 
     template <typename OtherT, typename OtherComp>
     friend std::ostream& operator<<(std::ostream&, const PolynomialSet<OtherT, OtherComp>&) noexcept;
@@ -215,17 +215,17 @@ bool IsGroebnerBasis(const PolynomialSet<T, Comp>& pol_set) noexcept {
 }
 
 template <typename T, typename Comp>
-PolynomialSet<T, Comp> GiveSigmaSet(const i64& variable_count) {
-    PolynomialSet<T, Comp> answer(GiveSigma<T, Comp>(variable_count, variable_count) - Term<T>(pow(static_cast<T>(-1), variable_count - 1)));
+PolynomialSet<T, Comp> GiveRootSet(const i64& variable_count) {
+    PolynomialSet<T, Comp> answer(GiveRoot<T, Comp>(variable_count, variable_count) - Term<T>(pow(static_cast<T>(-1), variable_count - 1)));
     for (i64 i = 1; i < variable_count; ++i) {
-        answer.AddPolynomial(GiveSigma<T, Comp>(i, variable_count));
+        answer.AddPolynomial(GiveRoot<T, Comp>(i, variable_count));
     }
     return answer;
 }
 
 template <typename T, typename Comp>
-PolynomialSet<T, Comp> GiveGroebnerSigmaSet(const i64& variable_count) {
-    return GiveSigmaSet<T, Comp>(variable_count).MakeGroebnerBasis().ReduceBasis();
+PolynomialSet<T, Comp> GiveGroebnerRootSet(const i64& variable_count) {
+    return GiveRootSet<T, Comp>(variable_count).MakeGroebnerBasis().ReduceBasis();
 }
 
 template <typename T, typename Comp>

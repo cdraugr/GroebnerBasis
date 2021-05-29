@@ -17,8 +17,8 @@ SRCNAMES :=	main.cpp \
 			test_Polynomial.cpp \
 			test_PolynomialOrder.cpp \
 			test_PolynomialSet.cpp \
-			test_Sigma.cpp \
-			test_SigmaTime.cpp \
+			test_Root.cpp \
+			test_RootTime.cpp \
 			test_CriticalPair.cpp \
 			test_FastGB.cpp
 

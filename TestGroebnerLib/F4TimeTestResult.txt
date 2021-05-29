@@ -1,11 +1,11 @@
-Test \sigma with 1 variable:
+Test Root with 1 variable:
 Time spended for calculate Root 1 Groebner Basis = 1.7e-05 seconds.
 Result System: {
 x_(1)-1
 }
 --------------------------------------------------
 --------------------------------------------------
-Test \sigma with 2 variables:
+Test Root with 2 variables:
 Time spended for calculate Root 2 Groebner Basis = 0.00016 seconds.
 Result System: {
 x_(2)^{2}-1
@@ -13,7 +13,7 @@ x_(1)+x_(2)
 }
 --------------------------------------------------
 --------------------------------------------------
-Test \sigma with 3 variables:
+Test Root with 3 variables:
 Time spended for calculate Root 3 Groebner Basis = 0.000903 seconds.
 Result System: {
 x_(3)^{3}-1
@@ -22,7 +22,7 @@ x_(1)+x_(2)+x_(3)
 }
 --------------------------------------------------
 --------------------------------------------------
-Test \sigma with 4 variables:
+Test Root with 4 variables:
 Time spended for calculate Root 4 Groebner Basis = 0.004782 seconds.
 Result System: {
 x_(4)^{4}-1
@@ -32,7 +32,7 @@ x_(1)+x_(2)+x_(3)+x_(4)
 }
 --------------------------------------------------
 --------------------------------------------------
-Test \sigma with 5 variables:
+Test Root with 5 variables:
 Time spended for calculate Root 5 Groebner Basis = 0.02887 seconds.
 Result System: {
 x_(5)^{5}-1
@@ -43,7 +43,7 @@ x_(1)+x_(2)+x_(3)+x_(4)+x_(5)
 }
 --------------------------------------------------
 --------------------------------------------------
-Test \sigma with 6 variables:
+Test Root with 6 variables:
 Time spended for calculate Root 6 Groebner Basis = 0.221138 seconds.
 Result System: {
 x_(6)^{6}-1
@@ -55,7 +55,7 @@ x_(1)+x_(2)+x_(3)+x_(4)+x_(5)+x_(6)
 }
 --------------------------------------------------
 --------------------------------------------------
-Test \sigma with 7 variables:
+Test Root with 7 variables:
 Time spended for calculate Root 7 Groebner Basis = 2.21151 seconds.
 Result System: {
 x_(7)^{7}-1
@@ -68,7 +68,7 @@ x_(1)+x_(2)+x_(3)+x_(4)+x_(5)+x_(6)+x_(7)
 }
 --------------------------------------------------
 --------------------------------------------------
-Test \sigma with 8 variables:
+Test Root with 8 variables:
 Time spended for calculate Root 8 Groebner Basis = 25.7704 seconds.
 Result System: {
 x_(8)^{8}-1
