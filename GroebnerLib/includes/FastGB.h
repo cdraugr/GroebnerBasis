@@ -8,30 +8,50 @@ namespace gb {
 /* Declaration */
 
 template <typename T, typename Comp>
-void update(PolynomialSet<T, Comp>&, CriticalPairs<T, Comp>&, const Polynomial<T, Comp>&);
+CriticalPairs<T, Comp> normal_select(CriticalPairs<T, Comp>&);
 
 template <typename T, typename Comp>
-CriticalPairs<T, Comp> normal_select(CriticalPairs<T, Comp>&);
+static void update(PolynomialSet<T, Comp>&, CriticalPairs<T, Comp>&, const Polynomial<T, Comp>&);
+
+template <typename T, typename Comp>
+static Polynomial<T, Comp>
+simplify_and_multiplicate(
+    const Monomial&, const Polynomial<T, Comp>&,
+    const std::vector<std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>>&  // vector<pair<set to reduce, result>>
+);
 
 template <typename T, typename Comp>
 static std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
 sym_preproc(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&);
 
 template <typename T, typename Comp>
-static PolynomialSet<T, Comp>
-reduction(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&);
+static PolynomialSet<T, Comp> reduction(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&);
 
 template <typename T, typename Comp, typename SelFunction = decltype(normal_select<T, Comp>)>
 PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>&, SelFunction = normal_select);
 
 template <typename T, typename Comp, typename SelFunction = decltype(normal_select<T, Comp>)>
-PolynomialSet<T, Comp>
-calculate_fast_gb(const PolynomialSet<T, Comp>&, SelFunction = normal_select);
+PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>&, SelFunction = normal_select);
 
 /* Realization */
 
 template <typename T, typename Comp>
-void update(
+CriticalPairs<T, Comp> normal_select(CriticalPairs<T, Comp>& critical_pairs) {
+    CriticalPairs<T, Comp> selected;
+    const auto min_degree = critical_pairs.GetSet().begin()->GetDegree();
+
+    for (auto it = critical_pairs.GetSet().begin(); it != critical_pairs.GetSet().end(); ) {
+        if (it->GetDegree() != min_degree) {
+            break;
+        }
+        selected.insert(*it);
+        it = critical_pairs.erase(it);
+    }
+    return selected;
+}
+
+template <typename T, typename Comp>
+static void update(
         PolynomialSet<T, Comp>& old_poly_set,
         CriticalPairs<T, Comp>& old_crit_pairs,
         const Polynomial<T, Comp>& poly_to_insert) {
@@ -87,21 +107,6 @@ void update(
 
     old_poly_set.AddPolynomial(poly_to_insert);
     old_crit_pairs = std::move(new_crit_pairs);
-}
-
-template <typename T, typename Comp>
-CriticalPairs<T, Comp> normal_select(CriticalPairs<T, Comp>& critical_pairs) {
-    CriticalPairs<T, Comp> selected;
-    const auto min_degree = critical_pairs.GetSet().begin()->GetDegree();
-
-    for (auto it = critical_pairs.GetSet().begin(); it != critical_pairs.GetSet().end(); ) {
-        if (it->GetDegree() != min_degree) {
-            break;
-        }
-        selected.insert(*it);
-        it = critical_pairs.erase(it);
-    }
-    return selected;
 }
 
 template <typename T, typename Comp>
