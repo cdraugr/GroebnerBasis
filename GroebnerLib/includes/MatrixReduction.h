@@ -5,12 +5,15 @@
 namespace gb {
 
 template <typename T>
-using Matrix =  std::vector<std::vector<T>>;
+using Row = std::vector<T>;
+
+template <typename T>
+using Matrix = std::vector<Row<T>>;
 
 /* Declaration */
 
 template <typename T, typename Comp>
-Polynomial<T, Comp> row_to_polynomial(const std::vector<T>&, const typename Polynomial<T, Comp>::container&);
+Polynomial<T, Comp> row_to_polynomial(const Row<T>&, const typename Polynomial<T, Comp>::container&);
 
 template <typename T, typename Comp>
 std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>
@@ -29,7 +32,7 @@ static void triangulation(Matrix<T>&);
 /* Realization */
 
 template <typename T, typename Comp>
-Polynomial<T, Comp> row_to_polynomial(const std::vector<T>& row, const typename Polynomial<T, Comp>::container& all_terms) {
+Polynomial<T, Comp> row_to_polynomial(const Row<T>& row, const typename Polynomial<T, Comp>::container& all_terms) {
     const T value_type_zero(0);
     typename Polynomial<T, Comp>::container polynomial;
     auto it = all_terms.begin();
@@ -46,7 +49,7 @@ std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>> matrix_reduction (
         const PolynomialSet<T, Comp>& results,
         const typename Polynomial<T, Comp>::container& all_terms,
         const typename Polynomial<T, Comp>::container& lead_terms) {
-    Matrix<T> matrix(results.PolSet().size(), std::vector<T>(all_terms.size()));
+    Matrix<T> matrix(results.PolSet().size(), Row<T>(all_terms.size()));
     size_t index = matrix.size() - 1;
     for (auto it = results.PolSet().begin(); it != results.PolSet().end(); ++it, --index) {
         size_t jndex = 0;
@@ -78,10 +81,7 @@ std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>> matrix_reduction (
 }
 
 template <typename T>
-size_t column_unzero(
-        const Matrix<T>& matrix,
-        size_t curren_line,
-        size_t current_column) {
+size_t column_unzero(const Matrix<T>& matrix, size_t curren_line, size_t current_column) {
     const T value_type_zero(0);
     for (size_t i = curren_line; i != matrix.size(); ++i) {
         if (matrix[i][current_column] != value_type_zero) {
