@@ -25,8 +25,8 @@ static std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container
 sym_preproc(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
 
 template <typename T, typename Comp>
-static std::tuple<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>
-reduction(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
+static PolynomialSet<T, Comp>
+reduction(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&, ResultsTriangPairs<T, Comp>&);
 
 template <typename T, typename Comp, typename SelFunction = decltype(normal_select<T, Comp>)>
 PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>&, SelFunction = normal_select);
@@ -34,8 +34,8 @@ PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>&, SelFunction 
 template <typename T, typename Comp, typename SelFunction = decltype(normal_select<T, Comp>)>
 PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>&, SelFunction = normal_select);
 
-template <typename T, typename Comp, typename SelFunction>
-bool fast_is_gb(const PolynomialSet<T, Comp>& given_ideal, SelFunction select_function = normal_select);
+template <typename T, typename Comp, typename SelFunction = decltype(normal_select<T, Comp>)>
+bool fast_is_gb(const PolynomialSet<T, Comp>&, SelFunction = normal_select);
 
 /* Realization */
 
@@ -197,11 +197,10 @@ sym_preproc(
 }
 
 template <typename T, typename Comp>
-static std::tuple<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>
-reduction(
+static PolynomialSet<T, Comp> reduction(
         const CriticalPairs<T, Comp>& critical_pairs,
         const PolynomialSet<T, Comp>& poly_set,
-        const ResultsTriangPairs<T, Comp>& results_triang_pairs) {
+        ResultsTriangPairs<T, Comp>& results_triang_pairs) {
     auto [results, all_terms] = sym_preproc(critical_pairs, poly_set, results_triang_pairs);
 
     const T value_type_one(1);
@@ -211,7 +210,8 @@ reduction(
     }
 
     const auto [triang, reduced_results] = matrix_reduction(results, all_terms, lead_terms);
-    return {results, triang, reduced_results};
+    results_triang_pairs.push_back({results, triang});
+    return reduced_results;
 }
 
 template <typename T, typename Comp, typename SelFunction>
@@ -232,8 +232,7 @@ PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>& given_ide
     results_triang_pairs.reserve(given_ideal.PolSet().size() * 2);
     while (!critical_pairs.empty()) {
         const auto selected_set = select_function(critical_pairs);
-        const auto [results, triang, reduced_set] = reduction(selected_set, groebner_basis, results_triang_pairs);
-        results_triang_pairs.push_back({results, triang});
+        const auto reduced_set = reduction(selected_set, groebner_basis, results_triang_pairs);
         for (const auto& res : reduced_set.PolSet()) {
             update(groebner_basis, critical_pairs, res);
         }
@@ -253,8 +252,7 @@ bool fast_is_gb(const PolynomialSet<T, Comp>& given_ideal, SelFunction select_fu
     results_triang_pairs.reserve(given_ideal.PolSet().size() * 2);
     while (!critical_pairs.empty()) {
         const auto selected_set = select_function(critical_pairs);
-        const auto [results, triang, reduced_set] = reduction(selected_set, groebner_basis, results_triang_pairs);
-        results_triang_pairs.push_back({results, triang});
+        const auto reduced_set = reduction(selected_set, groebner_basis, results_triang_pairs);
         if (reduced_set.PolSet().size()) {
             return false;
         }

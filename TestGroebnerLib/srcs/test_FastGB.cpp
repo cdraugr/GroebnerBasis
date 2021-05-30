@@ -25,7 +25,7 @@ void test_FastGB(u32 maximum_variables) {
 
         test_time(test_FastGBTime, "Time spent for calculate Root " +  std::to_string(i) + " Groebner Basis is ")(ideal);
 
-        if (gb::IsGroebnerBasis(ideal.ReduceBasis()) != true) {
+        if (gb::fast_is_gb(ideal) != true) {
             std::cout << "F4 Tests status: \033[1;31mFAIL\033[0m.\n\n";
             return;
         }
