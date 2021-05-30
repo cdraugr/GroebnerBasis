@@ -12,5 +12,5 @@ int main() {
     // test_Root(6);
     // test_RootTime(6);
     // test_CriticalPair();
-    test_FastGB(12);
+    test_FastGB(14);
 }

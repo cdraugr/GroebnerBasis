@@ -17,6 +17,7 @@ public:
     i64 GetDegree(const i64&) const noexcept;
     i64 GetLastVariableIndex() const noexcept;
     friend i64 deg(const Monomial&) noexcept;
+    friend std::list<Monomial> GetAllDivisors(const Monomial&);
 
     bool IsOne() const noexcept;
     bool IsDivisibleBy(const Monomial&) const noexcept;
@@ -38,8 +39,5 @@ public:
 private:
     container data_{};  // (variable number) && (power)
 };
-
-std::list<Monomial> _GetAllDivisors(const Monomial&, i64);
-std::list<Monomial> GetAllDivisors(const Monomial&);
 
 }  // namespace gb

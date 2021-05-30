@@ -6,7 +6,8 @@
 namespace gb {
 
 template <typename T, typename Comp>  // vector<pair<set to reduce, result>>
-using ResultsTriangPairs = std::vector<std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>>;
+using ResultsTriangPairs =
+    std::vector<std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>>;
 
 /* Declaration */
 
@@ -32,6 +33,9 @@ PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>&, SelFunction 
 
 template <typename T, typename Comp, typename SelFunction = decltype(normal_select<T, Comp>)>
 PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>&, SelFunction = normal_select);
+
+template <typename T, typename Comp, typename SelFunction>
+bool fast_is_gb(const PolynomialSet<T, Comp>& given_ideal, SelFunction select_function = normal_select);
 
 /* Realization */
 
@@ -124,12 +128,11 @@ static Polynomial<T, Comp> simplify_and_multiplicate(
             }
 
             for (const auto& triang_polynomial : triang.PolSet()) {
-                if (triang_polynomial.LeadMonomial() != multiplicated.LeadMonomial()) {
-                    continue;
+                if (triang_polynomial.LeadMonomial() == multiplicated.LeadMonomial()) {
+                    return divisor != monomial && divisor != Monomial() ?
+                        simplify_and_multiplicate(monomial / divisor, triang_polynomial, results_triang_pairs) :
+                        triang_polynomial;
                 }
-                return divisor != monomial && divisor != Monomial() ?
-                    simplify_and_multiplicate(monomial / divisor, triang_polynomial, results_triang_pairs) :
-                    triang_polynomial;
             }
         }
     }
@@ -212,14 +215,21 @@ reduction(
 }
 
 template <typename T, typename Comp, typename SelFunction>
-PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>& given_groebner_basis, SelFunction select_function) {
+PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>& given_ideal, SelFunction select_function) {
+    given_ideal = std::move(calculate_fast_gb(given_ideal, select_function));
+    return given_ideal;
+}
+
+template <typename T, typename Comp, typename SelFunction>
+PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>& given_ideal, SelFunction select_function) {
     PolynomialSet<T, Comp> groebner_basis;
     CriticalPairs<T, Comp> critical_pairs;
-    for (const auto& polynomial : given_groebner_basis.PolSet()) {
+    for (const auto& polynomial : given_ideal.PolSet()) {
         update(groebner_basis, critical_pairs, polynomial);
     }
 
     ResultsTriangPairs<T, Comp> results_triang_pairs;
+    results_triang_pairs.reserve(given_ideal.PolSet().size() * 2);
     while (!critical_pairs.empty()) {
         const auto selected_set = select_function(critical_pairs);
         const auto [results, triang, reduced_set] = reduction(selected_set, groebner_basis, results_triang_pairs);
@@ -228,14 +238,29 @@ PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>& given_groebne
             update(groebner_basis, critical_pairs, res);
         }
     }
-    given_groebner_basis = std::move(groebner_basis);
-    return given_groebner_basis;
+    return groebner_basis;
 }
 
 template <typename T, typename Comp, typename SelFunction>
-PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>& poly_set, SelFunction select_function) {
-    auto groebner_basis = poly_set;
-    return calculated_fast_gb(groebner_basis, select_function);
+bool fast_is_gb(const PolynomialSet<T, Comp>& given_ideal, SelFunction select_function) {
+    PolynomialSet<T, Comp> groebner_basis;
+    CriticalPairs<T, Comp> critical_pairs;
+    for (const auto& polynomial : given_ideal.PolSet()) {
+        update(groebner_basis, critical_pairs, polynomial);
+    }
+
+    ResultsTriangPairs<T, Comp> results_triang_pairs;
+    results_triang_pairs.reserve(given_ideal.PolSet().size() * 2);
+    while (!critical_pairs.empty()) {
+        const auto selected_set = select_function(critical_pairs);
+        const auto [results, triang, reduced_set] = reduction(selected_set, groebner_basis, results_triang_pairs);
+        results_triang_pairs.push_back({results, triang});
+        if (reduced_set.PolSet().size()) {
+            return false;
+        }
+    }
+    return true;
 }
+
 
 }  // namespace gb
