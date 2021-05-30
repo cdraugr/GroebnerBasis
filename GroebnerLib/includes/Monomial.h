@@ -39,4 +39,7 @@ private:
     container data_{};  // (variable number) && (power)
 };
 
+std::list<Monomial> _GetAllDivisors(const Monomial&, i64);
+std::list<Monomial> GetAllDivisors(const Monomial&);
+
 }  // namespace gb

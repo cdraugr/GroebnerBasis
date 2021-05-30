@@ -32,6 +32,7 @@ public:
     void ReduceCoefficients();
     PolynomialSet<T, Comp>& ReduceBasis();
 
+    bool IsPolynomialInMe(const Polynomial<T, Comp>&) const noexcept;
     bool IsPolynomialInMyIdeal(const Polynomial<T, Comp>&) const noexcept;
 
     template <typename OtherT, typename OtherComp>
@@ -186,6 +187,12 @@ PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::ReduceBasis() {
     *this = std::move(tmp);
     return *this;
 }
+
+template <typename T, typename Comp>
+bool PolynomialSet<T, Comp>::IsPolynomialInMe(const Polynomial<T, Comp>& polynomial) const noexcept {
+    return PolSet().find(polynomial) != PolSet().end();
+}
+
 
 template <typename T, typename Comp>
 bool PolynomialSet<T, Comp>::IsPolynomialInMyIdeal(const Polynomial<T, Comp>& polynom) const noexcept {

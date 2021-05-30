@@ -5,6 +5,9 @@
 
 namespace gb {
 
+template <typename T, typename Comp>  // vector<pair<set to reduce, result>>
+using ResultsTriangPairs = std::vector<std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>>;
+
 /* Declaration */
 
 template <typename T, typename Comp>
@@ -14,18 +17,15 @@ template <typename T, typename Comp>
 static void update(PolynomialSet<T, Comp>&, CriticalPairs<T, Comp>&, const Polynomial<T, Comp>&);
 
 template <typename T, typename Comp>
-static Polynomial<T, Comp>
-simplify_and_multiplicate(
-    const Monomial&, const Polynomial<T, Comp>&,
-    const std::vector<std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>>&  // vector<pair<set to reduce, result>>
-);
+static Polynomial<T, Comp> simplify_and_multiplicate(const Monomial&, const Polynomial<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
 
 template <typename T, typename Comp>
 static std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
-sym_preproc(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&);
+sym_preproc(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
 
 template <typename T, typename Comp>
-static PolynomialSet<T, Comp> reduction(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&);
+static std::tuple<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>
+reduction(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
 
 template <typename T, typename Comp, typename SelFunction = decltype(normal_select<T, Comp>)>
 PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>&, SelFunction = normal_select);
@@ -110,18 +110,46 @@ static void update(
 }
 
 template <typename T, typename Comp>
+static Polynomial<T, Comp> simplify_and_multiplicate(
+        const Monomial& monomial, const Polynomial<T, Comp>& polynomial,
+        const ResultsTriangPairs<T, Comp>& results_triang_pairs) {
+    const T value_type_one(1);
+    const auto divisors = GetAllDivisors(monomial);
+
+    for (const auto& divisor : divisors) {
+        for (const auto& [result, triang] : results_triang_pairs) {
+            const auto multiplicated = Term<T>(divisor, value_type_one) * polynomial;
+            if (!result.IsPolynomialInMe(multiplicated)) {
+                continue;
+            }
+
+            for (const auto& triang_polynomial : triang.PolSet()) {
+                if (triang_polynomial.LeadMonomial() != multiplicated.LeadMonomial()) {
+                    continue;
+                }
+                return divisor != monomial && divisor != Monomial() ?
+                    simplify_and_multiplicate(monomial / divisor, triang_polynomial, results_triang_pairs) :
+                    triang_polynomial;
+            }
+        }
+    }
+    return Term<T>(monomial, value_type_one) * polynomial;
+}
+
+template <typename T, typename Comp>
 static std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
 sym_preproc(
         const CriticalPairs<T, Comp>& critical_pairs,
-        const PolynomialSet<T, Comp>& poly_set) {
+        const PolynomialSet<T, Comp>& poly_set,
+        const ResultsTriangPairs<T, Comp>& results_triang_pairs) {
     const T value_type_one(1);
 
     PolynomialSet<T, Comp> to_reduce;
     for (const auto& critical_pair : critical_pairs.GetSet()) {
-        to_reduce.AddPolynomial(critical_pair.leftPolynomial() *
-                                Term<T>(critical_pair.leftMonomial(), value_type_one));
-        to_reduce.AddPolynomial(critical_pair.rightPolynomial() *
-                                Term<T>(critical_pair.rightMonomial(), value_type_one));
+        to_reduce.AddPolynomial(
+            simplify_and_multiplicate(critical_pair.leftMonomial(), critical_pair.leftPolynomial(), results_triang_pairs));
+        to_reduce.AddPolynomial(
+            simplify_and_multiplicate(critical_pair.rightMonomial(), critical_pair.rightPolynomial(), results_triang_pairs));
     }
 
     typename Polynomial<T, Comp>::container relative_complement;
@@ -148,7 +176,8 @@ sym_preproc(
                 continue;
             }
 
-            const auto polynomial_to_add = polynomial * (current_term / polynomial.LeadTerm());
+            const auto polynomial_to_add =
+                simplify_and_multiplicate((current_term / polynomial.LeadTerm()).monomial(), polynomial, results_triang_pairs);
             to_reduce.AddPolynomial(polynomial_to_add);
 
             for (const auto& term : polynomial_to_add.TermSet()) {
@@ -165,33 +194,36 @@ sym_preproc(
 }
 
 template <typename T, typename Comp>
-static PolynomialSet<T, Comp> reduction(
+static std::tuple<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>
+reduction(
         const CriticalPairs<T, Comp>& critical_pairs,
-        const PolynomialSet<T, Comp>& poly_set) {
-    auto [results, all_terms] = sym_preproc(critical_pairs, poly_set);
+        const PolynomialSet<T, Comp>& poly_set,
+        const ResultsTriangPairs<T, Comp>& results_triang_pairs) {
+    auto [results, all_terms] = sym_preproc(critical_pairs, poly_set, results_triang_pairs);
 
     const T value_type_one(1);
     typename Polynomial<T, Comp>::container lead_terms;
     for (const auto& polynomial : results.PolSet()) {
-        lead_terms.insert(Term<T>(polynomial.LeadTerm().monomial(), value_type_one));
+        lead_terms.insert(Term<T>(polynomial.LeadMonomial(), value_type_one));
     }
 
-    return matrix_reduction(results, all_terms, lead_terms);
+    const auto [triang, reduced_results] = matrix_reduction(results, all_terms, lead_terms);
+    return {results, triang, reduced_results};
 }
 
 template <typename T, typename Comp, typename SelFunction>
-PolynomialSet<T, Comp>& calculated_fast_gb(
-        PolynomialSet<T, Comp>& given_groebner_basis,
-        SelFunction select_function) {
+PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>& given_groebner_basis, SelFunction select_function) {
     PolynomialSet<T, Comp> groebner_basis;
     CriticalPairs<T, Comp> critical_pairs;
     for (const auto& polynomial : given_groebner_basis.PolSet()) {
         update(groebner_basis, critical_pairs, polynomial);
     }
 
+    ResultsTriangPairs<T, Comp> results_triang_pairs;
     while (!critical_pairs.empty()) {
         const auto selected_set = select_function(critical_pairs);
-        const auto reduced_set = reduction(selected_set, groebner_basis);
+        const auto [results, triang, reduced_set] = reduction(selected_set, groebner_basis, results_triang_pairs);
+        results_triang_pairs.push_back({results, triang});
         for (const auto& res : reduced_set.PolSet()) {
             update(groebner_basis, critical_pairs, res);
         }
@@ -201,9 +233,7 @@ PolynomialSet<T, Comp>& calculated_fast_gb(
 }
 
 template <typename T, typename Comp, typename SelFunction>
-PolynomialSet<T, Comp> calculate_fast_gb(
-        const PolynomialSet<T, Comp>& poly_set,
-        SelFunction select_function) {
+PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>& poly_set, SelFunction select_function) {
     auto groebner_basis = poly_set;
     return calculated_fast_gb(groebner_basis, select_function);
 }

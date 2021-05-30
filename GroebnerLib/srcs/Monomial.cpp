@@ -16,9 +16,9 @@ Monomial::Monomial(const std::vector<i64>& arguments) {
 }
 
 Monomial::Monomial(const container& arguments) {
-    for (const auto& [num, degree] : arguments) {
-        if (num >= 0 && degree > 0) {
-            data_[num] = degree;
+    for (const auto& [idx, degree] : arguments) {
+        if (idx >= 0 && degree > 0) {
+            data_[idx] = degree;
         }
     }
 }
@@ -28,9 +28,7 @@ const Monomial::container& Monomial::degrees() const noexcept {
 }
 
 i64 Monomial::GetDegree(const i64& index) const noexcept {
-    return degrees().find(index) != degrees().end() ?
-        degrees().at(index) :
-        0;
+    return degrees().find(index) != degrees().end() ? degrees().at(index) : 0;
 }
 
 i64 Monomial::GetLastVariableIndex() const noexcept {
@@ -39,7 +37,7 @@ i64 Monomial::GetLastVariableIndex() const noexcept {
 
 i64 deg(const Monomial& monomial) noexcept {
     i64 sum = 0;
-    for (const auto& [num, degree] : monomial.degrees()) {
+    for (const auto& [idx, degree] : monomial.degrees()) {
         sum += degree;
     }
     return sum;
@@ -50,8 +48,8 @@ bool Monomial::IsOne() const noexcept {
 }
 
 bool Monomial::IsDivisibleBy(const Monomial& other) const noexcept {
-    for (const auto& [num, degree] : other.degrees()) {
-        if (GetDegree(num) < degree) {
+    for (const auto& [idx, degree] : other.degrees()) {
+        if (GetDegree(idx) < degree) {
             return false;
         }
     }
@@ -59,8 +57,8 @@ bool Monomial::IsDivisibleBy(const Monomial& other) const noexcept {
 }
 
 Monomial& Monomial::operator*=(const Monomial& other) noexcept {
-    for (const auto& [num, degree] : other.degrees()) {
-        data_[num] += degree;
+    for (const auto& [idx, degree] : other.degrees()) {
+        data_[idx] += degree;
     }
     return *this;
 }
@@ -71,11 +69,11 @@ Monomial operator*(Monomial left, const Monomial& right) noexcept {
 }
 
 Monomial& Monomial::operator/=(const Monomial& other) {
-    for (const auto& [num, degree] : other.degrees()) {
-        data_[num] -= degree;
-        if (data_[num] == 0) {
-            data_.erase(num);
-        } else if (data_[num] < 0) {
+    for (const auto& [idx, degree] : other.degrees()) {
+        data_[idx] -= degree;
+        if (data_[idx] == 0) {
+            data_.erase(idx);
+        } else if (data_[idx] < 0) {
             data_.clear();
             throw std::runtime_error("Division is not defined.");
         }
@@ -98,9 +96,9 @@ bool operator!=(const Monomial& left, const Monomial& right) noexcept {
 
 Monomial gcd(const Monomial& left, const Monomial& right) noexcept {
     Monomial result;
-    for (const auto& [num, degree] : left.degrees()) {
-        if (right.degrees().find(num) != right.degrees().end()) {
-            result.data_[num] = std::min(degree, right.degrees().at(num));
+    for (const auto& [idx, degree] : left.degrees()) {
+        if (right.degrees().find(idx) != right.degrees().end()) {
+            result.data_[idx] = std::min(degree, right.degrees().at(idx));
         }
     }
     return result;
@@ -108,8 +106,8 @@ Monomial gcd(const Monomial& left, const Monomial& right) noexcept {
 
 Monomial lcm(const Monomial& left, const Monomial& right) noexcept {
     Monomial result = left;
-    for (const auto& [num, degree] : right.degrees()) {
-        result.data_[num] = std::max(result.data_[num], degree);
+    for (const auto& [idx, degree] : right.degrees()) {
+        result.data_[idx] = std::max(result.data_[idx], degree);
     }
     return result;
 }
@@ -129,6 +127,26 @@ std::ostream& operator<<(std::ostream& out, const Monomial& monomial) noexcept {
         }
     }
     return out;
+}
+
+std::list<Monomial> _GetAllDivisors(const Monomial& monomial, i64 start_index) {
+    if (monomial.IsOne()) {
+        return {monomial};
+    }
+    std::list<Monomial> result({monomial});
+    for (const auto& [idx, degree] : monomial.degrees()) {
+        if (start_index > idx) {
+            continue;
+        }
+        auto sub_degrees = monomial.degrees();
+        sub_degrees[idx] -= 1;
+        result.splice(result.end(), _GetAllDivisors(Monomial(sub_degrees), idx));
+    }
+    return result;
+}
+
+std::list<Monomial> GetAllDivisors(const Monomial& monomial) {
+    return _GetAllDivisors(monomial, 0);
 }
 
 }  // namespace gb

@@ -41,5 +41,21 @@ void test_Monomial() {
     } catch (const std::runtime_error& exception) {
         std::cout << exception.what() << '\n';
     }
+    PrintLine();
+
+    gb::Monomial monom9({0, 2, 3, 0, 2, 0});
+    auto divisors = GetAllDivisors(monom9);
+    assert(divisors.size() == 3 * 4 * 3);
+    for (auto it = divisors.begin(); it != divisors.end(); ++it) {
+        assert(monom9.IsDivisibleBy(*it));
+        for (auto jt = divisors.begin(); jt != divisors.end(); ++jt) {
+            if (it != jt) {
+                assert(*it != *jt);
+            }
+        }
+    }
+    for (const auto& monomial : divisors) {
+        std::cout << monomial << '\n';
+    }
     PrintLine(2);
 }
