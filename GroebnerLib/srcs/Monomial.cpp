@@ -37,8 +37,8 @@ i64 Monomial::GetLastVariableIndex() const noexcept {
 
 i64 deg(const Monomial& monomial) noexcept {
     i64 sum = 0;
-    for (const auto& [idx, degree] : monomial.degrees()) {
-        sum += degree;
+    for (const auto& idx_degree : monomial.degrees()) {
+        sum += idx_degree.second;
     }
     return sum;
 }
@@ -48,13 +48,13 @@ static std::list<Monomial> _GetAllDivisors(const Monomial& monomial, i64 start_i
         return {monomial};
     }
     std::list<Monomial> result({monomial});
-    for (const auto& [idx, degree] : monomial.degrees()) {
-        if (start_index > idx) {
+    for (const auto& idx_degree : monomial.degrees()) {
+        if (start_index > idx_degree.first) {
             continue;
         }
         auto sub_degrees = monomial.degrees();
-        sub_degrees[idx] -= 1;
-        result.splice(result.end(), _GetAllDivisors(Monomial(sub_degrees), idx));
+        sub_degrees[idx_degree.first] -= 1;
+        result.splice(result.end(), _GetAllDivisors(Monomial(sub_degrees), idx_degree.first));
     }
     return result;
 }

@@ -227,8 +227,8 @@ template <typename T, typename Comp, typename SelFunction>
 PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>& given_ideal, SelFunction select_function) {
     PolynomialSet<T, Comp> groebner_basis;
     CriticalPairs<T, Comp> critical_pairs;
-    for (const auto& polynomial : given_ideal.PolSet()) {
-        update(groebner_basis, critical_pairs, polynomial);
+    for (auto it = given_ideal.PolSet().rbegin(); it != given_ideal.PolSet().rend(); ++it) {
+        update(groebner_basis, critical_pairs, *it);
     }
 
     ResultsTriangPairs<T, Comp> results_triang_pairs;
@@ -236,8 +236,8 @@ PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>& given_ide
     while (!critical_pairs.empty()) {
         const auto selected_set = select_function(critical_pairs);
         const auto reduced_set = reduction(selected_set, groebner_basis, results_triang_pairs);
-        for (const auto& res : reduced_set.PolSet()) {
-            update(groebner_basis, critical_pairs, res);
+        for (auto it = reduced_set.PolSet().rbegin(); it != reduced_set.PolSet().rend(); ++it) {
+            update(groebner_basis, critical_pairs, *it);
         }
     }
     return groebner_basis;
