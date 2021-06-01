@@ -92,7 +92,7 @@ static void triangulation(Matrix<T>& matrix) {
 }
 
 template <typename T, typename Comp>
-std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>> matrix_reduction (
+std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>> matrix_reduction(
         const PolynomialSet<T, Comp>& results,
         const typename Polynomial<T, Comp>::container& all_terms,
         const typename Polynomial<T, Comp>::container& lead_terms) {
