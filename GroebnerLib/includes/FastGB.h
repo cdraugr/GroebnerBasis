@@ -129,9 +129,12 @@ static Polynomial<T, Comp> simplify_and_multiplicate(
 
             for (const auto& triang_polynomial : triang.PolSet()) {
                 if (triang_polynomial.LeadMonomial() == multiplicated.LeadMonomial()) {
-                    return divisor != monomial && divisor != Monomial() ?
-                        simplify_and_multiplicate(monomial / divisor, triang_polynomial, results_triang_pairs) :
-                        triang_polynomial;
+                    if (divisor.IsOne()) {
+                        return Term<T>(monomial, value_type_one) * triang_polynomial;
+                    } else if (divisor != monomial) {
+                        return simplify_and_multiplicate(monomial / divisor, triang_polynomial, results_triang_pairs);
+                    }
+                    return triang_polynomial;
                 }
             }
         }
