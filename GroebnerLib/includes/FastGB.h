@@ -15,6 +15,18 @@ template <typename T, typename Comp>
 CriticalPairs<T, Comp> normal_select(CriticalPairs<T, Comp>&);
 
 template <typename T, typename Comp>
+void erase_crit_by_lcm_(const Polynomial<T, Comp>&, CriticalPairs<T, Comp>&);
+
+template <typename T, typename Comp>
+void insert_crit_by_gcd_(const CriticalPairs<T, Comp>&, const Polynomial<T, Comp>&, CriticalPairs<T, Comp>&);
+
+template <typename T, typename Comp>
+void insert_crit_by_lcm_(const CriticalPairs<T, Comp>&, const Polynomial<T, Comp>&, CriticalPairs<T, Comp>&);
+
+template <typename T, typename Comp>
+void erase_polynomial_by_lead_(const Polynomial<T, Comp>&, PolynomialSet<T, Comp>&);
+
+template <typename T, typename Comp>
 void update(PolynomialSet<T, Comp>&, CriticalPairs<T, Comp>&, const Polynomial<T, Comp>&);
 
 template <typename T, typename Comp>
@@ -54,43 +66,53 @@ CriticalPairs<T, Comp> normal_select(CriticalPairs<T, Comp>& critical_pairs) {
 }
 
 template <typename T, typename Comp>
-void update(
-        PolynomialSet<T, Comp>& old_poly_set,
-        CriticalPairs<T, Comp>& old_crit_pairs,
-        const Polynomial<T, Comp>& poly_to_insert) {
-    CriticalPairs<T, Comp> all_crit;
-    for (const auto& polynomial : old_poly_set.PolSet()) {
-        all_crit.insert(CriticalPair(poly_to_insert, polynomial));
-    }
-
-    Monomial monomial_one;
+void erase_crit_by_lcm_(const Polynomial<T, Comp>& poly_to_insert, CriticalPairs<T, Comp>& all_crit) {
     for (auto it = all_crit.GetSet().begin(); it != all_crit.GetSet().end(); ) {
-        bool erased = false;
-        if (gcd(poly_to_insert.LeadMonomial(), it->rightPolynomial().LeadMonomial()) != monomial_one) {
-            for (auto jt = all_crit.GetSet().begin(); jt != all_crit.GetSet().end(); ++jt) {
-                if (it == jt) {
-                    continue;
-                }
+        if (gcd(poly_to_insert.LeadMonomial(), it->rightPolynomial().LeadMonomial()).IsOne()) {
+            ++it;
+            continue;
+        }
 
-                if (lcm(poly_to_insert.LeadMonomial(), it->rightPolynomial().LeadMonomial()).IsDivisibleBy(lcm(poly_to_insert.LeadMonomial(), jt->rightPolynomial().LeadMonomial()))) {
-                    it = all_crit.erase(it);
-                    erased = true;
-                    break;
-                }
+        bool erased = false;
+        for (auto jt = all_crit.GetSet().begin(); jt != all_crit.GetSet().end(); ++jt) {
+            if (it == jt) {
+                continue;
+            }
+
+            if (lcm(
+                    poly_to_insert.LeadMonomial(), it->rightPolynomial().LeadMonomial()
+                ).IsDivisibleBy(lcm(
+                    poly_to_insert.LeadMonomial(), jt->rightPolynomial().LeadMonomial()
+                ))
+            ) {
+                it = all_crit.erase(it);
+                erased = true;
+                break;
             }
         }
         if (!erased) {
             ++it;
         }
     }
+}
 
-    CriticalPairs<T, Comp> new_crit_pairs;
+template <typename T, typename Comp>
+void insert_crit_by_gcd_(
+        const CriticalPairs<T, Comp>& all_crit,
+        const Polynomial<T, Comp>& poly_to_insert,
+        CriticalPairs<T, Comp>& new_crit_pairs) {
     for (auto it = all_crit.GetSet().begin(); it != all_crit.GetSet().end(); ++it) {
-        if (gcd(poly_to_insert.LeadMonomial(), it->rightPolynomial().LeadMonomial()) != monomial_one) {
+        if (!gcd(poly_to_insert.LeadMonomial(), it->rightPolynomial().LeadMonomial()).IsOne()) {
             new_crit_pairs.insert(*it);
         }
     }
+}
 
+template <typename T, typename Comp>
+void insert_crit_by_lcm_(
+        const CriticalPairs<T, Comp>& old_crit_pairs,
+        const Polynomial<T, Comp>& poly_to_insert,
+        CriticalPairs<T, Comp>& new_crit_pairs) {
     for (const auto& old_pair : old_crit_pairs.GetSet()) {
         if (!old_pair.Getlcm().IsDivisibleBy(poly_to_insert.LeadMonomial()) ||
             (old_pair.Getlcm() == lcm(old_pair.leftPolynomial().LeadMonomial(), poly_to_insert.LeadMonomial())) ||
@@ -99,7 +121,10 @@ void update(
             new_crit_pairs.insert(old_pair);
         }
     }
+}
 
+template <typename T, typename Comp>
+void erase_polynomial_by_lead_(const Polynomial<T, Comp>& poly_to_insert, PolynomialSet<T, Comp>& old_poly_set) {
     for (auto it = old_poly_set.PolSet().begin(); it != old_poly_set.PolSet().end(); ) {
         if (it->LeadMonomial().IsDivisibleBy(poly_to_insert.LeadMonomial())) {
             it = old_poly_set.RemovePolynomial(it);
@@ -107,9 +132,25 @@ void update(
             ++it;
         }
     }
+}
 
-    old_poly_set.AddPolynomial(poly_to_insert);
+template <typename T, typename Comp>
+void update(
+        PolynomialSet<T, Comp>& old_poly_set,
+        CriticalPairs<T, Comp>& old_crit_pairs,
+        const Polynomial<T, Comp>& poly_to_insert) {
+    CriticalPairs<T, Comp> all_crit, new_crit_pairs;
+    for (const auto& polynomial : old_poly_set.PolSet()) {
+        all_crit.insert(CriticalPair(poly_to_insert, polynomial));
+    }
+
+    erase_crit_by_lcm_(poly_to_insert, all_crit);
+    insert_crit_by_gcd_(all_crit, poly_to_insert, new_crit_pairs);
+    insert_crit_by_lcm_(old_crit_pairs, poly_to_insert, new_crit_pairs);
     old_crit_pairs = std::move(new_crit_pairs);
+
+    erase_polynomial_by_lead_(poly_to_insert, old_poly_set);
+    old_poly_set.AddPolynomial(poly_to_insert);
 }
 
 template <typename T, typename Comp>
