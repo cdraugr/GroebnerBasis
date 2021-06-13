@@ -43,7 +43,7 @@ i64 deg(const Monomial& monomial) noexcept {
     return sum;
 }
 
-static std::list<Monomial> _GetAllDivisors(const Monomial& monomial, i64 start_index) {
+static std::list<Monomial> GetAllDivisors_(const Monomial& monomial, i64 start_index) {
     if (monomial.IsOne()) {
         return {monomial};
     }
@@ -54,13 +54,13 @@ static std::list<Monomial> _GetAllDivisors(const Monomial& monomial, i64 start_i
         }
         auto sub_degrees = monomial.degrees();
         sub_degrees[idx_degree.first] -= 1;
-        result.splice(result.end(), _GetAllDivisors(Monomial(sub_degrees), idx_degree.first));
+        result.splice(result.end(), GetAllDivisors_(Monomial(sub_degrees), idx_degree.first));
     }
     return result;
 }
 
 std::list<Monomial> GetAllDivisors(const Monomial& monomial) {
-    return _GetAllDivisors(monomial, 0);
+    return GetAllDivisors_(monomial, 0);
 }
 
 bool Monomial::IsOne() const noexcept {
