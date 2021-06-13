@@ -15,18 +15,17 @@ template <typename T, typename Comp>
 CriticalPairs<T, Comp> normal_select(CriticalPairs<T, Comp>&);
 
 template <typename T, typename Comp>
-static void update(PolynomialSet<T, Comp>&, CriticalPairs<T, Comp>&, const Polynomial<T, Comp>&);
+void update(PolynomialSet<T, Comp>&, CriticalPairs<T, Comp>&, const Polynomial<T, Comp>&);
 
 template <typename T, typename Comp>
-static Polynomial<T, Comp> simplify_and_multiplicate(const Monomial&, const Polynomial<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
+Polynomial<T, Comp> simplify_and_multiplicate(const Monomial&, const Polynomial<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
 
 template <typename T, typename Comp>
-static std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
+std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
 sym_preproc(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
 
 template <typename T, typename Comp>
-static PolynomialSet<T, Comp>
-reduction(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&, ResultsTriangPairs<T, Comp>&);
+PolynomialSet<T, Comp> reduction(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&, ResultsTriangPairs<T, Comp>&);
 
 template <typename T, typename Comp, typename SelFunction = decltype(normal_select<T, Comp>)>
 PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>&, SelFunction = normal_select);
@@ -55,7 +54,7 @@ CriticalPairs<T, Comp> normal_select(CriticalPairs<T, Comp>& critical_pairs) {
 }
 
 template <typename T, typename Comp>
-static void update(
+void update(
         PolynomialSet<T, Comp>& old_poly_set,
         CriticalPairs<T, Comp>& old_crit_pairs,
         const Polynomial<T, Comp>& poly_to_insert) {
@@ -114,7 +113,7 @@ static void update(
 }
 
 template <typename T, typename Comp>
-static Polynomial<T, Comp> simplify_and_multiplicate(
+Polynomial<T, Comp> simplify_and_multiplicate(
         const Monomial& monomial, const Polynomial<T, Comp>& polynomial,
         const ResultsTriangPairs<T, Comp>& results_triang_pairs) {
     const T value_type_one(1);
@@ -143,7 +142,7 @@ static Polynomial<T, Comp> simplify_and_multiplicate(
 }
 
 template <typename T, typename Comp>
-static std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
+std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
 sym_preproc(
         const CriticalPairs<T, Comp>& critical_pairs,
         const PolynomialSet<T, Comp>& poly_set,
@@ -200,7 +199,7 @@ sym_preproc(
 }
 
 template <typename T, typename Comp>
-static PolynomialSet<T, Comp> reduction(
+PolynomialSet<T, Comp> reduction(
         const CriticalPairs<T, Comp>& critical_pairs,
         const PolynomialSet<T, Comp>& poly_set,
         ResultsTriangPairs<T, Comp>& results_triang_pairs) {
