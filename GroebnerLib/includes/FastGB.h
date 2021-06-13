@@ -36,7 +36,7 @@ PolynomialSet<T, Comp> calculate_fast_gb(const PolynomialSet<T, Comp>&, SelFunct
 template <typename T, typename Comp, typename SelFunction = decltype(normal_select<T, Comp>)>
 bool fast_is_gb(const PolynomialSet<T, Comp>&, SelFunction = normal_select);
 
-/* Realization */
+/* Implementation */
 
 template <typename T, typename Comp>
 CriticalPairs<T, Comp> normal_select(CriticalPairs<T, Comp>& critical_pairs) {

@@ -29,7 +29,7 @@ matrix_reduction(
     const typename Polynomial<T, Comp>::container&  // Set of all lead terms.
 );
 
-/* Realization */
+/* Implementation */
 
 template <typename T, typename Comp>
 static Polynomial<T, Comp> row_to_polynomial(const Row<T>& row, const typename Polynomial<T, Comp>::container& all_terms) {
