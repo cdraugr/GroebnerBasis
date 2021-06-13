@@ -33,6 +33,16 @@ template <typename T, typename Comp>
 Polynomial<T, Comp> simplify_and_multiplicate(const Monomial&, const Polynomial<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
 
 template <typename T, typename Comp>
+std::pair<typename Polynomial<T, Comp>::container, typename Polynomial<T, Comp>::container>
+prepare_terms_sets_(const PolynomialSet<T, Comp>&, const CriticalPairs<T, Comp>&);
+
+template <typename T, typename Comp>
+void find_and_insert_possible_reducer_(
+    const PolynomialSet<T, Comp>&, const Term<T>&, const typename Polynomial<T, Comp>::container&,
+    const ResultsTriangPairs<T, Comp>&, PolynomialSet<T, Comp>&, typename Polynomial<T, Comp>::container&
+);
+
+template <typename T, typename Comp>
 std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
 sym_preproc(const CriticalPairs<T, Comp>&, const PolynomialSet<T, Comp>&, const ResultsTriangPairs<T, Comp>&);
 
@@ -183,21 +193,9 @@ Polynomial<T, Comp> simplify_and_multiplicate(
 }
 
 template <typename T, typename Comp>
-std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
-sym_preproc(
-        const CriticalPairs<T, Comp>& critical_pairs,
-        const PolynomialSet<T, Comp>& poly_set,
-        const ResultsTriangPairs<T, Comp>& results_triang_pairs) {
+std::pair<typename Polynomial<T, Comp>::container, typename Polynomial<T, Comp>::container>
+prepare_terms_sets_(const PolynomialSet<T, Comp>& to_reduce, const CriticalPairs<T, Comp>& critical_pairs) {
     const T value_type_one(1);
-
-    PolynomialSet<T, Comp> to_reduce;
-    for (const auto& critical_pair : critical_pairs.GetSet()) {
-        to_reduce.AddPolynomial(
-            simplify_and_multiplicate(critical_pair.leftMonomial(), critical_pair.leftPolynomial(), results_triang_pairs));
-        to_reduce.AddPolynomial(
-            simplify_and_multiplicate(critical_pair.rightMonomial(), critical_pair.rightPolynomial(), results_triang_pairs));
-    }
-
     typename Polynomial<T, Comp>::container relative_complement;
     for (const auto& polynomial : to_reduce.PolSet()) {
         for (const auto& term : polynomial.TermSet()) {
@@ -211,29 +209,56 @@ sym_preproc(
         done_terms.insert(done_term);
         relative_complement.erase(done_term);
     }
+    return {relative_complement, done_terms};
+}
+
+template <typename T, typename Comp>
+void find_and_insert_possible_reducer_(
+        const PolynomialSet<T, Comp>& poly_set,
+        const Term<T>& current_term,
+        const typename Polynomial<T, Comp>::container& done_terms,
+        const ResultsTriangPairs<T, Comp>& results_triang_pairs,
+        PolynomialSet<T, Comp>& to_reduce,
+        typename Polynomial<T, Comp>::container& relative_complement) {
+    for (const auto& polynomial : poly_set.PolSet()) {
+        if (!current_term.IsDivisibleBy(polynomial.LeadTerm())) {
+            continue;
+        }
+
+        const auto polynomial_to_add =
+            simplify_and_multiplicate((current_term / polynomial.LeadTerm()).monomial(), polynomial, results_triang_pairs);
+        to_reduce.AddPolynomial(polynomial_to_add);
+
+        const T value_type_one(1);
+        for (const auto& term : polynomial_to_add.TermSet()) {
+            Term<T> term_to_add(term.monomial(), value_type_one);
+            if (done_terms.find(term_to_add) == done_terms.end()) {
+                relative_complement.insert(term_to_add);
+            }
+        }
+        return;
+    }
+}
+
+template <typename T, typename Comp>
+std::pair<PolynomialSet<T, Comp>, typename Polynomial<T, Comp>::container>
+sym_preproc(
+        const CriticalPairs<T, Comp>& critical_pairs,
+        const PolynomialSet<T, Comp>& poly_set,
+        const ResultsTriangPairs<T, Comp>& results_triang_pairs) {
+    PolynomialSet<T, Comp> to_reduce;
+    for (const auto& critical_pair : critical_pairs.GetSet()) {
+        to_reduce.AddPolynomial(simplify_and_multiplicate(critical_pair.leftMonomial(), critical_pair.leftPolynomial(), results_triang_pairs));
+        to_reduce.AddPolynomial(simplify_and_multiplicate(critical_pair.rightMonomial(), critical_pair.rightPolynomial(), results_triang_pairs));
+    }
+
+    auto [relative_complement, done_terms] = prepare_terms_sets_(to_reduce, critical_pairs);
 
     while (!relative_complement.empty()) {
         const Term<T> current_term = *relative_complement.begin();
         done_terms.insert(current_term);
         relative_complement.erase(relative_complement.begin());
-
-        for (const auto& polynomial : poly_set.PolSet()) {
-            if (!current_term.IsDivisibleBy(polynomial.LeadTerm())) {
-                continue;
-            }
-
-            const auto polynomial_to_add =
-                simplify_and_multiplicate((current_term / polynomial.LeadTerm()).monomial(), polynomial, results_triang_pairs);
-            to_reduce.AddPolynomial(polynomial_to_add);
-
-            for (const auto& term : polynomial_to_add.TermSet()) {
-                Term<T> term_to_add(term.monomial(), value_type_one);
-                if (done_terms.find(term_to_add) == done_terms.end()) {
-                    relative_complement.insert(term_to_add);
-                }
-            }
-            break;
-        }
+        find_and_insert_possible_reducer_(poly_set, current_term, done_terms, results_triang_pairs, to_reduce, relative_complement);
     }
 
     return {to_reduce, done_terms};
