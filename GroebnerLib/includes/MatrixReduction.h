@@ -13,13 +13,13 @@ using Matrix = std::vector<Row<T>>;
 /* Declaration */
 
 template <typename T, typename Comp>
-static Polynomial<T, Comp> row_to_polynomial(const Row<T>&, const typename Polynomial<T, Comp>::container&);
+Polynomial<T, Comp> row_to_polynomial(const Row<T>&, const typename Polynomial<T, Comp>::container&);
 
 template <typename T>
-static size_t column_unzero(const Matrix<T>&, size_t, size_t);
+size_t column_unzero(const Matrix<T>&, size_t, size_t);
 
 template <typename T>
-static void triangulation(Matrix<T>&);
+void triangulation(Matrix<T>&);
 
 template <typename T, typename Comp>
 std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>
@@ -32,7 +32,7 @@ matrix_reduction(
 /* Implementation */
 
 template <typename T, typename Comp>
-static Polynomial<T, Comp> row_to_polynomial(const Row<T>& row, const typename Polynomial<T, Comp>::container& all_terms) {
+Polynomial<T, Comp> row_to_polynomial(const Row<T>& row, const typename Polynomial<T, Comp>::container& all_terms) {
     const T value_type_zero(0);
     typename Polynomial<T, Comp>::container polynomial;
     auto it = all_terms.begin();
@@ -45,7 +45,7 @@ static Polynomial<T, Comp> row_to_polynomial(const Row<T>& row, const typename P
 }
 
 template <typename T>
-static size_t column_unzero(const Matrix<T>& matrix, size_t curren_line, size_t current_column) {
+size_t column_unzero(const Matrix<T>& matrix, size_t curren_line, size_t current_column) {
     const T value_type_zero(0);
     for (size_t i = curren_line; i != matrix.size(); ++i) {
         if (matrix[i][current_column] != value_type_zero) {
@@ -56,7 +56,7 @@ static size_t column_unzero(const Matrix<T>& matrix, size_t curren_line, size_t 
 }
 
 template <typename T>
-static void triangulation(Matrix<T>& matrix) {
+void triangulation(Matrix<T>& matrix) {
     const T value_type_zero(0), value_type_one(1);
     size_t current_column = 0, i = 0;
     while (i != matrix.size() && current_column != matrix.front().size()) {
