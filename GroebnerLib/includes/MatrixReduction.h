@@ -24,9 +24,9 @@ static void triangulation(Matrix<T>&);
 template <typename T, typename Comp>
 std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>>
 matrix_reduction(
-    const PolynomialSet<T, Comp>&,  // Polynomials to reduce.
-    const typename Polynomial<T, Comp>::container&,  // Set of all terms.
-    const typename Polynomial<T, Comp>::container&  // Set of all lead terms.
+    const PolynomialSet<T, Comp>& to_reduce,
+    const typename Polynomial<T, Comp>::container& all_terms,
+    const typename Polynomial<T, Comp>::container& lead_terms
 );
 
 /* Implementation */
@@ -58,10 +58,11 @@ static size_t column_unzero(const Matrix<T>& matrix, size_t curren_line, size_t 
 template <typename T>
 static void triangulation(Matrix<T>& matrix) {
     const T value_type_zero(0), value_type_one(1);
-    size_t current_column = 0;
-    for (size_t i = 0; i != matrix.size() && current_column != matrix.front().size(); ++current_column) {
+    size_t current_column = 0, i = 0;
+    while (i != matrix.size() && current_column != matrix.front().size()) {
         size_t current_index = column_unzero(matrix, i, current_column);
         if (current_index == matrix.size()) {
+            ++current_column;
             continue;
         }
 
@@ -87,18 +88,19 @@ static void triangulation(Matrix<T>& matrix) {
                 }
             }
         }
+        ++current_column;
         ++i;
     }
 }
 
 template <typename T, typename Comp>
 std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>> matrix_reduction(
-        const PolynomialSet<T, Comp>& results,
+        const PolynomialSet<T, Comp>& to_reduce,
         const typename Polynomial<T, Comp>::container& all_terms,
         const typename Polynomial<T, Comp>::container& lead_terms) {
-    Matrix<T> matrix(results.PolSet().size(), Row<T>(all_terms.size()));
+    Matrix<T> matrix(to_reduce.PolSet().size(), Row<T>(all_terms.size()));
     size_t index = matrix.size() - 1;
-    for (auto it = results.PolSet().begin(); it != results.PolSet().end(); ++it, --index) {
+    for (auto it = to_reduce.PolSet().begin(); it != to_reduce.PolSet().end(); ++it, --index) {
         size_t jndex = 0;
         auto poly_it = it->TermSet().begin();
         for (auto jt = all_terms.begin(); poly_it != it->TermSet().end(); ++jt, ++jndex) {
