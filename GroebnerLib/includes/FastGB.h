@@ -218,7 +218,7 @@ PolynomialSet<T, Comp> reduction(
 
 template <typename T, typename Comp, typename SelFunction>
 PolynomialSet<T, Comp>& calculated_fast_gb(PolynomialSet<T, Comp>& given_ideal, SelFunction select_function) {
-    given_ideal = std::move(calculate_fast_gb(given_ideal, select_function));
+    given_ideal = calculate_fast_gb(given_ideal, select_function);
     return given_ideal;
 }
 
