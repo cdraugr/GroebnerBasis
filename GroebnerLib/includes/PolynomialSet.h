@@ -32,6 +32,7 @@ public:
     void ReduceCoefficients();
     PolynomialSet<T, Comp>& ReduceBasis();
 
+    bool IsPolynomialInMe(const Polynomial<T, Comp>&) const noexcept;
     bool IsPolynomialInMyIdeal(const Polynomial<T, Comp>&) const noexcept;
 
     template <typename OtherT, typename OtherComp>
@@ -42,10 +43,10 @@ public:
     friend bool IsGroebnerBasis(const PolynomialSet<OtherT, OtherComp>&) noexcept;
 
     template <typename OtherT, typename OtherComp>
-    friend PolynomialSet<OtherT, OtherComp> GiveSigmaSet(const i64&);
+    friend PolynomialSet<OtherT, OtherComp> GiveRootSet(const i64&);
 
     template <typename OtherT, typename OtherComp>
-    friend PolynomialSet<OtherT, OtherComp> GiveGroebnerSigmaSet(const i64&);
+    friend PolynomialSet<OtherT, OtherComp> GiveGroebnerRootSet(const i64&);
 
     template <typename OtherT, typename OtherComp>
     friend std::ostream& operator<<(std::ostream&, const PolynomialSet<OtherT, OtherComp>&) noexcept;
@@ -178,8 +179,7 @@ PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::ReduceBasis() {
     while (!polynoms_.empty()) {
         auto polynom = *PolSet().begin();
         polynoms_.erase(PolSet().begin());
-        ReductionToResByMe(&polynom);
-        tmp.ReductionToResByMe(&polynom);
+        while (ReductionToResByMe(&polynom) || tmp.ReductionToResByMe(&polynom)) {}
         if (polynom != Term<T>(0)) {
             tmp.polynoms_.insert(polynom * Term<T>(pow(polynom.LeadTerm().coefficient(), -1)));
         }  // I don't use AddPolynomial here for small uptimisation.
@@ -187,6 +187,12 @@ PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::ReduceBasis() {
     *this = std::move(tmp);
     return *this;
 }
+
+template <typename T, typename Comp>
+bool PolynomialSet<T, Comp>::IsPolynomialInMe(const Polynomial<T, Comp>& polynomial) const noexcept {
+    return PolSet().find(polynomial) != PolSet().end();
+}
+
 
 template <typename T, typename Comp>
 bool PolynomialSet<T, Comp>::IsPolynomialInMyIdeal(const Polynomial<T, Comp>& polynom) const noexcept {
@@ -215,24 +221,24 @@ bool IsGroebnerBasis(const PolynomialSet<T, Comp>& pol_set) noexcept {
 }
 
 template <typename T, typename Comp>
-PolynomialSet<T, Comp> GiveSigmaSet(const i64& variable_count) {
-    PolynomialSet<T, Comp> answer(GiveSigma<T, Comp>(variable_count, variable_count) - Term<T>(pow(static_cast<T>(-1), variable_count - 1)));
+PolynomialSet<T, Comp> GiveRootSet(const i64& variable_count) {
+    PolynomialSet<T, Comp> answer(GiveRoot<T, Comp>(variable_count, variable_count) - Term<T>(pow(static_cast<T>(-1), variable_count - 1)));
     for (i64 i = 1; i < variable_count; ++i) {
-        answer.AddPolynomial(GiveSigma<T, Comp>(i, variable_count));
+        answer.AddPolynomial(GiveRoot<T, Comp>(i, variable_count));
     }
     return answer;
 }
 
 template <typename T, typename Comp>
-PolynomialSet<T, Comp> GiveGroebnerSigmaSet(const i64& variable_count) {
-    return GiveSigmaSet<T, Comp>(variable_count).MakeGroebnerBasis().ReduceBasis();
+PolynomialSet<T, Comp> GiveGroebnerRootSet(const i64& variable_count) {
+    return GiveRootSet<T, Comp>(variable_count).MakeGroebnerBasis().ReduceBasis();
 }
 
 template <typename T, typename Comp>
 std::ostream& operator<<(std::ostream& out, const PolynomialSet<T, Comp>& poly_set) noexcept {
     for (auto it = poly_set.PolSet().begin(); it != poly_set.PolSet().end(); ++it) {
         if (it != poly_set.PolSet().begin()) {
-            out << "\n\n";
+            out << "\n";
         }
         out << *it;
     }

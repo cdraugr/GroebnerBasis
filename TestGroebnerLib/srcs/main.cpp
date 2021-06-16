@@ -9,8 +9,8 @@ int main() {
     // test_Polynomial();
     // test_PolynomialOrder();
     // test_PolynomialSet();
-    // test_Sigma(6);
-    // test_SigmaTime(6);
+    // test_Root(6);
+    // test_RootTime(6);
     // test_CriticalPair();
-    test_FastGB(7);
+    test_FastGB(14);
 }

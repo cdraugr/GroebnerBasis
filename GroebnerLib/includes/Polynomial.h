@@ -85,7 +85,7 @@ public:
     friend bool operator!=(const Term<OtherT>&, const Polynomial<OtherT, OtherComp>&) noexcept;
 
     template <typename OtherT, typename OtherComp>
-    friend Polynomial<OtherT, OtherComp> GiveSigma(const i64&, const i64&);
+    friend Polynomial<OtherT, OtherComp> GiveRoot(const i64&, const i64&);
 
     template <typename OtherT, typename OtherComp>
     friend std::ostream& operator<<(std::ostream&, const Polynomial<OtherT, OtherComp>&) noexcept;
@@ -344,7 +344,7 @@ bool operator!=(const Term<T>& term, const Polynomial<T, Comp>& polynom) noexcep
 }
 
 template <typename T, typename Comp>
-Polynomial<T, Comp> GiveSigma(const i64& degree_max, const i64& variable_count) {
+Polynomial<T, Comp> GiveRoot(const i64& degree_max, const i64& variable_count) {
     assert(degree_max >= 0);
 
     Polynomial<T, Comp> answer;

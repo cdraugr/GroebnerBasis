@@ -21,13 +21,11 @@ void test_FastGB(u32 maximum_variables) {
     assert(gb::IsGroebnerBasis(ideal) == true);
 
     for (u32 i = 1; i <= maximum_variables ; ++i) {
-        auto ideal = gb::GiveSigmaSet<Rational, gb::LexComp>(i);
+        auto ideal = gb::GiveRootSet<Rational, gb::LexComp>(i);
 
-        std::string text = "Time spent for calculate Root ";
-        text.push_back('0' + i);
-        test_time(test_FastGBTime, text + " Groebner Basis is ")(ideal);
+        test_time(test_FastGBTime, "Time spent for calculate Root " +  std::to_string(i) + " Groebner Basis is ")(ideal);
 
-        if (gb::IsGroebnerBasis(ideal.ReduceBasis()) != true) {
+        if (gb::fast_is_gb(ideal) != true) {
             std::cout << "F4 Tests status: \033[1;31mFAIL\033[0m.\n\n";
             return;
         }
