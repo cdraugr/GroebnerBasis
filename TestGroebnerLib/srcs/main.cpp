@@ -1,16 +1,19 @@
-#include "Tests.h"
+#include "Tests.hpp"
 
 int main() {
-    // test_Rational();
-    // test_Modular();
-    // test_Monomial();
-    // test_Term();
-    // test_TermOrder();
-    // test_Polynomial();
-    // test_PolynomialOrder();
-    // test_PolynomialSet();
-    // test_Root(6);
-    // test_RootTime(6);
-    // test_CriticalPair();
-    test_FastGB(14);
+    test_fields();
+
+    test_term();
+    test_monomial();
+    test_monomial_order();
+
+    test_polynomial();
+    test_polynomial_order();
+    test_polynomial_set();
+
+    test_root(3);
+    test_root_time(3);
+
+    test_critical_pair();
+    test_f4_gb(7);
 }

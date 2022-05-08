@@ -1,28 +1,31 @@
-#include "Rational.h"
+#include "Rational.hpp"
 
-Rational::Rational(const i64& numerator, const i64& denominator) {
+namespace gb {
+namespace fields {
+
+Rational::Rational(const gb::i64& numerator, const gb::i64& denominator) {
     if (denominator == 0) {
         throw std::runtime_error("Division by zero.");
     }
     numerator_ = denominator < 0 ? -numerator : numerator;
     denominator_ = denominator < 0 ? -denominator : denominator;
-    Reduce();
+    Reduce_();
 }
 
-const i64& Rational::numerator() const noexcept {
+const gb::i64& Rational::GetNumerator() const noexcept {
     return numerator_;
 }
 
-const i64& Rational::denominator() const noexcept {
+const gb::i64& Rational::GetDenominator() const noexcept {
     return denominator_;
 }
 
 bool Rational::IsInteger() const noexcept {
-    return denominator() == 1;
+    return GetDenominator() == 1;
 }
 
 bool operator<(const Rational& left, const Rational& right) noexcept {
-    return left.numerator() * right.denominator() < right.numerator() * left.denominator();
+    return left.GetNumerator() * right.GetDenominator() < right.GetNumerator() * left.GetDenominator();
 }
 
 bool operator>(const Rational& left, const Rational& right) noexcept {
@@ -38,7 +41,7 @@ bool operator>=(const Rational& left, const Rational& right) noexcept {
 }
 
 bool operator==(const Rational& left, const Rational& right) noexcept {
-    return left.numerator() == right.numerator() && left.denominator() == right.denominator();
+    return left.GetNumerator() == right.GetNumerator() && left.GetDenominator() == right.GetDenominator();
 }
 
 bool operator!=(const Rational& left, const Rational& right) noexcept {
@@ -50,13 +53,13 @@ Rational Rational::operator+() const noexcept {
 }
 
 Rational Rational::operator-() const noexcept {
-    return Rational(-numerator(), denominator());
+    return Rational(-GetNumerator(), GetDenominator());
 }
 
 Rational& Rational::operator+=(const Rational& other) noexcept {
-    numerator_ = numerator() * other.denominator() + other.numerator() * denominator();
-    denominator_ *= other.denominator();
-    Reduce();
+    numerator_ = GetNumerator() * other.GetDenominator() + other.GetNumerator() * GetDenominator();
+    denominator_ *= other.GetDenominator();
+    Reduce_();
     return *this;
 }
 
@@ -76,9 +79,9 @@ Rational operator-(Rational left, const Rational& right) noexcept {
 }
 
 Rational& Rational::operator*=(const Rational& other) noexcept {
-    numerator_ *= other.numerator();
-    denominator_ *= other.denominator();
-    Reduce();
+    numerator_ *= other.GetNumerator();
+    denominator_ *= other.GetDenominator();
+    Reduce_();
     return *this;
 }
 
@@ -91,7 +94,7 @@ Rational& Rational::operator/=(const Rational& other) {
     if (other == 0) {
         throw std::runtime_error("Division by zero.");
     }
-    *this *= Rational(other.denominator(), other.numerator());
+    *this *= Rational(other.GetDenominator(), other.GetNumerator());
     return *this;
 }
 
@@ -100,7 +103,7 @@ Rational operator/(Rational left, const Rational& right) {
     return left;
 }
 
-Rational pow(const Rational& number, const i64& power) noexcept {
+Rational pow(const Rational& number, const gb::i64& power) noexcept {
     if (power < 0) {
         return pow(1 / number, -power);
     } else if (power == 0) {
@@ -116,18 +119,21 @@ Rational pow(const Rational& number, const i64& power) noexcept {
 
 std::ostream& operator<<(std::ostream& out, const Rational& rational) noexcept {
     if (rational.IsInteger()) {
-        return out << rational.numerator();
+        return out << rational.GetNumerator();
     }
-    if (rational.numerator() < 0) {
-        out << "-(" << -rational.numerator();
+    if (rational.GetNumerator() < 0) {
+        out << "-(" << -rational.GetNumerator();
     } else {
-        out << '(' << rational.numerator();
+        out << '(' << rational.GetNumerator();
     }
-    return out << " / " << rational.denominator() << ')';
+    return out << " / " << rational.GetDenominator() << ')';
 }
 
-void Rational::Reduce() noexcept {  // private
-    auto gcd = std::gcd(numerator(), denominator());
+void Rational::Reduce_() noexcept {  // private
+    auto gcd = std::gcd(GetNumerator(), GetDenominator());
     numerator_ /= gcd;
     denominator_ /= gcd;
 }
+
+}  // namespace fields
+}  // namespace gb

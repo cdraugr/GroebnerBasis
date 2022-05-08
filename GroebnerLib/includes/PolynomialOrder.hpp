@@ -1,6 +1,6 @@
 #pragma once
 
-#include "Polynomial.h"
+#include "Polynomial.hpp"
 
 namespace gb {
 
@@ -18,15 +18,15 @@ bool PolynomialOrder<Comp>::operator()(
     const Polynomial<T, OtherComp>& right
 ) const noexcept {
     Comp comparator;
-    auto left_it = left.TermSet().begin();
-    auto right_it = right.TermSet().begin();
-    for (; left_it != left.TermSet().end() && right_it != right.TermSet().end(); ++left_it, ++right_it) {
+    auto left_it = left.GetMonomials().begin();
+    auto right_it = right.GetMonomials().begin();
+    for (; left_it != left.GetMonomials().end() && right_it != right.GetMonomials().end(); ++left_it, ++right_it) {
         if (comparator(*left_it, *right_it) || comparator(*right_it, *left_it)) {
             return comparator(*left_it, *right_it);
         }
     }
 
-    return left.TermSet().size() < right.TermSet().size();
+    return left.GetMonomials().size() < right.GetMonomials().size();
 }
 
 }  // namespace gb

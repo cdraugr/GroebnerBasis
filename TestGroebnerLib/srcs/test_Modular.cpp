@@ -1,54 +1,101 @@
-#include "Tests.h"
+#include "Tests.hpp"
 
-void test_Modular() {
+void test_modular() {
     std::cout << "Test Modular:\n";
     const u64 TBase = 53;
     std::cout << "TBase = " << TBase << ":\n";
-    Modular<TBase> a(200);  // 41
-    Modular<TBase> b(INT32_MIN);  // 32
-    Modular<TBase> one(1);  // 1
-    Modular<TBase> zero;  // 0
-    Modular<TBase> big_number(INT32_MAX * static_cast<i64>(7));
+
+    gb::fields::Modular<TBase> a(200);  // 41
+    assert_modular_(a, 41);
+    gb::fields::Modular<TBase> b(INT32_MIN);  // 32
+    assert_modular_(b, 32);
+    gb::fields::Modular<TBase> one(1);  // 1
+    assert_modular_(one, 1);
+    gb::fields::Modular<TBase> zero;  // 0
+    assert_modular_(zero, 0);
+
     std::cout << "a = " << a << '\n';
     std::cout << "b = " << b << '\n';
     std::cout << "one = " << one << '\n';
     std::cout << "zero = " << zero << '\n';
     std::cout << std::boolalpha << "a < b is " << (a < b) << '\n';
+    assert(a < b == false);
     std::cout << std::boolalpha << "a > b is " << (a > b) << '\n';
+    assert(a > b == true);
     std::cout << std::boolalpha << "a <= b is " << (a <= b) << '\n';
+    assert(a <= b == false);
     std::cout << std::boolalpha << "a >= b is " << (a >= b) << '\n';
+    assert(a >= b == true);
     std::cout << std::boolalpha << "a == 4 is " << (a == 4) << '\n';
-    PrintLine();
+    assert(a == b == false);
+    print_line();
 
     std::cout << "+a = " << +a << '\n';
+    assert_modular_(+a, 41);
+
     std::cout << "-one = " << -one << '\n';
+    assert_modular_(-one, 52);
+
     std::cout << "-zero = " << -zero << '\n';
+    assert_modular_(-zero, 0);
+
     std::cout << "5 * a = " << 5 * a << '\n';
+    assert_modular_(5 * a, 46);
+
     std::cout << "b * 4 = " << b * 4 << '\n';
+    assert_modular_(b * 4, 22);
+
     std::cout << "1 / a = " << 1 / a << '\n';
+    assert_modular_(1 / a, 22);
+
     std::cout << "pow(a, 5) = " << pow(a, 5) << '\n';
+    assert_modular_(pow(a, 5), 3);
+
     std::cout << "pow(b, -5) = " << pow(b, -5) << '\n';
+    assert_modular_(pow(b, -5), 51);
+
     std::cout << "a / b = " << a / b << '\n';
+    assert_modular_(a / b, 46);
+
     std::cout << "b / pow(a, 2) = " << b / pow(a, 2) << '\n';
-    PrintLine();
+    assert_modular_(b / pow(a, 2), 12);
+    print_line();
 
     std::cout << "a * b = " << a * b << '\n';
+    assert_modular_(a * b, 40);
+
     std::cout << "pow(a, -1) * pow(b, -1) = " << pow(a, -1) * pow(b, -1) << '\n';
+    assert_modular_(pow(a, -1) * pow(b, -1), 4);
+
     std::cout << "a ^ (-1) * b ^ (-1) = " << InverseElement(a) * InverseElement(b) << '\n';
+    assert_modular_(InverseElement(a) * InverseElement(b), 4);
+
     std::cout <<  "a * b * a ^ (-1) * b ^ (-1) = " << a * b * InverseElement(a) * InverseElement(b) << '\n';
-    PrintLine();
+    assert_modular_(a * b * InverseElement(a) * InverseElement(b), 1);
+    print_line();
 
     std::cout << "b * zero = " << b * zero << '\n';
+    assert_modular_(b * zero, 0);
+    assert(b * zero == zero);
+
     std::cout << "a - b + one = " << a - b + one << '\n';
+    assert_modular_(a - b + one, 10);
+
     std::cout << "b - a * b = " << b - a * b << '\n';
+    assert_modular_(b - a * b, 45);
+
     std::cout << "b / a + a * b = " << b / a + a * b << '\n';
+    assert_modular_(b / a + a * b, 2);
+
     std::cout << "zero / one - (a + b * 4 + one + a / 4) = " << zero / one - (a + b * 4 + one + a / 4) << '\n';
+    assert_modular_(zero / one - (a + b * 4 + one + a / 4), 45);
+
     std::cout << a << " / " << zero << " = ";
     try {
         std::cout << (a / zero) << '\n';
+        assert(false);
     } catch (const std::runtime_error& exception) {
         std::cout << exception.what() << '\n';
     }
-    std::cout << big_number << " * " << INT32_MAX << " = " << big_number * INT32_MAX << '\n';
-    PrintLine(2);
+    print_line(2);
 }

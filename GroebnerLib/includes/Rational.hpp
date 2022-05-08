@@ -1,13 +1,16 @@
 #pragma once
 
-#include "Lib.h"
+#include "Lib.hpp"
+
+namespace gb {
+namespace fields {
 
 class Rational {
 public:
-    Rational(const i64& = 0, const i64& = 1);
+    Rational(const gb::i64& = 0, const gb::i64& = 1);
 
-    const i64& numerator() const noexcept;
-    const i64& denominator() const noexcept;
+    const gb::i64& GetNumerator() const noexcept;
+    const gb::i64& GetDenominator() const noexcept;
 
     bool IsInteger() const noexcept;
 
@@ -34,13 +37,16 @@ public:
     Rational& operator/=(const Rational&);
     friend Rational operator/(Rational, const Rational&);
 
-    friend Rational pow(const Rational&, const i64&) noexcept;
+    friend Rational pow(const Rational&, const gb::i64&) noexcept;
 
     friend std::ostream& operator<<(std::ostream&, const Rational&) noexcept;
 
 private:
-    void Reduce() noexcept;
+    void Reduce_() noexcept;
 
-    i64 numerator_{};
-    i64 denominator_{};
+    gb::i64 numerator_{};
+    gb::i64 denominator_{};
 };
+
+}  // namespace fields
+}  // namespace gb

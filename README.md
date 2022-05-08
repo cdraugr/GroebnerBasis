@@ -14,7 +14,7 @@ git clone https://github.com/cdraugr/GroebnerBasis.git
 
 Вы можете собрать её, как и любую другую `.a` библиотеку. Например, [тут](https://github.com/cdraugr/GroebnerBasis/blob/b990c86263161787e347125bac447118edb8641a/TestGroebnerLib/Makefile#L29) (тот же проект, но тестовая часть) есть пример.
 
-В самом же коде потребуется написать `#include "FastGB.h"`, чтобы использовать все возможности `gb::`.
+В самом же коде потребуется написать `#include "FastGB.hpp"`, чтобы использовать все возможности `gb::`.
 
 ## Собрать тесты
 
