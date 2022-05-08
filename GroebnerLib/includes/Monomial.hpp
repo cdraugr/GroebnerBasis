@@ -1,7 +1,5 @@
 #pragma once
 
-#include "Rational.hpp"
-#include "Modular.hpp"
 #include "Term.hpp"
 
 namespace gb {

@@ -8,13 +8,13 @@
 ```bash
 git clone https://github.com/cdraugr/GroebnerBasis.git
 ```
-В папке `GroebnerBasis/GroebnerLib/` будет лежать библиотека. В ней можно прописать `make` и создастся собранная бинарник `GroebnerLib.a`.
+В папке `GroebnerBasis/GroebnerLib/` будет лежать библиотека. В ней можно прописать `make` и создастся собранный бинарник `GroebnerLib.a`.
 
 ## Использование библиотеки
 
 Вы можете собрать её, как и любую другую `.a` библиотеку. Например, [тут](https://github.com/cdraugr/GroebnerBasis/blob/b990c86263161787e347125bac447118edb8641a/TestGroebnerLib/Makefile#L29) (тот же проект, но тестовая часть) есть пример.
 
-В самом же коде потребуется написать `#include "FastGB.hpp"`, чтобы использовать все возможности `gb::`.
+В самом же коде потребуется написать `#include "GroebnerLib.hpp"`, чтобы использовать все возможности `gb::`.
 
 ## Собрать тесты
 
