@@ -1,37 +1,28 @@
-#include "Modular.h"
+#include "Modular.hpp"
 
-bool is_prime(const u64& number) {
-    if (number == 2) {
-        return true;
-    }
-    if (number < 2 || number % 2 == 0) {
-        return false;
-    }
-    for(u64 i = 3, root = std::sqrt(number); i <= root; i += 2) {
-        if (number % i == 0) {
-            return false;
-        }
-    }
-    return true;
-}
+namespace gb {
+namespace utils {
 
-static void make_combi_util(std::vector<std::vector<i64>> *ans, std::vector<i64> *tmp,
-        const i64& n, const i64& left, const i64& k) {
+void make_combinations_util_(std::vector<std::vector<gb::i64>> *ans, std::vector<gb::i64> *tmp,
+        const gb::i64& n, const gb::i64& left, const gb::i64& k) {
     if (k == 0) {
         ans->push_back(*tmp);
         return ;
     }
 
-    for (i64 i = left; i < n; ++i) {
+    for (auto i = left; i < n; ++i) {
         tmp->push_back(i);
-        make_combi_util(ans, tmp, n, i + 1, k - 1);
+        make_combinations_util_(ans, tmp, n, i + 1, k - 1);
         tmp->pop_back();
     }
 }
 
-std::vector<std::vector<i64>> make_combinations(const i64& k, const i64& n) {
-    std::vector<std::vector<i64>> ans;
-    std::vector<i64> tmp;
-    make_combi_util(&ans, &tmp, n, 0, k);
+std::vector<std::vector<gb::i64>> make_combinations(const gb::i64& k, const gb::i64& n) {
+    std::vector<std::vector<gb::i64>> ans;
+    std::vector<gb::i64> tmp;
+    make_combinations_util_(&ans, &tmp, n, 0, k);
     return ans;
 }
+
+}  // namespace utils
+}  // namespace gb

@@ -1,61 +1,50 @@
-#include "Tests.h"
+#include "Tests.hpp"
 
-void test_Monomial() {
+void test_monomial() {
     std::cout << "Test Monomial:\n";
-    gb::Monomial monom1({1, 4, 0, 0, 0, 0, 1, 0, 0, 12});  // by std::vector
-    gb::Monomial monom2({{0, 2}, {2, 1}, {6, 1}, {9, 17}});  // by std::map
-    std::cout << "m1 = " << monom1 << '\n' << "m2 = " << monom2 << '\n';
-    std::cout << "lcm(m1, m2) = " << lcm(monom1, monom2) << '\n';
-    std::cout << "gcd(m1, m2) = " << gcd(monom1, monom2) << '\n';
-    std::cout << "deg(m1) = " << deg(monom1) << '\n';
-    std::cout << "deg(m2) = " << deg(monom2) << '\n';
-    PrintLine();
-
-    gb::Monomial monom3({{2, 5}, {4, 2}});  // = ({0, 0, 5, 0, 2})
-    gb::Monomial monom4({{2, 12}, {3, 1}});  // = ({0, 0, 12, 1})
-    std::cout << "m3 = " << monom3 << '\n' << "m4 = " << monom4 << "\n\n";
-    std::cout << "m3 * m4 =\t" << monom3 * monom4 << '\n';
-    std::cout << "m3 =\t\t" << monom3 << '\n';
-    std::cout << "m3 *= m4 =\t" << (monom3 *= monom4) << '\n';
-    std::cout << "m3 =\t\t" << monom3 << '\n';
-    std::cout << "m3 /= m4 = \t" << (monom3 /= monom4) << '\n';
-    std::cout << "m3 =\t\t" << monom3 << '\n';
-    PrintLine();
-
-    gb::Monomial monom5({3, 0, 4});
-    gb::Monomial monom6({3, 0, 4});
-    std::cout << "m5 = " << monom5 << '\n' << "m6 = " << monom6 << "\n\n";
-    std::cout << std::boolalpha << "m5 == m6\t\tis " << (monom5 == monom6) << '\n';
-    std::cout << "m5 / m6 =\t\t" << monom5 / monom6 << '\n';
-    std::cout << std::boolalpha << "m5 divided by m6\tis " << monom5.IsDivisibleBy(monom6) << "\n\n";
-    PrintLine();
-
-    gb::Monomial monom7({1, 2, 5});
-    gb::Monomial monom8({1, 3, 5});
-    std::cout << "m7 = " << monom7 << '\n' << "m8 = " << monom8 << "\n\n";
-    std::cout << "m8 / m7 = " << monom8 / monom7 << '\n';
-    std::cout << "m7 * m8 / m8 = " << monom7 * monom8 / monom8 << '\n';
-    std::cout << "m7 / m8 = ";
-    try {
-        std::cout << monom7 / monom8;
-    } catch (const std::runtime_error& exception) {
-        std::cout << exception.what() << '\n';
+    std::vector<gb::Monomial<gb::fields::Modular<7>>> vec;
+    for (i64 i = -1; i != 9; ++i) {
+        vec.push_back({{{1, 0, 0, 3}}, i});
     }
-    PrintLine();
-
-    gb::Monomial monom9({0, 2, 3, 0, 2, 0});
-    auto divisors = GetAllDivisors(monom9);
-    assert(divisors.size() == 3 * 4 * 3);
-    for (auto it = divisors.begin(); it != divisors.end(); ++it) {
-        assert(monom9.IsDivisibleBy(*it));
-        for (auto jt = divisors.begin(); jt != divisors.end(); ++jt) {
-            if (it != jt) {
-                assert(*it != *jt);
-            }
-        }
-    }
-    for (const auto& monomial : divisors) {
+    for (const auto& monomial : vec) {
         std::cout << monomial << '\n';
     }
-    PrintLine(2);
+    utils::print_line();
+
+    gb::Monomial<gb::fields::Rational> monomial1({{1, 2, 3}}, 2);
+    gb::Monomial<gb::fields::Rational> monomial2({{3, 2, 1}}, -1);
+
+    std::cout << "m1 = " << monomial1 << '\n';
+    asserts::assert_rational_monomial_(monomial1, {1, 2, 3}, 2, 1);
+
+    std::cout << "m2 = " << monomial2 << '\n';
+    asserts::assert_rational_monomial_(monomial2, {3, 2, 1}, -1, 1);
+
+    std::cout << "m1 * 2 = " << monomial1 * 2 << '\n';
+    asserts::assert_rational_monomial_(monomial1 * 2, {1, 2, 3}, 4, 1);
+
+    std::cout << "2 * m2 = " << 2 * monomial2 << '\n';
+    asserts::assert_rational_monomial_(2 * monomial2, {3, 2, 1}, -2, 1);
+
+    std::cout << "gcd(m1, m2) = " << gcd(monomial1, monomial2) << '\n';
+    asserts::assert_rational_monomial_(gcd(monomial1, monomial2), {1, 2, 1}, 1, 1);
+
+    std::cout << "lcm(m1, m2) = " << lcm(monomial1, monomial2) << '\n';
+    asserts::assert_rational_monomial_(lcm(monomial1, monomial2), {3, 2, 3}, -2, 1);
+    utils::print_line();
+
+    gb::Monomial<gb::fields::Rational> monomial3(2);
+    gb::Monomial<gb::fields::Rational> monomial4({3, 5});
+    std::cout << "m3 = " << monomial3 << '\n';
+    std::cout << "m4 = " << monomial4 << '\n';
+    std::cout << std::boolalpha << "m3 == 2 is " << (monomial3 == 2) << '\n';
+    assert(monomial3 == 2 == true);
+
+    std::cout << std::boolalpha << "2 == m4 is " << (2 == monomial4) << '\n';
+    assert(2 == monomial4 == false);
+
+    std::cout << "m4 * 25 = " << monomial4 * 25 << '\n';
+    assert(monomial4 * 25 == 15);
+
+    utils::print_line(2);
 }

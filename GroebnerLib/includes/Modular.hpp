@@ -1,13 +1,16 @@
 #pragma once
 
-#include "Lib.h"
+#include "Lib.hpp"
 
-template <u64 TBase>
+namespace gb {
+namespace fields {
+
+template <gb::u64 TBase>
 class Modular {
 public:
-    Modular(i64 = 0);
+    Modular(gb::i64 = 0);
 
-    const i64& GetNumber() const noexcept;
+    const gb::i64& GetNumber() const noexcept;
 
     Modular operator+() const noexcept;
     Modular operator-() const noexcept;
@@ -61,75 +64,72 @@ public:
         return !(left == right);
     }
 
-    template <u64 OtherBase>
-    friend Modular<OtherBase> pow(const Modular<OtherBase>&, const i64&);
+    template <gb::u64 OtherBase>
+    friend Modular<OtherBase> pow(const Modular<OtherBase>&, const gb::i64&);
 
-    template <u64 OtherBase>
+    template <gb::u64 OtherBase>
     friend Modular<OtherBase> InverseElement(const Modular<OtherBase>&);
 
-    template <u64 OtherBase>
+    template <gb::u64 OtherBase>
     friend std::ostream& operator<<(std::ostream&, const Modular<OtherBase>&) noexcept;
 
 private:
-    void Reduce() noexcept;
+    void Reduce_() noexcept;
 
-    i64 number_{};
+    gb::i64 number_{};
 };
 
-template <u64 TBase>
-Modular<TBase>::Modular(i64 value) {
-    if (!is_prime(TBase)) {
-        throw std::runtime_error("Base is not a prime number.");
-    }
+template <gb::u64 TBase>
+Modular<TBase>::Modular(gb::i64 value) {
     number_ = std::move(value);
-    Reduce();
+    Reduce_();
 }
 
-template <u64 TBase>
-const i64& Modular<TBase>::GetNumber() const noexcept {
+template <gb::u64 TBase>
+const gb::i64& Modular<TBase>::GetNumber() const noexcept {
     return number_;
 }
 
-template <u64 TBase>
+template <gb::u64 TBase>
 Modular<TBase> Modular<TBase>::operator+() const noexcept {
     return *this;
 }
 
-template <u64 TBase>
+template <gb::u64 TBase>
 Modular<TBase> Modular<TBase>::operator-() const noexcept {
     return Modular<TBase>(TBase - GetNumber());
 }
 
-template <u64 TBase>
+template <gb::u64 TBase>
 Modular<TBase>& Modular<TBase>::operator+=(const Modular<TBase>& other) noexcept {
     number_ += other.GetNumber();
-    Reduce();
+    Reduce_();
     return *this;
 }
 
-template <u64 TBase>
+template <gb::u64 TBase>
 Modular<TBase>& Modular<TBase>::operator-=(const Modular<TBase>& other) noexcept {
     number_ -= other.GetNumber();
-    Reduce();
+    Reduce_();
     return *this;
 }
 
-template <u64 TBase>
+template <gb::u64 TBase>
 Modular<TBase>& Modular<TBase>::operator*=(const Modular<TBase>& other) noexcept {
     number_ *= other.GetNumber();
-    Reduce();
+    Reduce_();
     return *this;
 }
 
-template <u64 TBase>
+template <gb::u64 TBase>
 Modular<TBase>& Modular<TBase>::operator/=(const Modular<TBase>& other) {
     *this *= InverseElement(other);
-    Reduce();
+    Reduce_();
     return *this;
 }
 
-template <u64 TBase>
-Modular<TBase> pow(const Modular<TBase>& number, const i64& power) {
+template <gb::u64 TBase>
+Modular<TBase> pow(const Modular<TBase>& number, const gb::i64& power) {
     if (power < 0) {
         return pow(InverseElement(number), -power);
     } else if (power == 0) {
@@ -142,7 +142,7 @@ Modular<TBase> pow(const Modular<TBase>& number, const i64& power) {
     }
 }
 
-template <u64 TBase>
+template <gb::u64 TBase>
 Modular<TBase> InverseElement(const Modular<TBase>& number) {
     if (number.GetNumber() == 0) {
         throw std::runtime_error("Division by zero.");
@@ -150,15 +150,18 @@ Modular<TBase> InverseElement(const Modular<TBase>& number) {
     return pow(number, TBase - 2);
 }
 
-template <u64 TBase>
+template <gb::u64 TBase>
 std::ostream& operator<<(std::ostream& out, const Modular<TBase>& number) noexcept {
     return out << number.GetNumber();
 }
 
-template <u64 TBase>
-void Modular<TBase>::Reduce() noexcept {  // private
+template <gb::u64 TBase>
+void Modular<TBase>::Reduce_() noexcept {  // private
     if (GetNumber() < 0) {
         number_ += (-number_ / TBase + 1) * TBase;
     }
     number_ %= TBase;
 }
+
+}  // namespace fields
+}  // namespace gb

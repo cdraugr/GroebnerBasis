@@ -6,9 +6,9 @@ INCDIR := ./includes/
 SRCDIR := ./srcs/
 
 # Srcs, objs
-SRCNAMES := Rational.cpp \
+SRCNAMES :=	Rational.cpp \
 			Lib.cpp \
-			Monomial.cpp
+			Term.cpp
 
 SRC := $(addprefix $(SRCDIR), $(SRCNAMES))
 OBJ := $(SRCNAMES:.cpp=.o)

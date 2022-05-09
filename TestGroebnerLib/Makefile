@@ -8,19 +8,20 @@ OBJDIR := ./obj/
 
 # Srcs, objs
 SRCNAMES :=	main.cpp \
-			help_functions.cpp \
-			test_Rational.cpp \
-			test_Modular.cpp \
-			test_Monomial.cpp \
-			test_Term.cpp \
-			test_TermOrder.cpp \
-			test_Polynomial.cpp \
-			test_PolynomialOrder.cpp \
-			test_PolynomialSet.cpp \
-			test_Root.cpp \
-			test_RootTime.cpp \
-			test_CriticalPair.cpp \
-			test_FastGB.cpp
+			utils.cpp \
+			test_fields.cpp \
+			test_rational.cpp \
+			test_modular.cpp \
+			test_term.cpp \
+			test_monomial.cpp \
+			test_monomial_order.cpp \
+			test_polynomial.cpp \
+			test_polynomial_order.cpp \
+			test_polynomial_set.cpp \
+			test_root.cpp \
+			test_root_time.cpp \
+			test_critical_pair.cpp \
+			test_f4_gb.cpp
 
 SRC := $(addprefix $(SRCDIR), $(SRCNAMES))
 OBJ := $(addprefix $(OBJDIR), $(SRCNAMES:.cpp=.o))

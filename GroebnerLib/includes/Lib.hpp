@@ -15,12 +15,14 @@
 #include <utility>
 #include <vector>
 
-using u64 = std::uint64_t;
-using i64 = std::int64_t;
-
 namespace gb {
     using std::pow;  // I want to do Term<i32> and smf like.
-}
 
-bool is_prime(const u64&);
-std::vector<std::vector<i64>> make_combinations(const i64&, const i64&);
+    using u64 = std::uint64_t;
+    using i64 = std::int64_t;
+
+    namespace utils {
+        void make_combinations_util_(std::vector<std::vector<i64>> *, std::vector<i64> *, const i64&, const i64&, const i64&);
+        std::vector<std::vector<i64>> make_combinations(const i64&, const i64&);
+    }
+}
