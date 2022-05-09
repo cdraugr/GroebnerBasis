@@ -15,7 +15,7 @@ void test_polynomial() {
     std::cout << "f = " << f << '\n';
     std::cout << "g = " << g << '\n';
     std::cout << "k = " << k << '\n';
-    print_line();
+    utils::print_line();
 
     std::cout << "g + f =\t\t" << (g + f) << '\n';
     std::cout << "g - f =\t\t" << (g - f) << '\n';
@@ -23,21 +23,21 @@ void test_polynomial() {
     std::cout << "g =\t\t" << g << '\n';
     std::cout << "g -= f =\t" << (g -= f) << '\n';
     std::cout << "g =\t\t" << g << '\n';
-    print_line();
+    utils::print_line();
 
     std::cout << '(' << g << ") * (" << f << ") =\n" << (g * f) << '\n';
-    print_line();
+    utils::print_line();
 
     std::cout << "S(f, g) = " << gb::SPolynomial(f, g) << '\n';
     std::cout << "S(g, f) = " << gb::SPolynomial(g, f) << '\n';
     std::cout << "S(f, f) = " << gb::SPolynomial(f, f) << '\n';
-    print_line();
+    utils::print_line();
 
     f.TryReduceOnceBy(g);
     std::cout << "f -> (g) = " << f << '\n';
     f.TryReduceOnceBy(f);
     std::cout << "f -> (f) = " << f << '\n';
-    print_line();
+    utils::print_line();
 
     {  // HW 06, ex 02
         gb::Polynomial<gb::fields::Rational> f({
@@ -57,5 +57,5 @@ void test_polynomial() {
             std::cout << g << '\n';
         }
     }
-    print_line(2);
+    utils::print_line(2);
 }

@@ -8,7 +8,7 @@ OBJDIR := ./obj/
 
 # Srcs, objs
 SRCNAMES :=	main.cpp \
-			help_functions.cpp \
+			utils.cpp \
 			test_fields.cpp \
 			test_rational.cpp \
 			test_modular.cpp \

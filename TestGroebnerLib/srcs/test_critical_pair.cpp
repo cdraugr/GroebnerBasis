@@ -15,16 +15,16 @@ void test_critical_pair() {
     const gb::CriticalPair critical_pair(f, g);
     std::cout << "Pair(f, g) = {\n";
     std::cout << "    lcm = " << critical_pair.GetLcm() << '\n';
-    assert_term_(critical_pair.GetLcm(), {2, 1, 2});
+    asserts::assert_term_(critical_pair.GetLcm(), {2, 1, 2});
 
     std::cout << "    t_1 = " << critical_pair.GetLeftTerm() << '\n';
-    assert_term_(critical_pair.GetLeftTerm(), {0, 0, 2});
+    asserts::assert_term_(critical_pair.GetLeftTerm(), {0, 0, 2});
 
     std::cout << "    p_1 = " << critical_pair.GetLeftPolynomial() << '\n';
     assert(critical_pair.GetLeftPolynomial() == f);
 
     std::cout << "    t_2 = " << critical_pair.GetRightTerm() << '\n';
-    assert_term_(critical_pair.GetRightTerm(), {1, 1});
+    asserts::assert_term_(critical_pair.GetRightTerm(), {1, 1});
 
     std::cout << "    p_2 = " << critical_pair.GetRightPolynomial() << '\n';
     assert(critical_pair.GetRightPolynomial() == g);
@@ -32,7 +32,7 @@ void test_critical_pair() {
 
     std::cout << "\nTotal degree: deg(Pair(f, g)) = " << critical_pair.GetDegree() << '\n';
     assert(critical_pair.GetDegree() == 5);
-    print_line();
+    utils::print_line();
 
     gb::Polynomial<gb::fields::Rational> left1({
         {{{0, 0, 3}}, 1},

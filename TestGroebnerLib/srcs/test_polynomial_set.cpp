@@ -21,7 +21,7 @@ void test_polynomial_set() {
     std::cout << "System F = {\n" << F << "\n}\n";
     std::cout << std::boolalpha << "Statement that F is Groebner Basis is " << gb::IsGroebnerBasis(F) << '\n';
     assert(gb::IsGroebnerBasis(F) == true);
-    print_line();
+    utils::print_line();
 
     {
         gb::Polynomial<gb::fields::Rational> i1({  // HW 07, ex 01
@@ -42,7 +42,7 @@ void test_polynomial_set() {
         });
         std::cout << std::boolalpha << "Statement that " << g << " belongs ideal I is " << I.IsPolynomialInMyIdeal(g) << '\n';
         assert(I.IsPolynomialInMyIdeal(g) == false);
-        print_line();
+        utils::print_line();
     }
     {
         gb::Polynomial<gb::fields::Rational> i1({  // Test 01, Variant 01, ex 04
@@ -63,7 +63,7 @@ void test_polynomial_set() {
         });
         std::cout << std::boolalpha << "Statement that " << g << " belongs ideal I is " << I.IsPolynomialInMyIdeal(g) << '\n';
         assert(I.IsPolynomialInMyIdeal(g) == true);
-        print_line();
+        utils::print_line();
     }
-    print_line();
+    utils::print_line();
 }

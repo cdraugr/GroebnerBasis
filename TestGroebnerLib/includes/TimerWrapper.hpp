@@ -1,3 +1,5 @@
+#pragma once
+
 #include <ctime>
 #include <string>
 #include <iostream>

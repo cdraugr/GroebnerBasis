@@ -1,9 +1,5 @@
 #include "Tests.hpp"
 
-void test_f4_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>& ideal) {
-    gb::inplace_calculate_f4_gb(ideal);
-}
-
 void test_f4_gb(u32 maximum_variables) {
     gb::Polynomial<gb::fields::Rational> i1({  // HW 07, ex 01
         {{{2, 1}}, 1},
@@ -23,7 +19,7 @@ void test_f4_gb(u32 maximum_variables) {
     for (u32 i = 1; i <= maximum_variables ; ++i) {
         auto ideal = gb::GiveRootSet<gb::fields::Rational, gb::LexComp>(i);
 
-        test_time(test_f4_gb_time_, "Time spent for calculate Root " +  std::to_string(i) + " Groebner Basis is ")(ideal);
+        test_time(times::test_f4_gb_time_, "Time spent for calculate Root " +  std::to_string(i) + " Groebner Basis is ")(ideal);
 
         if (gb::fast_is_gb(ideal) != true) {
             std::cout << "F4 Tests status: \033[1;31mFAIL\033[0m.\n\n";
@@ -32,5 +28,5 @@ void test_f4_gb(u32 maximum_variables) {
     }
 
     std::cout << "\nF4 Tests status: \033[1;32mOK\033[0m.\n";
-    print_line(2);
+    utils::print_line(2);
 }

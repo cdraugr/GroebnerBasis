@@ -46,12 +46,12 @@ void test_polynomial_order() {
     std::cout << std::boolalpha << "k < k is " << comparator(k, k) << '\n';
     assert(comparator(k, k) == false);
 
-    print_line();
+    utils::print_line();
 
     std::set<gb::Polynomial<gb::fields::Rational, gb::LexComp>, gb::PolynomialOrder<gb::LexComp>> polynomials({f, g, k});
     std::cout << "set:\n";
     for (const auto& polynomial : polynomials) {
         std::cout << polynomial << '\n';
     }
-    print_line(2);
+    utils::print_line(2);
 }

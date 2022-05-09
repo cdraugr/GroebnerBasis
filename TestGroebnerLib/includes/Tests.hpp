@@ -1,3 +1,5 @@
+#pragma once
+
 #include "GroebnerLib.hpp"
 #include "TimerWrapper.hpp"
 
@@ -8,28 +10,49 @@ using u64 = std::uint64_t;
 using i64 = std::int64_t;
 
 namespace constants {
-    const u64 DIVIDING_LINE_LENGHT = 50;
-    const char DIVIDING_LINE_SYMBOL = '-';
-    const std::string DIVIDING_LINE(constants::DIVIDING_LINE_LENGHT, constants::DIVIDING_LINE_SYMBOL);
+
+const u64 DIVIDING_LINE_LENGHT = 50;
+const char DIVIDING_LINE_SYMBOL = '-';
+const std::string DIVIDING_LINE(constants::DIVIDING_LINE_LENGHT, constants::DIVIDING_LINE_SYMBOL);
+
 }  // namespace constants
+
+namespace utils {
 
 void print_line(u32 = 1);
 
-void test_fields();
+}  // namespace utils
+
+namespace asserts {  /* Declaration */
+
 void assert_rational_(const gb::fields::Rational&, const i64& = 0, const i64& = 1);
-void test_rational();
+void assert_term_(const gb::Term&, const std::vector<i64>&);
+void assert_rational_monomial_(const gb::Monomial<gb::fields::Rational>&, const std::vector<i64>&, const i64& = 0, const i64& = 1);
 
 template <u64 TBase>
 void assert_modular_(const gb::fields::Modular<TBase>&, const i64&);
-void test_modular();
-
-void assert_term_(const gb::Term&, const std::vector<i64>&);
-void test_term();
-void assert_rational_monomial_(const gb::Monomial<gb::fields::Rational>&, const std::vector<i64>&, const i64& = 0, const i64& = 1);
-void test_monomial();
 
 template <typename Comp>
-void test_monomial_comp_(const std::vector<gb::Monomial<gb::fields::Rational>>&, const std::vector<std::vector<bool>>&);
+void assert_monomial_comp_(const std::vector<gb::Monomial<gb::fields::Rational>>&, const std::vector<std::vector<bool>>&);
+
+}  // namespace asserts
+
+namespace times {
+
+extern gb::PolynomialSet<gb::fields::Rational, gb::LexCoefComp> LexGroebnerSystem;
+void test_time_deg_rev_lex_(u32);
+void test_time_lex_(u32);
+
+void test_f4_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>&);
+
+}  // namespace times
+
+void test_fields();
+void test_rational();
+void test_modular();
+
+void test_term();
+void test_monomial();
 void test_monomial_order();
 
 void test_polynomial();
@@ -37,13 +60,12 @@ void test_polynomial_order();
 void test_polynomial_set();
 
 void test_root(u32);
-void test_time_deg_rev_lex_(u32);
-void test_time_lex_(u32);
 void test_root_time(u32);
 
 void test_critical_pair();
-void test_f4_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>&);
 void test_f4_gb(u32);
+
+namespace asserts {  /* Implementation */
 
 template <u64 TBase>
 void assert_modular_(const gb::fields::Modular<TBase>& value, const i64& number) {
@@ -51,7 +73,7 @@ void assert_modular_(const gb::fields::Modular<TBase>& value, const i64& number)
 }
 
 template <typename Comp>
-void test_monomial_comp_(
+void assert_monomial_comp_(
     const std::vector<gb::Monomial<gb::fields::Rational>>& monomials,
     const std::vector<bool>& expected_comparations
 ) {
@@ -69,5 +91,7 @@ void test_monomial_comp_(
     for (const auto& monomial : monomial_set) {
         std::cout << monomial << '\n';
     }
-    print_line();
+    utils::print_line();
 }
+
+}  // namespace asserts

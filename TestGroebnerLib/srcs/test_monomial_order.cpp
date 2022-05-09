@@ -17,18 +17,18 @@ void test_monomial_order() {
     for (size_t i = 0; i != monomials.size(); ++i) {
         std::cout << "monomial" << i + 1 << " = " << monomials[i] << '\n';
     }
-    print_line();
+    utils::print_line();
 
     std::cout << "deg comp:\n";
-    test_monomial_comp_<gb::DegComp>(monomials, expected_comparations[0]);
+    asserts::assert_monomial_comp_<gb::DegComp>(monomials, expected_comparations[0]);
 
     std::cout << "lex comp:\n";
-    test_monomial_comp_<gb::LexComp>(monomials, expected_comparations[1]);
+    asserts::assert_monomial_comp_<gb::LexComp>(monomials, expected_comparations[1]);
 
     std::cout << "re-lex comp:\n";
-    test_monomial_comp_<gb::ReLexComp>(monomials, expected_comparations[2]);
+    asserts::assert_monomial_comp_<gb::ReLexComp>(monomials, expected_comparations[2]);
 
     std::cout << "deg-lex comp:\n";
-    test_monomial_comp_<gb::DegLexComp>(monomials, expected_comparations[3]);
-    print_line();
+    asserts::assert_monomial_comp_<gb::DegLexComp>(monomials, expected_comparations[3]);
+    utils::print_line();
 }
