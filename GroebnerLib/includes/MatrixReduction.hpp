@@ -99,7 +99,7 @@ std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>> matrix_reduction(
         const PolynomialSet<T, Comp>& to_reduce,
         const typename Polynomial<T, Comp>::container& all_monomials,
         const typename Polynomial<T, Comp>::container& lead_monomials) {
-    Matrix<T> matrix(to_reduce.GetPolynomials().size(), Row<T>(all_monomials.size()));
+    Matrix<T> matrix(to_reduce.size(), Row<T>(all_monomials.size()));
     size_t index = matrix.size() - 1;
     for (auto it = to_reduce.GetPolynomials().begin(); it != to_reduce.GetPolynomials().end(); ++it, --index) {
         size_t jndex = 0;
@@ -118,7 +118,7 @@ std::pair<PolynomialSet<T, Comp>, PolynomialSet<T, Comp>> matrix_reduction(
     PolynomialSet<T, Comp> reduced_results, triang;
     for (const auto& row : matrix) {
         const auto polynomial = row_to_polynomial_<T, Comp>(row, all_monomials);
-        if (polynomial == Monomial<T>(0)) {
+        if (polynomial.IsZero()) {
             break;
         }
         triang.AddPolynomial(polynomial);

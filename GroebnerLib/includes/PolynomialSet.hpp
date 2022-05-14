@@ -19,6 +19,8 @@ public:
 
     const container& GetPolynomials() const noexcept;
     const Polynomial<T, Comp>& LeadPolynomial(const gb::i64& = 0) const;
+    bool empty() const noexcept;
+    size_t size() const noexcept;
 
     bool OneReductionByMe(Polynomial<T, Comp>*) const noexcept;  // Сhanging given Polynomial.
     bool ReductionToResByMe(Polynomial<T, Comp>*) const noexcept;  // Changing given Polynomial.
@@ -77,16 +79,25 @@ PolynomialSet<T, Comp>::PolynomialSet(const PolynomialSet<T, OtherComp>& polynom
     }
 }
 
-
 template <typename T, typename Comp>
 const typename PolynomialSet<T, Comp>::container& PolynomialSet<T, Comp>::GetPolynomials() const noexcept {
     return polynomials_;
 }
 
 template <typename T, typename Comp>
+bool PolynomialSet<T, Comp>::empty() const noexcept {
+    return GetPolynomials().empty();
+}
+
+template <typename T, typename Comp>
+size_t PolynomialSet<T, Comp>::size() const noexcept {
+    return GetPolynomials().size();
+}
+
+template <typename T, typename Comp>
 const Polynomial<T, Comp>& PolynomialSet<T, Comp>::LeadPolynomial(const gb::i64& index) const {
     assert(0 <= index);  // Firstly check negative.
-    assert(static_cast<size_t>(index) < GetPolynomials().size());
+    assert(static_cast<size_t>(index) < size());
 
     auto it = GetPolynomials().begin();
     std::advance(it, index);
@@ -116,7 +127,7 @@ bool PolynomialSet<T, Comp>::ReductionToResByMe(Polynomial<T, Comp> *polynomial)
 template <typename T, typename Comp>
 typename PolynomialSet<T, Comp>::container::iterator
 PolynomialSet<T, Comp>::AddPolynomial(const Polynomial<T, Comp>& polynomial) noexcept {
-    if (polynomial != Monomial<T>(0)) {
+    if (!polynomial.IsZero()) {
         return polynomials_.insert(polynomial).first;
     }
     return GetPolynomials().end();
@@ -153,7 +164,7 @@ PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::MakeGroebnerBasis() noexcept {
     auto s_polynomials = AllSPolynomials(*this);
     for (auto& s_polynomial : s_polynomials) {
         ReductionToResByMe(&s_polynomial);
-        if (s_polynomial != Monomial<T>(0)) {
+        if (!s_polynomial.IsZero()) {
             for (const auto& polynomial : GetPolynomials()) {
                 s_polynomials.push_back(SPolynomial(polynomial, s_polynomial));
             }
@@ -167,7 +178,7 @@ template <typename T, typename Comp>
 void PolynomialSet<T, Comp>::ReduceCoefficients() {
     PolynomialSet<T, Comp>::container tmp;
     for (const auto& polynomial : GetPolynomials()) {
-        tmp.insert(polynomial * Monomial<T>(pow(polynomial.LeadMonomial().GetCoefficient(), -1)));
+        tmp.insert(polynomial.Normalized());
     }
     polynomials_ = std::move(tmp);
 }
@@ -179,8 +190,8 @@ PolynomialSet<T, Comp>& PolynomialSet<T, Comp>::ReduceBasis() {
         auto polynomial = *GetPolynomials().begin();
         polynomials_.erase(GetPolynomials().begin());
         while (ReductionToResByMe(&polynomial) || tmp.ReductionToResByMe(&polynomial)) {}
-        if (polynomial != Monomial<T>(0)) {
-            tmp.polynomials_.insert(polynomial * Monomial<T>(pow(polynomial.LeadMonomial().GetCoefficient(), -1)));
+        if (!polynomial.IsZero()) {
+            tmp.polynomials_.insert(polynomial.Normalized());
         }  // I don't use AddPolynomial here for small uptimisation.
     }
     *this = std::move(tmp);
@@ -198,7 +209,7 @@ bool PolynomialSet<T, Comp>::IsPolynomialInMyIdeal(const Polynomial<T, Comp>& po
     auto ideal = *this;
     auto tmp = polynomial;
     ideal.MakeGroebnerBasis().ReductionToResByMe(&tmp);
-    return tmp == Monomial<T>(0);
+    return tmp.IsZero();
 }
 
 template <typename T, typename Comp>
@@ -211,7 +222,7 @@ bool IsGroebnerBasis(const PolynomialSet<T, Comp>& polynomial_set) noexcept {
             }
             auto s_polynomial = SPolynomial(polynomial_f, polynomial_g);
             polynomial_set.ReductionToResByMe(&s_polynomial);
-            if (s_polynomial != Monomial<T>(0)) {
+            if (!s_polynomial.IsZero()) {
                 return false;
             }
         }

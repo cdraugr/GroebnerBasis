@@ -21,7 +21,8 @@ SRCNAMES :=	main.cpp \
 			test_root.cpp \
 			test_root_time.cpp \
 			test_critical_pair.cpp \
-			test_f4_gb.cpp
+			test_f4_gb.cpp \
+			test_f5_gb.cpp \
 
 SRC := $(addprefix $(SRCDIR), $(SRCNAMES))
 OBJ := $(addprefix $(OBJDIR), $(SRCNAMES:.cpp=.o))

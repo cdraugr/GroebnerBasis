@@ -10,7 +10,6 @@ void print_line(u32 count) {
 
 }  // namespace utils
 
-
 namespace asserts {
 
 void assert_rational_(const gb::fields::Rational& value, const i64& numerator, const i64& denominator) {

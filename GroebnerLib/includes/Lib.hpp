@@ -9,6 +9,7 @@
 #include <list>
 #include <map>
 #include <numeric>
+#include <optional>
 #include <set>
 #include <stdexcept>
 #include <tuple>

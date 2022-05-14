@@ -19,11 +19,15 @@ public:
     const container& GetMonomials() const noexcept;
     const Monomial<T>& LeadMonomial(const gb::i64& = 0) const;
     const Term& LeadTerm(const gb::i64& = 0) const;
+    const T& LeadCoefficient(const gb::i64& = 0) const;
 
     template <typename OtherT, typename OtherComp>
     friend gb::i64 deg(const Polynomial<OtherT, OtherComp>&) noexcept;
 
     bool TryReduceOnceBy(const Polynomial&) noexcept;  // Returns true if there was a reduction otherwise returns false.
+    Polynomial Normalized() const;
+
+    bool IsZero() const noexcept;
 
     Polynomial operator-() const noexcept;
     Polynomial operator+() const noexcept;
@@ -142,6 +146,11 @@ const Term& Polynomial<T, Comp>::LeadTerm(const gb::i64& index) const {
 }
 
 template <typename T, typename Comp>
+const T& Polynomial<T, Comp>::LeadCoefficient(const gb::i64& index) const {
+    return LeadMonomial(index).GetCoefficient();
+}
+
+template <typename T, typename Comp>
 gb::i64 deg(const Polynomial<T, Comp>& polynomial) noexcept {
     gb::i64 max_degree = -1;
     for (const auto& monomial : polynomial.GetMonomials()) {
@@ -169,7 +178,7 @@ Polynomial<T, Comp> Polynomial<T, Comp>::operator+() const noexcept {
 
 template <typename T, typename Comp>
 bool Polynomial<T, Comp>::TryReduceOnceBy(const Polynomial<T, Comp>& other) noexcept {
-    if (*this == Monomial<T>(0) || other == Monomial<T>(0)) {
+    if (IsZero() || other.IsZero()) {
         return false;
     }
 
@@ -180,6 +189,16 @@ bool Polynomial<T, Comp>::TryReduceOnceBy(const Polynomial<T, Comp>& other) noex
         }
     }
     return false;
+}
+
+template <typename T, typename Comp>
+Polynomial<T, Comp> Polynomial<T, Comp>::Normalized() const {
+    return *this * Monomial<T>(pow(LeadCoefficient(), -1));
+}
+
+template <typename T, typename Comp>
+bool Polynomial<T, Comp>::IsZero() const noexcept {
+    return GetMonomials().size() == static_cast<size_t>(0);
 }
 
 template <typename T, typename Comp>
@@ -301,7 +320,7 @@ Polynomial<T, Comp> operator*(Polynomial<T, Comp> left, const Polynomial<T, Comp
 
 template <typename T, typename Comp>
 Polynomial<T, Comp> SPolynomial(const Polynomial<T, Comp>& left, const Polynomial<T, Comp>& right) {
-    if (left == Monomial<T>(0) || right == Monomial<T>(0)) {
+    if (left.IsZero() || right.IsZero()) {
         throw std::runtime_error("No S-Polynomial from 0.");
     }
 
@@ -361,7 +380,7 @@ Polynomial<T, Comp> GiveRoot(const gb::i64& degree_max, const gb::i64& variable_
 
 template <typename T, typename Comp>
 std::ostream& operator<<(std::ostream& out, const Polynomial<T, Comp>& polynomial) noexcept {
-    if (polynomial == Monomial<T>(0)) {
+    if (polynomial.IsZero()) {
         return out << static_cast<T>(0);
     }
 

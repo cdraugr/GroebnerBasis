@@ -65,6 +65,8 @@ void test_root_time(u32);
 void test_critical_pair();
 void test_f4_gb(u32);
 
+void test_f5_gb(u32);
+
 namespace asserts {  /* Implementation */
 
 template <u64 TBase>
