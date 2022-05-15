@@ -58,4 +58,8 @@ void test_f4_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>& idea
     gb::inplace_calculate_f4_gb(ideal);
 }
 
+void test_f5_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>& ideal) {
+    gb::inplace_calculate_f5_gb(ideal);
+}
+
 }  // namespace times

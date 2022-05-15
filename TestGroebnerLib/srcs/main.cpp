@@ -15,7 +15,6 @@ int main() {
     // test_root_time(3);
 
     // test_critical_pair();
-    // test_f4_gb(7);
-
-    test_f5_gb(2);
+    test_f4_gb(7);
+    test_f5_gb(7);
 }

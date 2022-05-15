@@ -44,6 +44,7 @@ void test_time_deg_rev_lex_(u32);
 void test_time_lex_(u32);
 
 void test_f4_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>&);
+void test_f5_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>&);
 
 }  // namespace times
 
