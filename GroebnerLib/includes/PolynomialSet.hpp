@@ -203,7 +203,6 @@ bool PolynomialSet<T, Comp>::IsPolynomialInMe(const Polynomial<T, Comp>& polynom
     return GetPolynomials().find(polynomial) != GetPolynomials().end();
 }
 
-
 template <typename T, typename Comp>
 bool PolynomialSet<T, Comp>::IsPolynomialInMyIdeal(const Polynomial<T, Comp>& polynomial) const noexcept {
     auto ideal = *this;

@@ -31,15 +31,23 @@ private:
 
     std::vector<std::set<size_t>> result_indexes_;  // G
     std::vector<LabeledPolynomial<T, Comp>> labeled_polynomials_;  // r
-    std::vector<std::vector<typename LabeledPolynomial<T, Comp>::signature>> rules_;  // Rules
+    std::vector<std::vector<Signature<T, Comp>>> rules_;  // Rules
 
     void algorithm_f5_(const size_t&);
     std::optional<IndexCriticalPair> get_critical_pair_(size_t, size_t);
-    std::set<size_t> reduction_(const std::vector<size_t>&, const size_t&);
+    std::set<size_t> reduction_(std::vector<size_t>, const size_t&);
     std::vector<size_t> get_s_polynomials_(const std::set<IndexCriticalPair>&);
     void add_rule_(const size_t&);
     bool is_rewritable_(const Term&, const size_t&);
     size_t rewrite_(const Term&, const size_t&);
+    std::pair<std::set<size_t>, std::vector<size_t>> top_reduction_(const size_t&, const std::set<size_t>&);
+    std::optional<size_t> find_reductor_(const size_t&, const std::set<size_t>&);
+
+    template <class RandomIt>
+    void sort_by_signatures_(RandomIt, RandomIt);
+
+    PolynomialSet<T, Comp> get_polynomial_set_from_result_indexes_(const size_t&);
+    bool is_top_reducible_(const Term&, const size_t&);
 };
 
 template <typename T, typename Comp>
@@ -71,11 +79,7 @@ PolynomialSet<T, Comp> F5Calculation<T, Comp>::CalculateBasis() {
         }
     }
 
-    PolynomialSet<T, Comp> result;
-    for (const auto& index : result_indexes_.front()) {
-        result.AddPolynomial(labeled_polynomials_[index].GetEvaluation());
-    }
-    return result;
+    return get_polynomial_set_from_result_indexes_(0);
 }
 
 template <typename T, typename Comp>
@@ -122,29 +126,21 @@ std::optional<typename F5Calculation<T, Comp>::IndexCriticalPair> F5Calculation<
     auto lht_multiplier = current_lcm / labeled_polynomials_[lht_index].LeadTerm();
     auto rht_multiplier = current_lcm / labeled_polynomials_[rht_index].LeadTerm();
 
-    Comp comparator;  // TODO: sigmoid<
-    bool comparition_result = comparator(
-        Monomial<T>(lht_multiplier * labeled_polynomials_[lht_index].GetTerm(), static_cast<T>(1)),
-        Monomial<T>(rht_multiplier * labeled_polynomials_[rht_index].GetTerm(), static_cast<T>(1))
-    );
-    if (lht_index > rht_index || (lht_index == rht_index && comparition_result)) {
+    if (lht_multiplier * labeled_polynomials_[lht_index].GetSignature() < rht_multiplier * labeled_polynomials_[rht_index].GetSignature()) {
         std::swap(lht_index, rht_index);
         std::swap(lht_multiplier, rht_multiplier);
     }
 
-    const auto [lht_term, lht_signature_index] = labeled_polynomials_[lht_index].GetSignature();
-    for (const auto& r_index : result_indexes_[lht_signature_index + 1]) {
-        if ((lht_multiplier * lht_term).IsDivisibleBy(labeled_polynomials_[r_index].LeadTerm())) {
-            return std::nullopt;
-        }
+    const auto [lht_term, lht_signature_index] = labeled_polynomials_[lht_index].GetPairSignature();
+    if (is_top_reducible_(lht_multiplier * lht_term, lht_signature_index + 1)) {
+        return std::nullopt;
     }
 
-    const auto [rht_term, rht_signature_index] = labeled_polynomials_[rht_index].GetSignature();
-    for (const auto& r_index : result_indexes_[rht_signature_index + 1]) {
-        if ((rht_multiplier * rht_term).IsDivisibleBy(labeled_polynomials_[r_index].LeadTerm())) {
-            return std::nullopt;
-        }
+    const auto [rht_term, rht_signature_index] = labeled_polynomials_[rht_index].GetPairSignature();
+    if (is_top_reducible_(rht_multiplier * rht_term, rht_signature_index + 1)) {
+        return std::nullopt;
     }
+
     return {{deg(current_lcm), current_lcm, lht_multiplier, lht_index, rht_multiplier, rht_index}};
 }
 
@@ -169,28 +165,41 @@ std::vector<size_t> F5Calculation<T, Comp>::get_s_polynomials_(const std::set<ty
 
         labeled_polynomials_.emplace_back(
             critical_pair.left_term * labeled_polynomials_[critical_pair.right_polynomial_index].GetTerm(),
-            critical_pair.right_polynomial_index,
+            labeled_polynomials_[critical_pair.right_polynomial_index].GetBasisIndex(),
             s_polynomial
         );
 
         add_rule_(labeled_polynomials_.size() - 1);
         result.push_back(labeled_polynomials_.size() - 1);
     }
-    // TODO: sort F s.t. i < j => S(rFi) ≺ S(rFj)
+    sort_by_signatures_(result.begin(), result.end());
     return result;
 }
 
-template <typename T, typename Comp>  // G' == G[current_index], G_i == G[current_index + 1];
-std::set<size_t> F5Calculation<T, Comp>::reduction_(const std::vector<size_t>& s_polynomials, const size_t& current_index) {
+template <typename T, typename Comp>
+std::set<size_t> F5Calculation<T, Comp>::reduction_(std::vector<size_t> s_polynomials, const size_t& current_index) {
     std::set<size_t> result;
-    // TODO
+    while (!s_polynomials.empty()) {
+        sort_by_signatures_(s_polynomials.rbegin(), s_polynomials.rend());
+        const auto r_index = s_polynomials.back();
+        s_polynomials.pop_back();
 
+        auto polynomial_to_reduce = labeled_polynomials_[r_index].GetEvaluation();
+        get_polynomial_set_from_result_indexes_(current_index).ReductionToResByMe(&polynomial_to_reduce);
+        labeled_polynomials_[r_index].SetEvaluation(polynomial_to_reduce);
+
+        auto set_to_reduce = result;
+        set_to_reduce.merge(result_indexes_[current_index]);
+        auto [new_polynomials, to_do] = top_reduction_(r_index, set_to_reduce);
+        result.merge(new_polynomials);
+        s_polynomials.insert(s_polynomials.end(), to_do.begin(), to_do.end());
+    }
     return result;
 }
 
 template <typename T, typename Comp>
 void F5Calculation<T, Comp>::add_rule_(const size_t& rule_index) {
-    const auto& [term, i] = labeled_polynomials_[rule_index].GetSignature();
+    const auto& [term, i] = labeled_polynomials_[rule_index].GetPairSignature();
     rules_[i].emplace_back(term, rule_index);
 }
 
@@ -201,14 +210,97 @@ bool F5Calculation<T, Comp>::is_rewritable_(const Term& to_rewrite, const size_t
 
 template <typename T, typename Comp>
 size_t F5Calculation<T, Comp>::rewrite_(const Term& to_rewrite, const size_t& r_index) {
-    const auto& [multiplier, i] = labeled_polynomials_[r_index].GetSignature();
+    const auto& [multiplier, i] = labeled_polynomials_[r_index].GetPairSignature();
     for (auto j = rules_[i].size(); j != 0; --j) {
-        const auto& [divisible, candidate] = rules_[i][j - 1];
+        const auto& [divisible, candidate] = rules_[i][j - 1].GetPairSignature();
         if ((multiplier * to_rewrite).IsDivisibleBy(divisible)) {
             return candidate;
         }
     }
     return r_index;
+}
+
+template <typename T, typename Comp>  // G' = set_to_reduce;
+std::pair<std::set<size_t>, std::vector<size_t>> F5Calculation<T, Comp>::top_reduction_(const size_t& r_index, const std::set<size_t>& set_to_reduce) {
+    if (labeled_polynomials_[r_index].GetEvaluation().IsZero()) {
+        std::cout << "\033[1;33mWarning: reduction to zero!\033[0m\n";
+    }
+
+    auto polynomial = labeled_polynomials_[r_index].GetEvaluation();
+    const auto reductor_index = find_reductor_(r_index, set_to_reduce);
+    if (!reductor_index.has_value()) {
+        labeled_polynomials_[r_index].SetEvaluation(polynomial.Normalized());
+        return {{r_index}, {}};
+    }
+
+    const auto reductior = labeled_polynomials_[reductor_index.value()].GetEvaluation();
+    const auto reductior_term = polynomial.LeadTerm() / reductior.LeadTerm();  // FIXME: Division is not defined.
+    polynomial -= polynomial.LeadMonomial() / reductior.LeadMonomial() * reductior;
+    if (reductior_term * labeled_polynomials_[reductor_index.value()].GetSignature() < labeled_polynomials_[r_index].GetSignature()) {
+        labeled_polynomials_[r_index].SetEvaluation(polynomial);
+        return {{}, {r_index}};
+    }
+
+    labeled_polynomials_.emplace_back(
+        reductior_term * labeled_polynomials_[reductor_index.value()].GetTerm(),
+        labeled_polynomials_[reductor_index.value()].GetBasisIndex(),
+        polynomial
+    );
+
+    add_rule_(labeled_polynomials_.size() - 1);
+    return {{}, {r_index, labeled_polynomials_.size() - 1}};
+}
+
+template <typename T, typename Comp>
+std::optional<size_t> F5Calculation<T, Comp>::find_reductor_(const size_t& r_index, const std::set<size_t>& set_to_reduce) {
+    const auto term = labeled_polynomials_[r_index].LeadTerm();
+    for (const auto& i : set_to_reduce) {
+        const auto divisible = labeled_polynomials_[i].LeadTerm();
+        if (!term.IsDivisibleBy(divisible)) {
+            continue;
+        }
+
+        const auto [signature_term, result_index] = labeled_polynomials_[i].GetPairSignature();
+        const auto quotient = term / divisible;
+        if (
+            quotient * labeled_polynomials_[i].GetSignature() != labeled_polynomials_[r_index].GetSignature() &&
+            !is_rewritable_(quotient, i) &&
+            !is_top_reducible_(quotient * signature_term, result_index + 1)
+        ) {
+            return {i};
+        }
+    }
+    return std::nullopt;
+}
+
+template <typename T, typename Comp>
+template <typename RandomIt>
+void F5Calculation<T, Comp>::sort_by_signatures_(RandomIt first, RandomIt last) {
+    std::sort(
+        first, last,
+        [this](const size_t& lht, const size_t& rht) -> bool {
+            return labeled_polynomials_[lht].GetSignature() < labeled_polynomials_[rht].GetSignature();
+        }
+    );
+}
+
+template <typename T, typename Comp>
+PolynomialSet<T, Comp> F5Calculation<T, Comp>::get_polynomial_set_from_result_indexes_(const size_t& index) {
+    PolynomialSet<T, Comp> result;
+    for (const auto& r_index : result_indexes_[index]) {
+        result.AddPolynomial(labeled_polynomials_[r_index].GetEvaluation());
+    }
+    return result;
+}
+
+template <typename T, typename Comp>
+bool F5Calculation<T, Comp>::is_top_reducible_(const Term& term, const size_t& index) {
+    for (const auto& r_index : result_indexes_[index]) {
+        if (term.IsDivisibleBy(labeled_polynomials_[r_index].LeadTerm())) {
+            return true;
+        }
+    }
+    return false;
 }
 
 }  // namespace gb
