@@ -11,10 +11,10 @@ void test_f5_gb(u32 maximum_variables) {
     });
     gb::PolynomialSet<gb::fields::Rational> ideal({i1, i2});
 
-    std::cout << "Before F4 {\n" << ideal << "\n}\n";
+    std::cout << "Before F5 {\n" << ideal << "\n}\n";
     gb::inplace_calculate_f5_gb(ideal);
     assert(gb::fast_is_gb(ideal) == true);
-    std::cout << "After F4  {\n" << ideal.ReduceBasis() << "\n}\n\n";
+    std::cout << "After F5  {\n" << ideal.ReduceBasis() << "\n}\n\n";
 
     for (u32 i = 1; i <= maximum_variables ; ++i) {
         auto ideal = gb::GiveRootSet<gb::fields::Rational, gb::LexComp>(i);
