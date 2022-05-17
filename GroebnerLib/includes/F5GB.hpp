@@ -22,8 +22,8 @@ PolynomialSet<T, Comp>& inplace_calculate_f5_gb(PolynomialSet<T, Comp>& given_se
 
 template <typename T, typename Comp>
 PolynomialSet<T, Comp> calculate_f5_gb(const PolynomialSet<T, Comp>& given_set) {
-    F5Calculation f5_evaluator(given_set);
-    return f5_evaluator.CalculateBasis();
+    F5Calculation<T, Comp> f5_evaluator;
+    return f5_evaluator.CalculateBasis(given_set);
 }
 
 }  // namespace gb

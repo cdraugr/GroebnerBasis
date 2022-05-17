@@ -8,9 +8,9 @@ namespace gb {
 template <typename T, typename Comp>
 class F5Calculation {
 public:
-    F5Calculation(const PolynomialSet<T, Comp>&);
+    F5Calculation();
 
-    PolynomialSet<T, Comp> CalculateBasis();
+    PolynomialSet<T, Comp> CalculateBasis(const PolynomialSet<T, Comp>&);
 
     struct IndexCriticalPair {
         gb::i64 degree{};
@@ -27,11 +27,13 @@ public:
     };
 
 private:
-    std::vector<Polynomial<T, Comp>> given_set_;  // F
+    std::vector<Polynomial<T, Comp>> given_set_;
 
-    std::vector<std::set<size_t>> result_indexes_;  // G
-    std::vector<LabeledPolynomial<T, Comp>> labeled_polynomials_;  // r
-    std::vector<std::vector<Signature<T, Comp>>> rules_;  // Rules
+    std::vector<std::set<size_t>> result_indexes_;
+    std::vector<LabeledPolynomial<T, Comp>> labeled_polynomials_;
+    std::vector<std::vector<Signature<T, Comp>>> rules_;
+
+    void init_(const PolynomialSet<T, Comp>&);
 
     void algorithm_f5_(const size_t&);
     std::optional<IndexCriticalPair> get_critical_pair_(size_t, size_t);
@@ -51,7 +53,10 @@ private:
 };
 
 template <typename T, typename Comp>
-F5Calculation<T, Comp>::F5Calculation(const PolynomialSet<T, Comp>& given_set) {
+F5Calculation<T, Comp>::F5Calculation() = default;
+
+template <typename T, typename Comp>
+void F5Calculation<T, Comp>::init_(const PolynomialSet<T, Comp>& given_set) {
     given_set_.resize(given_set.size());
     std::copy(given_set.GetPolynomials().rbegin(), given_set.GetPolynomials().rend(), given_set_.begin());
 
@@ -61,7 +66,9 @@ F5Calculation<T, Comp>::F5Calculation(const PolynomialSet<T, Comp>& given_set) {
 }
 
 template <typename T, typename Comp>
-PolynomialSet<T, Comp> F5Calculation<T, Comp>::CalculateBasis() {
+PolynomialSet<T, Comp> F5Calculation<T, Comp>::CalculateBasis(const PolynomialSet<T, Comp>& given_set) {
+    init_(given_set);
+
     if (given_set_.empty()) {
         return {};
     }
@@ -83,7 +90,7 @@ PolynomialSet<T, Comp> F5Calculation<T, Comp>::CalculateBasis() {
 }
 
 template <typename T, typename Comp>
-void F5Calculation<T, Comp>::algorithm_f5_(const size_t& current_index) {  // G' == G[current_index], G_i == G[current_index + 1];
+void F5Calculation<T, Comp>::algorithm_f5_(const size_t& current_index) {
     labeled_polynomials_[current_index] = {current_index, given_set_[current_index].Normalized()};
 
     result_indexes_[current_index] = result_indexes_[current_index + 1];
@@ -220,7 +227,7 @@ size_t F5Calculation<T, Comp>::rewrite_(const Term& to_rewrite, const size_t& r_
     return r_index;
 }
 
-template <typename T, typename Comp>  // G' = set_to_reduce;
+template <typename T, typename Comp>
 std::pair<std::set<size_t>, std::vector<size_t>> F5Calculation<T, Comp>::top_reduction_(const size_t& r_index, const std::set<size_t>& set_to_reduce) {
     if (labeled_polynomials_[r_index].GetEvaluation().IsZero()) {
         std::cout << "\033[1;33mWarning: reduction to zero!\033[0m\n";
