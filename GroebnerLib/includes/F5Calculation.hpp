@@ -42,7 +42,7 @@ private:
     void add_rule_(const size_t&);
     bool is_rewritable_(const Term&, const size_t&);
     size_t rewrite_(const Term&, const size_t&);
-    std::pair<std::set<size_t>, std::vector<size_t>> top_reduction_(const size_t&, const std::set<size_t>&);
+    std::pair<std::optional<size_t>, std::vector<size_t>> top_reduction_(const size_t&, const std::set<size_t>&);
     std::optional<size_t> find_reductor_(const size_t&, const std::set<size_t>&);
 
     template <class RandomIt>
@@ -138,12 +138,12 @@ std::optional<typename F5Calculation<T, Comp>::IndexCriticalPair> F5Calculation<
         std::swap(lht_multiplier, rht_multiplier);
     }
 
-    const auto [lht_term, lht_signature_index] = labeled_polynomials_[lht_index].GetPairSignature();
+    const auto& [lht_term, lht_signature_index] = labeled_polynomials_[lht_index].GetPairSignature();
     if (is_top_reducible_(lht_multiplier * lht_term, lht_signature_index)) {
         return std::nullopt;
     }
 
-    const auto [rht_term, rht_signature_index] = labeled_polynomials_[rht_index].GetPairSignature();
+    const auto& [rht_term, rht_signature_index] = labeled_polynomials_[rht_index].GetPairSignature();
     if (is_top_reducible_(rht_multiplier * rht_term, rht_signature_index)) {
         return std::nullopt;
     }
@@ -179,7 +179,6 @@ std::vector<size_t> F5Calculation<T, Comp>::get_s_polynomials_(const std::set<ty
         add_rule_(labeled_polynomials_.size() - 1);
         result.push_back(labeled_polynomials_.size() - 1);
     }
-    sort_by_signatures_(result.begin(), result.end());
     return result;
 }
 
@@ -197,8 +196,10 @@ std::set<size_t> F5Calculation<T, Comp>::reduction_(std::vector<size_t> s_polyno
 
         auto set_to_reduce = result_indexes_[current_index];
         set_to_reduce.insert(result.cbegin(), result.cend());
-        auto [new_polynomials, to_do] = top_reduction_(r_index, set_to_reduce);
-        result.merge(new_polynomials);
+        auto [new_polynomial, to_do] = top_reduction_(r_index, set_to_reduce);
+        if (new_polynomial.has_value()) {
+            result.insert(new_polynomial.value());
+        }
         s_polynomials.insert(s_polynomials.end(), to_do.begin(), to_do.end());
     }
     return result;
@@ -218,9 +219,10 @@ bool F5Calculation<T, Comp>::is_rewritable_(const Term& to_rewrite, const size_t
 template <typename T, typename Comp>
 size_t F5Calculation<T, Comp>::rewrite_(const Term& to_rewrite, const size_t& r_index) {
     const auto& [multiplier, i] = labeled_polynomials_[r_index].GetPairSignature();
+    const auto to_devide = multiplier * to_rewrite;
     for (auto j = rules_[i].size(); j != 0; --j) {
         const auto& [divisible, candidate] = rules_[i][j - 1].GetPairSignature();
-        if ((multiplier * to_rewrite).IsDivisibleBy(divisible)) {
+        if (to_devide.IsDivisibleBy(divisible)) {
             return candidate;
         }
     }
@@ -228,10 +230,10 @@ size_t F5Calculation<T, Comp>::rewrite_(const Term& to_rewrite, const size_t& r_
 }
 
 template <typename T, typename Comp>
-std::pair<std::set<size_t>, std::vector<size_t>> F5Calculation<T, Comp>::top_reduction_(const size_t& r_index, const std::set<size_t>& set_to_reduce) {
+std::pair<std::optional<size_t>, std::vector<size_t>> F5Calculation<T, Comp>::top_reduction_(const size_t& r_index, const std::set<size_t>& set_to_reduce) {
     if (labeled_polynomials_[r_index].GetEvaluation().IsZero()) {
         std::cout << "\033[1;33mWarning: reduction to zero!\033[0m\n";
-        return {{}, {}};
+        return {std::nullopt, {}};
     }
 
     auto polynomial = labeled_polynomials_[r_index].GetEvaluation();
@@ -246,7 +248,7 @@ std::pair<std::set<size_t>, std::vector<size_t>> F5Calculation<T, Comp>::top_red
     polynomial -= polynomial.LeadMonomial() / reductior.LeadMonomial() * reductior;
     if (reductior_term * labeled_polynomials_[reductor_index.value()].GetSignature() < labeled_polynomials_[r_index].GetSignature()) {
         labeled_polynomials_[r_index].SetEvaluation(polynomial);
-        return {{}, {r_index}};
+        return {std::nullopt, {r_index}};
     }
 
     labeled_polynomials_.emplace_back(
@@ -256,7 +258,7 @@ std::pair<std::set<size_t>, std::vector<size_t>> F5Calculation<T, Comp>::top_red
     );
 
     add_rule_(labeled_polynomials_.size() - 1);
-    return {{}, {r_index, labeled_polynomials_.size() - 1}};
+    return {std::nullopt, {r_index, labeled_polynomials_.size() - 1}};
 }
 
 template <typename T, typename Comp>
@@ -268,7 +270,7 @@ std::optional<size_t> F5Calculation<T, Comp>::find_reductor_(const size_t& r_ind
             continue;
         }
 
-        const auto [signature_term, result_index] = labeled_polynomials_[i].GetPairSignature();
+        const auto& [signature_term, result_index] = labeled_polynomials_[i].GetPairSignature();
         const auto quotient = term / divisible;
         if (
             quotient * labeled_polynomials_[i].GetSignature() != labeled_polynomials_[r_index].GetSignature() &&
