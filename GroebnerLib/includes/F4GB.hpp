@@ -68,8 +68,8 @@ CriticalPairSet<T, Comp> normal_select(CriticalPairSet<T, Comp>& critical_pairs)
         if (it->GetDegree() != min_degree) {
             break;
         }
-        selected.insert(*it);
-        it = critical_pairs.erase(it);
+        selected.AddCriticalPair(*it);
+        it = critical_pairs.RemoveCriticalPair(it);
     }
     return selected;
 }
@@ -94,7 +94,7 @@ void erase_crit_by_lcm_(const Polynomial<T, Comp>& polynomial_to_insert, Critica
                     polynomial_to_insert.LeadTerm(), jt->GetRightPolynomial().LeadTerm()
                 ))
             ) {
-                it = all_crit.erase(it);
+                it = all_crit.RemoveCriticalPair(it);
                 erased = true;
                 break;
             }
@@ -112,7 +112,7 @@ void insert_crit_by_gcd_(
         CriticalPairSet<T, Comp>& new_crit_pairs) {
     for (auto it = all_crit.GetCriticalPairs().begin(); it != all_crit.GetCriticalPairs().end(); ++it) {
         if (!gcd(polynomial_to_insert.LeadTerm(), it->GetRightPolynomial().LeadTerm()).IsOne()) {
-            new_crit_pairs.insert(*it);
+            new_crit_pairs.AddCriticalPair(*it);
         }
     }
 }
@@ -127,7 +127,7 @@ void insert_crit_by_lcm_(
             (old_pair.GetLcm() == lcm(old_pair.GetLeftPolynomial().LeadTerm(), polynomial_to_insert.LeadTerm())) ||
             (old_pair.GetLcm() == lcm(old_pair.GetRightPolynomial().LeadTerm(), polynomial_to_insert.LeadTerm()))
         ) {
-            new_crit_pairs.insert(old_pair);
+            new_crit_pairs.AddCriticalPair(old_pair);
         }
     }
 }
@@ -150,7 +150,7 @@ void update_(
         const Polynomial<T, Comp>& polynomial_to_insert) {
     CriticalPairSet<T, Comp> all_crit, new_crit_pairs;
     for (const auto& polynomial : old_polynomial_set.GetPolynomials()) {
-        all_crit.insert(CriticalPair(polynomial_to_insert, polynomial));
+        all_crit.AddCriticalPair(CriticalPair(polynomial_to_insert, polynomial));
     }
 
     erase_crit_by_lcm_(polynomial_to_insert, all_crit);
@@ -282,21 +282,21 @@ PolynomialSet<T, Comp> reduction_(
 }
 
 template <typename T, typename Comp, typename SelFunction>
-PolynomialSet<T, Comp>& inplace_calculate_f4_gb(PolynomialSet<T, Comp>& given_ideal, SelFunction select_function) {
-    given_ideal = calculate_f4_gb(given_ideal, select_function);
-    return given_ideal;
+PolynomialSet<T, Comp>& inplace_calculate_f4_gb(PolynomialSet<T, Comp>& given_set, SelFunction select_function) {
+    given_set = calculate_f4_gb(given_set, select_function);
+    return given_set;
 }
 
 template <typename T, typename Comp, typename SelFunction>
-PolynomialSet<T, Comp> calculate_f4_gb(const PolynomialSet<T, Comp>& given_ideal, SelFunction select_function) {
+PolynomialSet<T, Comp> calculate_f4_gb(const PolynomialSet<T, Comp>& given_set, SelFunction select_function) {
     PolynomialSet<T, Comp> groebner_basis;
     CriticalPairSet<T, Comp> critical_pairs;
-    for (auto it = given_ideal.GetPolynomials().rbegin(); it != given_ideal.GetPolynomials().rend(); ++it) {
+    for (auto it = given_set.GetPolynomials().rbegin(); it != given_set.GetPolynomials().rend(); ++it) {
         update_(groebner_basis, critical_pairs, *it);
     }
 
     ResultsTriangPairs<T, Comp> results_triang_pairs;
-    results_triang_pairs.reserve(given_ideal.GetPolynomials().size() * 2);
+    results_triang_pairs.reserve(given_set.size() * 2);
     while (!critical_pairs.empty()) {
         const auto selected_set = select_function(critical_pairs);
         const auto reduced_set = reduction_(selected_set, groebner_basis, results_triang_pairs);
@@ -308,19 +308,19 @@ PolynomialSet<T, Comp> calculate_f4_gb(const PolynomialSet<T, Comp>& given_ideal
 }
 
 template <typename T, typename Comp, typename SelFunction>
-bool fast_is_gb(const PolynomialSet<T, Comp>& given_ideal, SelFunction select_function) {
+bool fast_is_gb(const PolynomialSet<T, Comp>& given_set, SelFunction select_function) {
     PolynomialSet<T, Comp> groebner_basis;
     CriticalPairSet<T, Comp> critical_pairs;
-    for (const auto& polynomial : given_ideal.GetPolynomials()) {
+    for (const auto& polynomial : given_set.GetPolynomials()) {
         update_(groebner_basis, critical_pairs, polynomial);
     }
 
     ResultsTriangPairs<T, Comp> results_triang_pairs;
-    results_triang_pairs.reserve(given_ideal.GetPolynomials().size() * 2);
+    results_triang_pairs.reserve(given_set.size() * 2);
     while (!critical_pairs.empty()) {
         const auto selected_set = select_function(critical_pairs);
         const auto reduced_set = reduction_(selected_set, groebner_basis, results_triang_pairs);
-        if (reduced_set.GetPolynomials().size()) {
+        if (reduced_set.size()) {
             return false;
         }
     }

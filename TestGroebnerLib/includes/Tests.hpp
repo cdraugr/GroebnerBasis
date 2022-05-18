@@ -44,6 +44,7 @@ void test_time_deg_rev_lex_(u32);
 void test_time_lex_(u32);
 
 void test_f4_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>&);
+void test_f5_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>&);
 
 }  // namespace times
 
@@ -64,6 +65,8 @@ void test_root_time(u32);
 
 void test_critical_pair();
 void test_f4_gb(u32);
+
+void test_f5_gb(u32);
 
 namespace asserts {  /* Implementation */
 

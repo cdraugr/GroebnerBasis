@@ -19,15 +19,15 @@ void test_modular() {
     std::cout << "one = " << one << '\n';
     std::cout << "zero = " << zero << '\n';
     std::cout << std::boolalpha << "a < b is " << (a < b) << '\n';
-    assert(a < b == false);
+    assert((a < b) == false);
     std::cout << std::boolalpha << "a > b is " << (a > b) << '\n';
-    assert(a > b == true);
+    assert((a > b) == true);
     std::cout << std::boolalpha << "a <= b is " << (a <= b) << '\n';
-    assert(a <= b == false);
+    assert((a <= b) == false);
     std::cout << std::boolalpha << "a >= b is " << (a >= b) << '\n';
-    assert(a >= b == true);
+    assert((a >= b) == true);
     std::cout << std::boolalpha << "a == 4 is " << (a == 4) << '\n';
-    assert(a == b == false);
+    assert((a == b) == false);
     utils::print_line();
 
     std::cout << "+a = " << +a << '\n';

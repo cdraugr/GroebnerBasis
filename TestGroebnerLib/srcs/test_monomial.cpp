@@ -38,10 +38,10 @@ void test_monomial() {
     std::cout << "m3 = " << monomial3 << '\n';
     std::cout << "m4 = " << monomial4 << '\n';
     std::cout << std::boolalpha << "m3 == 2 is " << (monomial3 == 2) << '\n';
-    assert(monomial3 == 2 == true);
+    assert((monomial3 == 2) == true);
 
     std::cout << std::boolalpha << "2 == m4 is " << (2 == monomial4) << '\n';
-    assert(2 == monomial4 == false);
+    assert((2 == monomial4) == false);
 
     std::cout << "m4 * 25 = " << monomial4 * 25 << '\n';
     assert(monomial4 * 25 == 15);

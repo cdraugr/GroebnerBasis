@@ -10,7 +10,6 @@ void print_line(u32 count) {
 
 }  // namespace utils
 
-
 namespace asserts {
 
 void assert_rational_(const gb::fields::Rational& value, const i64& numerator, const i64& denominator) {
@@ -57,6 +56,10 @@ void test_time_lex_(u32 variable_count) {
 
 void test_f4_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>& ideal) {
     gb::inplace_calculate_f4_gb(ideal);
+}
+
+void test_f5_gb_time_(gb::PolynomialSet<gb::fields::Rational, gb::LexComp>& ideal) {
+    gb::inplace_calculate_f5_gb(ideal);
 }
 
 }  // namespace times

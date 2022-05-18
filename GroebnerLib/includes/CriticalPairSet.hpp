@@ -18,8 +18,8 @@ public:
 
     bool empty() const noexcept;
 
-    void insert(const CriticalPair<T, Comp>&);
-    iterator erase(iterator);
+    void AddCriticalPair(const CriticalPair<T, Comp>&);
+    iterator RemoveCriticalPair(iterator);
 
 private:
     container critical_pairs_;
@@ -32,7 +32,7 @@ template <typename T, typename Comp>
 CriticalPairSet<T, Comp>::CriticalPairSet(const PolynomialSet<T, Comp>& polynomial_set) {
     for (auto it = polynomial_set.GetPolynomials().begin(); it != polynomial_set.GetPolynomials().end(); ++it) {
         for (auto jt = polynomial_set.GetPolynomials().begin(); jt != it; ++jt) {
-            critical_pairs_.insert(CriticalPair(*it, *jt));
+            AddCriticalPair(CriticalPair(*it, *jt));
         }
     }
 }
@@ -53,13 +53,13 @@ bool CriticalPairSet<T, Comp>::empty() const noexcept {
 }
 
 template <typename T, typename Comp>
-void CriticalPairSet<T, Comp>::insert(const CriticalPair<T, Comp>& critical_pair) {
+void CriticalPairSet<T, Comp>::AddCriticalPair(const CriticalPair<T, Comp>& critical_pair) {
     GetCriticalPairs().insert(critical_pair);
 }
 
 template <typename T, typename Comp>
 typename CriticalPairSet<T, Comp>::iterator
-CriticalPairSet<T, Comp>::erase(typename CriticalPairSet<T, Comp>::iterator it) {
+CriticalPairSet<T, Comp>::RemoveCriticalPair(typename CriticalPairSet<T, Comp>::iterator it) {
     return GetCriticalPairs().erase(it);
 }
 

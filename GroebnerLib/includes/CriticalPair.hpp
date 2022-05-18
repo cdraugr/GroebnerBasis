@@ -15,8 +15,8 @@ public:
     gb::i64 GetDegree() const noexcept;
     const Term& GetLcm() const noexcept;
 
-    const side_pair& Left() const noexcept;
-    const side_pair& Right() const noexcept;
+    const side_pair& GetLeft() const noexcept;
+    const side_pair& GetRight() const noexcept;
 
     const Polynomial<T, Comp>& GetLeftPolynomial() const noexcept;
     const Polynomial<T, Comp>& GetRightPolynomial() const noexcept;
@@ -33,9 +33,9 @@ public:
 
 private:
     gb::i64 degree_{};
-    Term lcm_{};
-    side_pair left_{};
-    side_pair right_{};
+    Term lcm_;
+    side_pair left_;
+    side_pair right_;
 };
 
 template <typename T, typename Comp>
@@ -66,33 +66,33 @@ const Term& CriticalPair<T, Comp>::GetLcm() const noexcept {
 }
 
 template <typename T, typename Comp>
-const typename CriticalPair<T, Comp>::side_pair& CriticalPair<T, Comp>::Left() const noexcept {
+const typename CriticalPair<T, Comp>::side_pair& CriticalPair<T, Comp>::GetLeft() const noexcept {
     return left_;
 }
 
 template <typename T, typename Comp>
-const typename CriticalPair<T, Comp>::side_pair& CriticalPair<T, Comp>::Right() const noexcept {
+const typename CriticalPair<T, Comp>::side_pair& CriticalPair<T, Comp>::GetRight() const noexcept {
     return right_;
 }
 
 template <typename T, typename Comp>
 const Polynomial<T, Comp>& CriticalPair<T, Comp>::GetLeftPolynomial() const noexcept {
-    return Left().second;
+    return GetLeft().second;
 }
 
 template <typename T, typename Comp>
 const Polynomial<T, Comp>& CriticalPair<T, Comp>::GetRightPolynomial() const noexcept {
-    return Right().second;
+    return GetRight().second;
 }
 
 template <typename T, typename Comp>
 const Term& CriticalPair<T, Comp>::GetLeftTerm() const noexcept {
-    return Left().first;
+    return GetLeft().first;
 }
 
 template <typename T, typename Comp>
 const Term& CriticalPair<T, Comp>::GetRightTerm() const noexcept {
-    return Right().first;
+    return GetRight().first;
 }
 
 template <typename T, typename Comp>

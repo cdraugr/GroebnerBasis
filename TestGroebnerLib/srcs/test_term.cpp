@@ -44,13 +44,13 @@ void test_term() {
     gb::Term term6({3, 0, 4});
     std::cout << "t5 = " << term5 << '\n' << "t6 = " << term6 << "\n\n";
     std::cout << std::boolalpha << "t5 == t6\t\tis " << (term5 == term6) << '\n';
-    assert(term5 == term6 == true);
+    assert((term5 == term6) == true);
 
     std::cout << "t5 / t6 =\t\t" << term5 / term6 << '\n';
     asserts::assert_term_(term5 / term6, {});
 
     std::cout << std::boolalpha << "t5 divided by t6\tis " << term5.IsDivisibleBy(term6) << "\n\n";
-    assert(term5 == term6 == true);
+    assert((term5 == term6) == true);
     utils::print_line();
 
     gb::Term term7({1, 2, 5});
