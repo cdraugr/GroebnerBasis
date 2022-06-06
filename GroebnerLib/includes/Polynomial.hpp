@@ -24,6 +24,9 @@ public:
     template <typename OtherT, typename OtherComp>
     friend gb::i64 deg(const Polynomial<OtherT, OtherComp>&) noexcept;
 
+    template <gb::u64 VCount>
+    static std::array<Polynomial, VCount> get_variables();
+
     bool TryReduceOnceBy(const Polynomial&) noexcept;  // Returns true if there was a reduction otherwise returns false.
     Polynomial Normalized() const;
 
@@ -160,6 +163,16 @@ gb::i64 deg(const Polynomial<T, Comp>& polynomial) noexcept {
         }
     }
     return max_degree;
+}
+
+template <typename T, typename Comp>
+template <gb::u64 VCount>
+inline std::array<Polynomial<T, Comp>, VCount> Polynomial<T, Comp>::get_variables() {
+    std::array<Polynomial<T, Comp>, VCount> result;
+    for (gb::u64 i = 0; i != VCount; ++i) {
+        result[i] = Polynomial<T, Comp>(Monomial<T>(Term::term_from_map({{i, 1}}), static_cast<T>(1)));
+    }
+    return result;
 }
 
 template <typename T, typename Comp>
@@ -373,7 +386,7 @@ Polynomial<T, Comp> GiveRoot(const gb::i64& degree_max, const gb::i64& variable_
         for (const auto& degree : one_combination) {
             buffer_map[degree] = 1;
         }
-        answer += Monomial<T>(Term::term_from_map(buffer_map), 1);
+        answer += Monomial<T>(Term::term_from_map(buffer_map), static_cast<T>(1));
     }
     return answer;
 }
